@@ -28,9 +28,14 @@ TODO: Add long description of the pod here.
   s.source           = { :git => 'https://github.com/vitelabs/vite-wallet-ios.git', :tag => s.version.to_s }
   # s.social_media_url = 'https://twitter.com/<TWITTER_USERNAME>'
 
-  s.ios.deployment_target = '8.0'
+  s.ios.deployment_target = '10.0'
 
   s.source_files = 'ViteWallet/Classes/**/*'
+
+  s.dependency 'BigInt'
+  s.dependency 'ObjectMapper'
+  s.dependency 'CryptoSwift'
+  s.dependency 'Vite_HDWalletKit'
   
   # s.resource_bundles = {
   #   'ViteWallet' => ['ViteWallet/Assets/*.png']
