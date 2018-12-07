@@ -1,0 +1,16 @@
+PODS:
+  - ViteWallet (0.1.0)
+
+DEPENDENCIES:
+  - ViteWallet (from `../`)
+
+EXTERNAL SOURCES:
+  ViteWallet:
+    :path: "../"
+
+SPEC CHECKSUMS:
+  ViteWallet: fe4ba0da4335a3030e17d596b00e9c53158fd801
+
+PODFILE CHECKSUM: 3fabaa5df826dcbdda7f1583a9de8c487440799a
+
+COCOAPODS: 1.5.3
