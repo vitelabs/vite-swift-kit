@@ -10,16 +10,16 @@ import Foundation
 import ObjectMapper
 import BigInt
 
-struct Pledge: Mappable {
+public struct Pledge: Mappable {
 
-    fileprivate(set) var beneficialAddress = Address()
-    fileprivate(set) var amount = Balance()
-    fileprivate(set) var timestamp = Date(timeIntervalSince1970: 0)
-    fileprivate(set) var withdrawHeight = BigInt(0)
+    public fileprivate(set) var beneficialAddress = Address()
+    public fileprivate(set) var amount = Balance()
+    public fileprivate(set) var timestamp = Date(timeIntervalSince1970: 0)
+    public fileprivate(set) var withdrawHeight = BigInt(0)
 
-    init?(map: Map) { }
+    public init?(map: Map) { }
 
-    mutating func mapping(map: Map) {
+    public mutating func mapping(map: Map) {
         beneficialAddress <- (map["beneficialAddr"], JSONTransformer.address)
         amount <- (map["amount"], JSONTransformer.balance)
         timestamp <- (map["withdrawTime"], JSONTransformer.timestamp)

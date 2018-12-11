@@ -10,14 +10,14 @@ import Foundation
 import ObjectMapper
 import BigInt
 
-struct BalanceInfo: Mappable {
+public struct BalanceInfo: Mappable {
 
-    fileprivate(set) var token = Token()
-    fileprivate(set) var balance = Balance()
-    fileprivate(set) var unconfirmedBalance = Balance()
-    fileprivate(set) var unconfirmedCount: UInt64 = 0
+    public fileprivate(set) var token = Token()
+    public fileprivate(set) var balance = Balance()
+    public fileprivate(set) var unconfirmedBalance = Balance()
+    public fileprivate(set) var unconfirmedCount: UInt64 = 0
 
-    init?(map: Map) {
+    public init?(map: Map) {
 
     }
 
@@ -28,7 +28,7 @@ struct BalanceInfo: Mappable {
         self.unconfirmedCount = unconfirmedCount
     }
 
-    mutating func mapping(map: Map) {
+    public mutating func mapping(map: Map) {
         token <- map["tokenInfo"]
         balance <- (map["totalAmount"], JSONTransformer.balance)
     }
@@ -40,48 +40,25 @@ struct BalanceInfo: Mappable {
 }
 
 extension BalanceInfo: Equatable {
-    static func == (lhs: BalanceInfo, rhs: BalanceInfo) -> Bool {
+    public static func == (lhs: BalanceInfo, rhs: BalanceInfo) -> Bool {
         return lhs.token.id == rhs.token.id
     }
 }
 
 extension BalanceInfo {
 
-    static func defaultBalanceInfos() -> [BalanceInfo] {
-        return []
-//        return TokenCacheService.instance.defaultTokens.map {
-//            BalanceInfo(token: $0, balance: Balance(), unconfirmedBalance: Balance(), unconfirmedCount: 0)
-//        }
-    }
-
-    static func mergeBalanceInfos(_ balanceInfos: [BalanceInfo]) -> [BalanceInfo] {
+    static func mergeBalanceInfos(_ balanceInfos: [BalanceInfo], onroadInfos: [OnroadInfo]) -> [BalanceInfo] {
         let infos = NSMutableArray(array: balanceInfos)
         let ret = NSMutableArray()
 
-        for defaultBalanceInfo in defaultBalanceInfos() {
-            if let index = (infos as Array).index(where: { ($0 as! BalanceInfo).token.id == defaultBalanceInfo.token.id }) {
-                ret.add(infos[index])
-                infos.removeObject(at: index)
-            } else {
-                ret.add(defaultBalanceInfo)
-            }
-        }
-        ret.addObjects(from: infos as! [Any])
-        return ret as! [BalanceInfo]
-    }
-
-    static func mergeBalanceInfos(_ balanceInfos: [BalanceInfo], unConfirmedInfos: [UnConfirmedInfo]) -> [BalanceInfo] {
-        let infos = NSMutableArray(array: balanceInfos)
-        let ret = NSMutableArray()
-
-        for unConfirmedInfo in unConfirmedInfos {
-            if let index = (infos as Array).index(where: { ($0 as! BalanceInfo).token.id == unConfirmedInfo.token.id }) {
+        for onroadInfo in onroadInfos {
+            if let index = (infos as Array).index(where: { ($0 as! BalanceInfo).token.id == onroadInfo.token.id }) {
                 var info = infos[index] as! BalanceInfo
-                info.fill(unconfirmedBalance: unConfirmedInfo.unconfirmedBalance, unconfirmedCount: unConfirmedInfo.unconfirmedCount)
+                info.fill(unconfirmedBalance: onroadInfo.unconfirmedBalance, unconfirmedCount: onroadInfo.unconfirmedCount)
                 ret.add(info)
                 infos.removeObject(at: index)
             } else {
-                let info = BalanceInfo(token: unConfirmedInfo.token, balance: Balance(value: BigInt(0)), unconfirmedBalance: unConfirmedInfo.unconfirmedBalance, unconfirmedCount: unConfirmedInfo.unconfirmedCount)
+                let info = BalanceInfo(token: onroadInfo.token, balance: Balance(value: BigInt(0)), unconfirmedBalance: onroadInfo.unconfirmedBalance, unconfirmedCount: onroadInfo.unconfirmedCount)
                 ret.add(info)
             }
         }

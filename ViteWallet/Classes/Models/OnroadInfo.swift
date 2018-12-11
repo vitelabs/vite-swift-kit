@@ -1,5 +1,5 @@
 //
-//  UnConfirmedInfo.swift
+//  OnroadInfo.swift
 //  Vite
 //
 //  Created by Stone on 2018/9/10.
@@ -8,18 +8,17 @@
 
 import Foundation
 import ObjectMapper
-import BigInt
 
-struct UnConfirmedInfo: Mappable {
+public struct OnroadInfo: Mappable {
 
-    fileprivate(set) var token = Token()
-    fileprivate(set) var unconfirmedBalance = Balance()
-    fileprivate(set) var unconfirmedCount: UInt64 = 0
-    init?(map: Map) {
+    public fileprivate(set) var token = Token()
+    public fileprivate(set) var unconfirmedBalance = Balance()
+    public fileprivate(set) var unconfirmedCount: UInt64 = 0
+    public init?(map: Map) {
 
     }
 
-    mutating func mapping(map: Map) {
+    public mutating func mapping(map: Map) {
         token <- map["tokenInfo"]
         unconfirmedBalance <- (map["totalAmount"], JSONTransformer.balance)
         unconfirmedCount <- (map["number"], JSONTransformer.uint64)

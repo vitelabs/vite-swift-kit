@@ -9,19 +9,19 @@
 import Foundation
 import BigInt
 
-struct Balance: BalanceType {
+public struct Balance: BalanceType {
 
-    var value: BigInt
+    public var value: BigInt
 
-    init(value: BigInt = BigInt(0)) {
+    public init(value: BigInt = BigInt(0)) {
         self.value = value
     }
 
-    func amountShort(decimals: Int) -> String {
+    public func amountShort(decimals: Int) -> String {
         return pri_amount(decimals: decimals, count: 4)
     }
 
-    func amountFull(decimals: Int) -> String {
+    public func amountFull(decimals: Int) -> String {
         return pri_amount(decimals: decimals, count: 8)
     }
 
@@ -47,7 +47,7 @@ struct Balance: BalanceType {
 
 extension String {
 
-    func toBigInt(decimals: Int) -> BigInt? {
+    public func toBigInt(decimals: Int) -> BigInt? {
 
         var str = self
 

@@ -10,8 +10,8 @@ import Foundation
 import ObjectMapper
 import BigInt
 
-struct JSONTransformer {
-    static let timestamp = TransformOf<Date, UInt64>(fromJSON: { (timestamp) -> Date? in
+public struct JSONTransformer {
+    public static let timestamp = TransformOf<Date, UInt64>(fromJSON: { (timestamp) -> Date? in
         guard let timestamp = timestamp else { return nil }
         return Date(timeIntervalSince1970: TimeInterval(timestamp))
     }, toJSON: { (date) -> UInt64? in
@@ -19,7 +19,7 @@ struct JSONTransformer {
         return UInt64(date.timeIntervalSinceNow)
     })
 
-    static let address = TransformOf<Address, String>(fromJSON: { (string) -> Address? in
+    public static let address = TransformOf<Address, String>(fromJSON: { (string) -> Address? in
         guard let string = string else { return nil }
         return Address(string: string)
     }, toJSON: { (address) -> String? in
@@ -27,7 +27,7 @@ struct JSONTransformer {
         return address.description
     })
 
-    static let bigint = TransformOf<BigInt, String>(fromJSON: { (string) -> BigInt? in
+    public static let bigint = TransformOf<BigInt, String>(fromJSON: { (string) -> BigInt? in
         guard let string = string, let bigInt = BigInt(string) else { return nil }
         return bigInt
     }, toJSON: { (bigint) -> String? in
@@ -35,7 +35,7 @@ struct JSONTransformer {
         return String(bigint)
     })
 
-    static let hexTobase64 = TransformOf<String, String>(fromJSON: { (base64) -> String? in
+    public static let hexTobase64 = TransformOf<String, String>(fromJSON: { (base64) -> String? in
         guard let base64 = base64, let string = Data(base64Encoded: base64)?.toHexString() else { return nil }
         return string
     }, toJSON: { (string) -> String? in
@@ -43,7 +43,7 @@ struct JSONTransformer {
         return Data(bytes: string.hex2Bytes).base64EncodedString()
     })
 
-    static let stringToBase64 = TransformOf<String, String>(fromJSON: { (base64) -> String? in
+    public static let stringToBase64 = TransformOf<String, String>(fromJSON: { (base64) -> String? in
         guard let base64 = base64, let data = Data(base64Encoded: base64), let string = String(bytes: data, encoding: .utf8) else { return nil }
         return string
     }, toJSON: { (string) -> String? in
@@ -51,7 +51,7 @@ struct JSONTransformer {
         return string.bytes.toBase64()
     })
 
-    static let uint64 = TransformOf<UInt64, String>(fromJSON: { (string) -> UInt64? in
+    public static let uint64 = TransformOf<UInt64, String>(fromJSON: { (string) -> UInt64? in
         guard let string = string, let num = UInt64(string) else { return nil }
         return num
     }, toJSON: { (num) -> String? in
@@ -59,7 +59,7 @@ struct JSONTransformer {
         return String(num)
     })
 
-    static let balance = TransformOf<Balance, String>(fromJSON: { (string) -> Balance? in
+    public static let balance = TransformOf<Balance, String>(fromJSON: { (string) -> Balance? in
         guard let string = string, let bigInt = BigInt(string) else { return nil }
         return Balance(value: bigInt)
     }, toJSON: { (balance) -> String? in

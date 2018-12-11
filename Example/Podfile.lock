@@ -1,8 +1,22 @@
 PODS:
+  - APIKit (3.2.1):
+    - Result (~> 3.0)
   - BigInt (3.1.0):
     - SipHash (~> 1.2)
   - CryptoSwift (0.12.0)
+  - JSONRPCKit (3.0.0):
+    - Result (~> 3.2.0)
   - ObjectMapper (3.3.0)
+  - PromiseKit (6.5.2):
+    - PromiseKit/CorePromise (= 6.5.2)
+    - PromiseKit/Foundation (= 6.5.2)
+    - PromiseKit/UIKit (= 6.5.2)
+  - PromiseKit/CorePromise (6.5.2)
+  - PromiseKit/Foundation (6.5.2):
+    - PromiseKit/CorePromise
+  - PromiseKit/UIKit (6.5.2):
+    - PromiseKit/CorePromise
+  - Result (3.2.4)
   - SipHash (1.2.2)
   - TrezorCryptoEd25519WithBlake2b (0.0.1)
   - Vite_HDWalletKit (1.2.0):
@@ -10,23 +24,33 @@ PODS:
     - CryptoSwift (~> 0.12.0)
     - TrezorCryptoEd25519WithBlake2b (~> 0.0.1)
   - ViteWallet (0.1.0):
+    - APIKit
     - BigInt
     - CryptoSwift
+    - JSONRPCKit
     - ObjectMapper
+    - PromiseKit
     - Vite_HDWalletKit
 
 DEPENDENCIES:
+  - APIKit (= 3.2.1)
   - BigInt (= 3.1.0)
   - CryptoSwift (= 0.12.0)
+  - JSONRPCKit (= 3.0.0)
   - ObjectMapper (= 3.3.0)
+  - PromiseKit (= 6.5.2)
   - Vite_HDWalletKit (= 1.2.0)
   - ViteWallet (from `../`)
 
 SPEC REPOS:
   https://github.com/cocoapods/specs.git:
+    - APIKit
     - BigInt
     - CryptoSwift
+    - JSONRPCKit
     - ObjectMapper
+    - PromiseKit
+    - Result
     - SipHash
     - TrezorCryptoEd25519WithBlake2b
     - Vite_HDWalletKit
@@ -36,14 +60,18 @@ EXTERNAL SOURCES:
     :path: "../"
 
 SPEC CHECKSUMS:
+  APIKit: a39ff72ac44efc15513fd1b98800f63c525be61b
   BigInt: 76b5dfdfa3e2e478d4ffdf161aeede5502e2742f
   CryptoSwift: 1c07ca50843dd48bc54e6ea53d7a4dba3b645716
+  JSONRPCKit: 50e0dc5e7f873e87f81562feb8836b7d1974da6d
   ObjectMapper: b612bf8c8e99c4dc0bb6013a51f7c27966ed5da9
+  PromiseKit: 27c1601bfb73405871b805bcb8cf7e55c4dad3db
+  Result: d2d07204ce72856f1fd9130bbe42c35a7b0fea10
   SipHash: fad90a4683e420c52ef28063063dbbce248ea6d4
   TrezorCryptoEd25519WithBlake2b: e70fc022094a2f2aa8b86117ab1085d7a7b62098
   Vite_HDWalletKit: 8d3f78883b58def92610e44704a93db7b566656c
-  ViteWallet: 28f03530abbfaece77af84aa43da98d337e4c058
+  ViteWallet: c831392a05201d8ca46f481bf53fc441c8aac7b1
 
-PODFILE CHECKSUM: acc969997159579fd13f0354f53a9c3ec1c7844c
+PODFILE CHECKSUM: d0bdd6e3226097d69e8f53edde656a6ccbf0619e
 
 COCOAPODS: 1.5.3

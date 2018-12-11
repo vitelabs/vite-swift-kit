@@ -36,6 +36,11 @@ TODO: Add long description of the pod here.
   s.dependency 'ObjectMapper'
   s.dependency 'CryptoSwift'
   s.dependency 'Vite_HDWalletKit'
+
+  s.dependency 'APIKit'
+  s.dependency 'JSONRPCKit'
+  s.dependency 'PromiseKit'
+  
   
   # s.resource_bundles = {
   #   'ViteWallet' => ['ViteWallet/Assets/*.png']

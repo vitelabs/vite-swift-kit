@@ -12,33 +12,13 @@ import BigInt
 import CryptoSwift
 import Vite_HDWalletKit
 
-struct AccountBlock: Mappable {
+public struct AccountBlock: Mappable {
 
     struct Const {
         static let defaultHash = "0000000000000000000000000000000000000000000000000000000000000000"
-
-        enum Difficulty {
-            case sendWithoutData
-            case receive
-            case pledge
-            case vote
-            case cancelVote
-
-            var value: BigInt {
-                switch self {
-                case .sendWithoutData:
-                    return BigInt("157108864")!
-                case .receive, .pledge:
-                    return BigInt("67108864")!
-                case .vote, .cancelVote:
-                    return BigInt("201564160")!
-                }
-
-            }
-        }
     }
 
-    enum BlockType: Int {
+    public enum BlockType: Int {
         case createSend = 1
         case send = 2
         case rewardSend = 3
@@ -46,45 +26,40 @@ struct AccountBlock: Mappable {
         case receiveError = 5
     }
 
-    fileprivate(set) var type: BlockType?
-    fileprivate(set) var hash: String?
-    fileprivate(set) var prevHash: String?
-    fileprivate(set) var accountAddress: Address?
-    fileprivate(set) var publicKey: String?
-    fileprivate(set) var fromAddress: Address?
-    fileprivate(set) var toAddress: Address?
-    fileprivate(set) var fromHash: String?
-    fileprivate(set) var tokenId: String?
-    fileprivate(set) var snapshotHash: String?
-    fileprivate(set) var data: String?
-    fileprivate(set) var timestamp: Int64?
-    fileprivate(set) var logHash: String?
-    fileprivate(set) var nonce: String?
-    fileprivate(set) var difficulty: BigInt?
-    fileprivate(set) var signature: String?
-    fileprivate(set) var height: UInt64?
-    fileprivate(set) var quota: UInt64?
-    fileprivate(set) var amount: BigInt?
-    fileprivate(set) var fee: BigInt?
-    fileprivate(set) var confirmedTimes: UInt64?
-    fileprivate(set) var tokenInfo: Token?
+    public fileprivate(set) var type: BlockType?
+    public fileprivate(set) var hash: String?
+    public fileprivate(set) var prevHash: String?
+    public fileprivate(set) var accountAddress: Address?
+    public fileprivate(set) var publicKey: String?
+    public fileprivate(set) var fromAddress: Address?
+    public fileprivate(set) var toAddress: Address?
+    public fileprivate(set) var fromHash: String?
+    public fileprivate(set) var tokenId: String?
+    public fileprivate(set) var snapshotHash: String?
+    public fileprivate(set) var data: String?
+    public fileprivate(set) var timestamp: Int64?
+    public fileprivate(set) var logHash: String?
+    public fileprivate(set) var nonce: String?
+    public fileprivate(set) var difficulty: BigInt?
+    public fileprivate(set) var signature: String?
+    public fileprivate(set) var height: UInt64?
+    public fileprivate(set) var quota: UInt64?
+    public fileprivate(set) var amount: BigInt?
+    public fileprivate(set) var fee: BigInt?
+    public fileprivate(set) var confirmedTimes: UInt64?
+    public fileprivate(set) var tokenInfo: Token?
 
-    init() {
+    public init() {
 
     }
 
-    init?(map: Map) {
+    public init?(map: Map) {
         guard let type = map.JSON["blockType"] as? Int, let _ = BlockType(rawValue: type) else {
             return nil
         }
     }
 
-    init(address: Address) {
-        self.init()
-        self.accountAddress = address
-    }
-
-    mutating func mapping(map: Map) {
+    public mutating func mapping(map: Map) {
         type <- map["blockType"]
         hash <- map["hash"]
         prevHash <- map["prevHash"]
@@ -112,10 +87,10 @@ struct AccountBlock: Mappable {
 
 extension AccountBlock {
 
-    static func makeSendAccountBlock(secretKey: String,
+    public static func makeSendAccountBlock(secretKey: String,
                                      publicKey: String,
                                      address: Address,
-                                     latest: AccountBlock,
+                                     latest: AccountBlock?,
                                      snapshotHash: String,
                                      toAddress: Address,
                                      tokenId: String,
@@ -147,14 +122,14 @@ extension AccountBlock {
         return block
     }
 
-    static func makeReceiveAccountBlock(secretKey: String,
-                                        publicKey: String,
-                                        address: Address,
-                                        unconfirmed: AccountBlock,
-                                        latest: AccountBlock,
-                                        snapshotHash: String,
-                                        nonce: String?,
-                                        difficulty: BigInt?) -> AccountBlock {
+    public static func makeReceiveAccountBlock(secretKey: String,
+                                               publicKey: String,
+                                               address: Address,
+                                               unconfirmed: AccountBlock,
+                                               latest: AccountBlock?,
+                                               snapshotHash: String,
+                                               nonce: String?,
+                                               difficulty: BigInt?) -> AccountBlock {
 
         var block = makeBaseAccountBlock(secretKey: secretKey,
                                          publicKey: publicKey,
@@ -179,14 +154,14 @@ extension AccountBlock {
     fileprivate static func makeBaseAccountBlock(secretKey: String,
                                                  publicKey: String,
                                                  address: Address,
-                                                 latest: AccountBlock,
+                                                 latest: AccountBlock?,
                                                  snapshotHash: String,
                                                  nonce: String?,
                                                  difficulty: BigInt?) -> AccountBlock {
         var block = AccountBlock()
-        block.prevHash = latest.hash ?? Const.defaultHash
+        block.prevHash = latest?.hash ?? Const.defaultHash
 
-        if let height = latest.height {
+        if let height = latest?.height {
             block.height = height + 1
         } else {
             block.height = 1
@@ -282,7 +257,7 @@ extension AccountBlock {
 }
 
 extension FixedWidthInteger {
-    var toBytes: [UInt8] {
+    public var toBytes: [UInt8] {
         var bigEndian = self.bigEndian
         let data = Data(bytes: &bigEndian, count: MemoryLayout.size(ofValue: bigEndian))
         let bytes = [UInt8](data)

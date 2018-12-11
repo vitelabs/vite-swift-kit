@@ -9,26 +9,25 @@
 import Foundation
 import ObjectMapper
 
-typealias VoteNum = Balance
+public struct Candidate: Mappable {
+    public typealias VoteNum = Balance
 
-class Candidate: NSObject, Mappable {
-
-    required init?(map: Map) {
+    public init?(map: Map) {
 
     }
 
-    fileprivate(set) var name: String = ""
-    fileprivate(set) var nodeAddr: Address = Address()
-    fileprivate(set) var voteNum: VoteNum = VoteNum()
-    fileprivate(set) var rank: Int = 0
+    public fileprivate(set) var name: String = ""
+    public fileprivate(set) var nodeAddr: Address = Address()
+    public fileprivate(set) var voteNum: VoteNum = VoteNum()
+    public fileprivate(set) var rank: Int = 0
 
-    func mapping(map: Map) {
+    public mutating func mapping(map: Map) {
         name <- map["name"]
         nodeAddr <- (map["nodeAddr"], JSONTransformer.address)
         voteNum <- (map["voteNum"], JSONTransformer.balance)
     }
 
-    func updateRank(_ rank: Int) {
+    public mutating func updateRank(_ rank: Int) {
         self.rank = rank
     }
 }

@@ -11,20 +11,17 @@ import CryptoSwift
 
 public class Wallet: Mappable {
 
-    fileprivate(set) var uuid: String
-    fileprivate(set) var name: String
-    fileprivate(set) var ciphertext: String
-    fileprivate(set) var language: MnemonicCodeBook
-    fileprivate(set) var hash: String
-
+    public fileprivate(set) var uuid: String
+    public fileprivate(set) var name: String
+    public fileprivate(set) var ciphertext: String
+    public fileprivate(set) var language: MnemonicCodeBook
+    public fileprivate(set) var hash: String
 
     private var _mnemonic: String?
     private var _seed: String?
     private var _encryptedKey: String?
 
-
-
-    required public init?(map: Map) {
+    public required init?(map: Map) {
         uuid = ""
         name = ""
         ciphertext = ""
@@ -70,11 +67,12 @@ extension  Wallet {
 
     public enum WalletError: Error {
         case invalidEncryptedKey
+        case invalidTokenId
     }
 
     public struct Account {
 
-        private let secretKey: String
+        public let secretKey: String
         public let publicKey: String
         public let address: Address
 

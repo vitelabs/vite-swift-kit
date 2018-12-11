@@ -9,7 +9,7 @@
 import Foundation
 import BigInt
 
-protocol BalanceType {
+public protocol BalanceType {
     var value: BigInt { get }
     func amountShort(decimals: Int) -> String
     func amountFull(decimals: Int) -> String

@@ -8,15 +8,14 @@
 
 import Foundation
 import ObjectMapper
-import BigInt
 
-struct Transaction: Equatable, Mappable {
+public struct Transaction: Equatable, Mappable {
 
-    static func == (lhs: Transaction, rhs: Transaction) -> Bool {
+    public static func == (lhs: Transaction, rhs: Transaction) -> Bool {
         return lhs.hash == rhs.hash
     }
 
-    enum TransactionType: Int {
+    public enum TransactionType: Int {
         case register
         case registerUpdate
         case cancelRegister
@@ -31,14 +30,14 @@ struct Transaction: Equatable, Mappable {
         case receive
     }
 
-    fileprivate var blockType: AccountBlock.BlockType?
-    fileprivate(set) var timestamp = Date(timeIntervalSince1970: 0)
-    fileprivate(set) var fromAddress = Address()
-    fileprivate(set) var toAddress = Address()
-    fileprivate(set) var hash = ""
-    fileprivate(set) var amount = Balance()
-    fileprivate(set) var token = Token()
-    fileprivate(set) var data: String?
+    public fileprivate(set) var blockType: AccountBlock.BlockType?
+    public fileprivate(set) var timestamp = Date(timeIntervalSince1970: 0)
+    public fileprivate(set) var fromAddress = Address()
+    public fileprivate(set) var toAddress = Address()
+    public fileprivate(set) var hash = ""
+    public fileprivate(set) var amount = Balance()
+    public fileprivate(set) var token = Token()
+    public fileprivate(set) var data: String?
 
     fileprivate static let transactionTypeDataPrefixMap: [String: TransactionType] = [
         "f29c6ce2": .register,
@@ -53,36 +52,20 @@ struct Transaction: Equatable, Mappable {
         "9b9125f5": .cancelCoin,
         ]
 
-    struct Const {
-        enum ContractAddress: String {
-            case register = "vite_0000000000000000000000000000000000000001c9e9f25417"
-            case vote = "vite_000000000000000000000000000000000000000270a48cc491"
-            case pledge = "vite_000000000000000000000000000000000000000309508ba646"
-            case consensus = "vite_00000000000000000000000000000000000000042d7ef71894"
-            case coin = "vite_00000000000000000000000000000000000000056ad6d26692"
-
-            var address: Address {
-                return Address(string: self.rawValue)
-            }
-        }
-
-        static let gid = "00000000000000000001"
-    }
-
     fileprivate static let transactionTypeToAddressMap: [TransactionType: String] = [
-        .register: Const.ContractAddress.register.rawValue,
-        .registerUpdate: Const.ContractAddress.register.rawValue,
-        .cancelRegister: Const.ContractAddress.register.rawValue,
-        .extractReward: Const.ContractAddress.register.rawValue,
-        .vote: Const.ContractAddress.vote.rawValue,
-        .cancelVote: Const.ContractAddress.vote.rawValue,
-        .pledge: Const.ContractAddress.pledge.rawValue,
-        .cancelPledge: Const.ContractAddress.pledge.rawValue,
-        .coin: Const.ContractAddress.coin.rawValue,
-        .cancelCoin: Const.ContractAddress.coin.rawValue,
+        .register: ViteWalletConst.ContractAddress.register.rawValue,
+        .registerUpdate: ViteWalletConst.ContractAddress.register.rawValue,
+        .cancelRegister: ViteWalletConst.ContractAddress.register.rawValue,
+        .extractReward: ViteWalletConst.ContractAddress.register.rawValue,
+        .vote: ViteWalletConst.ContractAddress.vote.rawValue,
+        .cancelVote: ViteWalletConst.ContractAddress.vote.rawValue,
+        .pledge: ViteWalletConst.ContractAddress.pledge.rawValue,
+        .cancelPledge: ViteWalletConst.ContractAddress.pledge.rawValue,
+        .coin: ViteWalletConst.ContractAddress.coin.rawValue,
+        .cancelCoin: ViteWalletConst.ContractAddress.coin.rawValue,
         ]
 
-    var type: TransactionType {
+    public var type: TransactionType {
         guard let blockType = blockType else {
             return .receive
         }
@@ -110,13 +93,13 @@ struct Transaction: Equatable, Mappable {
         }
     }
 
-    init?(map: Map) {
+    public init?(map: Map) {
         guard let type = map.JSON["blockType"] as? Int, let _ = AccountBlock.BlockType(rawValue: type) else {
             return nil
         }
     }
 
-    mutating func mapping(map: Map) {
+    public mutating func mapping(map: Map) {
         blockType <- map["blockType"]
         timestamp <- (map["timestamp"], JSONTransformer.timestamp)
         fromAddress <- (map["fromAddress"], JSONTransformer.address)

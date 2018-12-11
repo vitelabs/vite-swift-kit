@@ -8,37 +8,27 @@
 
 import Foundation
 import ObjectMapper
-import BigInt
 
-struct VoteInfo: Mappable {
+public struct VoteInfo: Mappable {
 
-    enum NodeStatus: Int {
+    public enum NodeStatus: Int {
         case valid = 1
         case invalid = 2
-//
-//        var display: String {
-//            switch self {
-//            case .valid:
-//                return R.string.localizable.votePageNodeStatusValidTitle()
-//            case .invalid:
-//                return R.string.localizable.votePageNodeStatusInvalidTitle()
-//            }
-//        }
     }
 
-    fileprivate(set) var nodeName: String?
-    fileprivate(set) var nodeStatus: NodeStatus?
-    fileprivate(set) var balance: Balance?
+    public fileprivate(set) var nodeName: String?
+    public fileprivate(set) var nodeStatus: NodeStatus?
+    public fileprivate(set) var balance: Balance?
 
-    init(_ nodeName: String? = "", _ nodeStatus: NodeStatus? = .valid, _ balance: Balance? = nil) {
+    public init(_ nodeName: String? = "", _ nodeStatus: NodeStatus? = .valid, _ balance: Balance? = nil) {
         self.nodeName = nodeName
         self.nodeStatus = nodeStatus
         self.balance = balance
     }
 
-    init?(map: Map) { }
+    public init?(map: Map) { }
 
-    mutating func mapping(map: Map) {
+    public mutating func mapping(map: Map) {
         nodeName <- (map["nodeName"])
         nodeStatus <- (map["nodeStatus"])
         balance <- (map["balance"], JSONTransformer.balance)
