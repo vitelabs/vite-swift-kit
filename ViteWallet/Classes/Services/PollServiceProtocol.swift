@@ -7,13 +7,29 @@
 
 import Foundation
 
+public enum Result<T> {
+    case success(T)
+    case failure(Error)
+
+    public init(value: T) {
+        self = .success(value)
+    }
+
+    public init(error: Error) {
+        self = .failure(error)
+    }
+}
+
 public protocol PollService: class {
+
+    associatedtype Ret
 
     var registerCount: Int { get set }
     var isPolling: Bool { get set }
     var interval: TimeInterval { get set }
+    var completion: ((Ret) -> ())? { get set }
 
-    func handle(completion: @escaping () -> ())
+    func handle(completion: @escaping (Ret) -> ())
 }
 
 extension PollService {
@@ -40,9 +56,10 @@ extension PollService {
 
     private func run() {
         printLog("start")
-        handle(completion: { [weak self] in
+        handle(completion: { [weak self] r in
             printLog("end")
             guard let `self` = self else { return }
+            if let c = self.completion { c(r) }
             guard self.isPolling else { return }
             printLog("will run again after \(self.interval)")
             DispatchQueue.main.asyncAfter(deadline: .now() + self.interval, execute: self.run)

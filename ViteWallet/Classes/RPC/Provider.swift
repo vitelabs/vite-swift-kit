@@ -36,7 +36,8 @@ extension Provider {
         let batch = BatchFactory().create(GetLatestAccountBlockRequest(address: account.address.description),
                                           GetFittestSnapshotHashRequest(address: account.address.description))
         return RPCRequest(for: server, batch: batch).promise
-            .then { [unowned self] (latestAccountBlock, fittestSnapshotHash) -> Promise<Void> in
+            .then { [weak self] (latestAccountBlock, fittestSnapshotHash) -> Promise<Void> in
+                guard let `self` = self else { return Promise(error: ViteError.cancelError) }
                 let send = AccountBlock.makeSendAccountBlock(secretKey: account.secretKey,
                                                              publicKey: account.publicKey,
                                                              address: account.address,
@@ -63,11 +64,13 @@ extension Provider {
         let batch = BatchFactory().create(GetLatestAccountBlockRequest(address: account.address.description),
                                           GetFittestSnapshotHashRequest(address: account.address.description))
         return RPCRequest(for: server, batch: batch).promise
-            .then { [unowned self] (latestAccountBlock, fittestSnapshotHash) -> Promise<(latestAccountBlock: AccountBlock?, fittestSnapshotHash: String, nonce: String)> in
+            .then { [weak self] (latestAccountBlock, fittestSnapshotHash) -> Promise<(latestAccountBlock: AccountBlock?, fittestSnapshotHash: String, nonce: String)> in
+                guard let `self` = self else { return Promise(error: ViteError.cancelError) }
                 guard cancel() == false else { return Promise(error: ViteError.cancelError) }
                 let request = GetPowNonceRequest(address: account.address, preHash: latestAccountBlock?.hash, difficulty: difficulty)
                 return RPCRequest(for: self.server, batch: BatchFactory().create(request)).promise.map { (latestAccountBlock, fittestSnapshotHash, $0) }
-            }.then { [unowned self] (latestAccountBlock, fittestSnapshotHash, nonce: String) -> Promise<Void> in
+            }.then { [weak self] (latestAccountBlock, fittestSnapshotHash, nonce: String) -> Promise<Void> in
+                guard let `self` = self else { return Promise(error: ViteError.cancelError) }
                 guard cancel() == false else { return Promise(error: ViteError.cancelError) }
                 let send = AccountBlock.makeSendAccountBlock(secretKey: account.secretKey,
                                                              publicKey: account.publicKey,
@@ -190,13 +193,15 @@ extension Provider {
                                 cancel: cancel)
     }
 
-    public func receiveTransactionWithoutPow(account: Wallet.Account, onroadBlock: AccountBlock) -> Promise<Void> {
+    public func receiveTransactionWithoutPow(account: Wallet.Account, onroadBlock: AccountBlock) -> Promise<AccountBlock> {
 
         return RPCRequest(for: server, batch: BatchFactory().create(GetLatestAccountBlockRequest(address: account.address.description))).promise
-            .then { [unowned self] (latestAccountBlock) -> Promise<(latestAccountBlock: AccountBlock?, fittestSnapshotHash: String)> in
+            .then { [weak self] (latestAccountBlock) -> Promise<(latestAccountBlock: AccountBlock?, fittestSnapshotHash: String)> in
+                guard let `self` = self else { return Promise(error: ViteError.cancelError) }
                 let request = GetFittestSnapshotHashRequest(address: account.address.description, sendAccountBlockHash: onroadBlock.hash)
                 return RPCRequest(for: self.server, batch: BatchFactory().create(request)).promise.map { (latestAccountBlock, $0) }
-            }.then { [unowned self] (latestAccountBlock, fittestSnapshotHash) -> Promise<Void> in
+            }.then { [weak self] (latestAccountBlock, fittestSnapshotHash) -> Promise<AccountBlock> in
+                guard let `self` = self else { return Promise(error: ViteError.cancelError) }
                 let receive = AccountBlock.makeReceiveAccountBlock(secretKey: account.secretKey,
                                                                    publicKey: account.publicKey,
                                                                    address: account.address,
@@ -205,25 +210,28 @@ extension Provider {
                                                                    snapshotHash: fittestSnapshotHash,
                                                                    nonce: nil,
                                                                    difficulty: nil)
-                return RPCRequest(for: self.server, batch: BatchFactory().create(SendRawTxRequest(accountBlock: receive))).promise.map { _ in Void() }
+                return RPCRequest(for: self.server, batch: BatchFactory().create(SendRawTxRequest(accountBlock: receive))).promise.map { _ in onroadBlock }
         }
     }
 
     public func receiveTransactionWithPow(account: Wallet.Account,
                                           onroadBlock: AccountBlock,
                                           difficulty: BigInt,
-                                          cancel: @escaping () -> (Bool) = { return false } ) -> Promise<Void> {
+                                          cancel: @escaping () -> (Bool) = { return false } ) -> Promise<AccountBlock> {
 
         return RPCRequest(for: server, batch: BatchFactory().create(GetLatestAccountBlockRequest(address: account.address.description))).promise
-            .then { [unowned self] (latestAccountBlock) -> Promise<(latestAccountBlock: AccountBlock?, nonce: String)> in
+            .then { [weak self] (latestAccountBlock) -> Promise<(latestAccountBlock: AccountBlock?, nonce: String)> in
+                guard let `self` = self else { return Promise(error: ViteError.cancelError) }
                 guard cancel() == false else { return Promise(error: ViteError.cancelError) }
                 let request = GetPowNonceRequest(address: account.address, preHash: latestAccountBlock?.hash, difficulty: difficulty)
                 return RPCRequest(for: self.server, batch: BatchFactory().create(request)).promise.map { (latestAccountBlock, $0) }
-            }.then { [unowned self] (latestAccountBlock, nonce) -> Promise<(latestAccountBlock: AccountBlock?, nonce: String, fittestSnapshotHash: String)> in
+            }.then { [weak self] (latestAccountBlock, nonce) -> Promise<(latestAccountBlock: AccountBlock?, nonce: String, fittestSnapshotHash: String)> in
+                guard let `self` = self else { return Promise(error: ViteError.cancelError) }
                 guard cancel() == false else { return Promise(error: ViteError.cancelError) }
                 let request = GetFittestSnapshotHashRequest(address: account.address.description, sendAccountBlockHash: onroadBlock.hash)
                 return RPCRequest(for: self.server, batch: BatchFactory().create(request)).promise.map { (latestAccountBlock, nonce, $0) }
-            }.then { [unowned self] (latestAccountBlock, nonce, fittestSnapshotHash) -> Promise<Void> in
+            }.then { [weak self] (latestAccountBlock, nonce, fittestSnapshotHash) -> Promise<AccountBlock> in
+                guard let `self` = self else { return Promise(error: ViteError.cancelError) }
                 guard cancel() == false else { return Promise(error: ViteError.cancelError) }
                 let receive = AccountBlock.makeReceiveAccountBlock(secretKey: account.secretKey,
                                                                    publicKey: account.publicKey,
@@ -233,34 +241,41 @@ extension Provider {
                                                                    snapshotHash: fittestSnapshotHash,
                                                                    nonce: nonce,
                                                                    difficulty: difficulty)
-                return RPCRequest(for: self.server, batch: BatchFactory().create(SendRawTxRequest(accountBlock: receive))).promise.map { _ in Void() }
+                return RPCRequest(for: self.server, batch: BatchFactory().create(SendRawTxRequest(accountBlock: receive))).promise.map { _ in onroadBlock }
         }
     }
 
-    public func receiveLatestTransactionIfHasWithoutPow(account: Wallet.Account) -> Promise<Void> {
+    public func receiveLatestTransactionIfHasWithoutPow(account: Wallet.Account) -> Promise<AccountBlock?> {
         let request = GetOnroadBlocksRequest(address: account.address.description, index: 0, count: 1)
         return RPCRequest(for: server, batch: BatchFactory().create(request)).promise
-            .then { [unowned self] onroadBlocks -> Promise<Void> in
-                guard let onroadBlock = onroadBlocks.first else { return Promise { $0.fulfill(Void()) } }
-                return self.receiveTransactionWithoutPow(account: account, onroadBlock: onroadBlock)
+            .then { [weak self] onroadBlocks -> Promise<AccountBlock?> in
+                guard let `self` = self else { return Promise(error: ViteError.cancelError) }
+                guard let onroadBlock = onroadBlocks.first else { return Promise.value(nil) }
+                return self.receiveTransactionWithoutPow(account: account, onroadBlock: onroadBlock).map { block -> AccountBlock? in block }
         }
     }
 
     public func receiveLatestTransactionIfHasWithPow(account: Wallet.Account,
                                                      difficulty: BigInt,
-                                                     cancel: @escaping () -> (Bool) = { return false } ) -> Promise<Void> {
+                                                     cancel: @escaping () -> (Bool) = { return false } ) -> Promise<AccountBlock?> {
         let request = GetOnroadBlocksRequest(address: account.address.description, index: 0, count: 1)
         return RPCRequest(for: server, batch: BatchFactory().create(request)).promise
-            .then { [unowned self] onroadBlocks -> Promise<Void> in
+            .then { [weak self] onroadBlocks -> Promise<AccountBlock?> in
+                guard let `self` = self else { return Promise(error: ViteError.cancelError) }
                 guard cancel() == false else { return Promise(error: ViteError.cancelError) }
-                guard let onroadBlock = onroadBlocks.first else { return Promise { $0.fulfill(Void()) } }
-                return self.receiveTransactionWithPow(account: account, onroadBlock: onroadBlock, difficulty: difficulty, cancel: cancel)
+                guard let onroadBlock = onroadBlocks.first else { return Promise.value(nil) }
+                return self.receiveTransactionWithPow(account: account, onroadBlock: onroadBlock, difficulty: difficulty, cancel: cancel).map { block -> AccountBlock? in block }
         }
     }
 }
 
 // MARK: Pledge
 extension Provider {
+
+    public func getPledgeQuota(address: Address) -> Promise<(UInt64, UInt64)> {
+        let request = GetPledgeQuotaRequest(address: address.description)
+        return RPCRequest(for: server, batch: BatchFactory().create(request)).promise
+    }
 
     public func getPledges(address: Address, index: Int, count: Int) -> Promise<[Pledge]> {
         let request = GetPledgesRequest(address: address.description, index: index, count: count)
@@ -272,7 +287,8 @@ extension Provider {
                                  amount: BigInt) -> Promise<Void> {
         let request = GetPledgeDataRequest(beneficialAddress: beneficialAddress.description)
         return RPCRequest(for: server, batch: BatchFactory().create(request)).promise
-            .then { [unowned self] data -> Promise<Void> in
+            .then { [weak self] data -> Promise<Void> in
+                guard let `self` = self else { return Promise(error: ViteError.cancelError) }
                 return self.sendRawTxWithoutPow(account: account,
                                                 toAddress: ViteWalletConst.ContractAddress.pledge.address,
                                                 tokenId: ViteWalletConst.viteToken.id,
@@ -288,7 +304,8 @@ extension Provider {
                                  cancel: @escaping () -> (Bool) = { return false } ) -> Promise<Void> {
         let request = GetPledgeDataRequest(beneficialAddress: beneficialAddress.description)
         return RPCRequest(for: server, batch: BatchFactory().create(request)).promise
-            .then { [unowned self] data -> Promise<Void> in
+            .then { [weak self] data -> Promise<Void> in
+                guard let `self` = self else { return Promise(error: ViteError.cancelError) }
                 guard cancel() == false else { return Promise(error: ViteError.cancelError) }
                 return self.sendRawTxWithPow(account: account,
                                              toAddress: ViteWalletConst.ContractAddress.pledge.address,
@@ -316,7 +333,8 @@ extension Provider {
                                name: String) -> Promise<Void> {
         let request = GetVoteDataRequest(gid: gid, name: name)
         return RPCRequest(for: server, batch: BatchFactory().create(request)).promise
-            .then { [unowned self] data -> Promise<Void> in
+            .then { [weak self] data -> Promise<Void> in
+                guard let `self` = self else { return Promise(error: ViteError.cancelError) }
                 return self.sendRawTxWithoutPow(account: account,
                                                 toAddress: ViteWalletConst.ContractAddress.vote.address,
                                                 tokenId: ViteWalletConst.viteToken.id,
@@ -332,7 +350,8 @@ extension Provider {
                             cancel: @escaping () -> (Bool) = { return false } ) -> Promise<Void> {
         let request = GetVoteDataRequest(gid: gid, name: name)
         return RPCRequest(for: server, batch: BatchFactory().create(request)).promise
-            .then { [unowned self] data -> Promise<Void> in
+            .then { [weak self] data -> Promise<Void> in
+                guard let `self` = self else { return Promise(error: ViteError.cancelError) }
                 guard cancel() == false else { return Promise(error: ViteError.cancelError) }
                 return self.sendRawTxWithPow(account: account,
                                              toAddress: ViteWalletConst.ContractAddress.vote.address,
@@ -349,7 +368,8 @@ extension Provider {
                                      name: String) -> Promise<Void> {
         let request = GetCancelVoteDataRequest(gid: gid)
         return RPCRequest(for: server, batch: BatchFactory().create(request)).promise
-            .then { [unowned self] data -> Promise<Void> in
+            .then { [weak self] data -> Promise<Void> in
+                guard let `self` = self else { return Promise(error: ViteError.cancelError) }
                 return self.sendRawTxWithoutPow(account: account,
                                                 toAddress: ViteWalletConst.ContractAddress.vote.address,
                                                 tokenId: ViteWalletConst.viteToken.id,
@@ -365,7 +385,8 @@ extension Provider {
                                   cancel: @escaping () -> (Bool) = { return false } ) -> Promise<Void> {
         let request = GetCancelVoteDataRequest(gid: gid)
         return RPCRequest(for: server, batch: BatchFactory().create(request)).promise
-            .then { [unowned self] data -> Promise<Void> in
+            .then { [weak self] data -> Promise<Void> in
+                guard let `self` = self else { return Promise(error: ViteError.cancelError) }
                 guard cancel() == false else { return Promise(error: ViteError.cancelError) }
                 return self.sendRawTxWithPow(account: account,
                                              toAddress: ViteWalletConst.ContractAddress.vote.address,

@@ -28,7 +28,7 @@ public func printLog<T>(_ message: T,
     dateFormatter.locale = Locale.current
     dateFormatter.dateFormat = "HH:mm:ss.SSS"
     let time = dateFormatter.string(from: Date())
-    print("\(time) \((fileName as NSString).deletingPathExtension)[\(line)], \(method): \(message)")
+    print("📣 \(time) \((fileName as NSString).deletingPathExtension)[\(line)], \(method): \(message)")
     #endif
 }
 

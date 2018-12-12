@@ -1,6 +1,5 @@
 import XCTest
 import ViteWallet
-
 import Vite_HDWalletKit
 
 class Tests: XCTestCase {
@@ -8,6 +7,7 @@ class Tests: XCTestCase {
     override func setUp() {
         super.setUp()
         // Put setup code here. This method is called before the invocation of each test method in the class.
+        LogConfig.instance.isEnable = true
     }
     
     override func tearDown() {
@@ -48,7 +48,7 @@ class Tests: XCTestCase {
         for index in 0..<10 {
             do {
                 let account = try wallet.account(at: index, encryptedKey: encryptedKey)
-                print("\(index): \(account.address) \(account.sign(hash: "1234".hex2Bytes).toHexString())")
+                printLog("\(index): \(account.address) \(account.sign(hash: "1234".hex2Bytes).toHexString())")
             } catch {
                 XCTAssert(false)
             }
@@ -57,7 +57,7 @@ class Tests: XCTestCase {
         for index in 0..<10 {
             do {
                 let account = try unlockWallet.account(at: index, encryptedKey: encryptedKey)
-                print("\(index): \(account.address) \(account.sign(hash: "1234".hex2Bytes).toHexString())")
+                printLog("\(index): \(account.address) \(account.sign(hash: "1234".hex2Bytes).toHexString())")
             } catch {
                 XCTAssert(false)
             }

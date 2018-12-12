@@ -10,24 +10,27 @@ import Foundation
 import PromiseKit
 
 public class ReceiveTransactionService: PollService {
+    public typealias Ret = Result<AccountBlock?>
 
     deinit {
         printLog("")
     }
 
     public let account: Wallet.Account
-    public init(account: Wallet.Account) {
+    public init(account: Wallet.Account, completion: ((Result<AccountBlock?>) -> ())? = nil) {
         self.account = account
+        self.completion = completion
     }
 
     public var registerCount: Int = 0
     public var isPolling: Bool = false
     public var interval: TimeInterval = 0
+    public var completion: ((Result<AccountBlock?>) -> ())?
 
-    public func handle(completion: @escaping () -> ()) {
+    public func handle(completion: @escaping (Result<AccountBlock?>) -> ()) {
         let a = account
         Provider.default.receiveLatestTransactionIfHasWithoutPow(account: a)
-            .recover { (e) -> Promise<Void> in
+            .recover { (e) -> Promise<AccountBlock?> in
                 if ViteError.conversion(from: e).code == ViteErrorCode.rpcNotEnoughQuota {
                     printLog("Use PoW")
                     let d = ViteWalletConst.DefaultDifficulty.receive.value
@@ -36,11 +39,9 @@ public class ReceiveTransactionService: PollService {
                     return Promise(error: e)
                 }
             }.done { (ret) in
-                printLog(ret)
+                completion(Result(value: ret))
             }.catch { (e) in
-                printLog(e)
-            }.finally {
-                completion()
+                completion(Result(error: e))
         }
     }
 }

@@ -13,6 +13,7 @@ target 'ViteWallet_Example' do
   pod 'APIKit', '3.2.1'
   pod 'JSONRPCKit', '3.0.0'
   pod 'PromiseKit', '6.5.2'
+  pod 'Result', '3.2.4'
 
   target 'ViteWallet_Tests' do
     inherit! :search_paths

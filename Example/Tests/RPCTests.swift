@@ -8,7 +8,6 @@
 
 import XCTest
 import ViteWallet
-import JSONRPCKit
 import BigInt
 
 class RPCTests: XCTestCase {
@@ -16,6 +15,7 @@ class RPCTests: XCTestCase {
     override func setUp() {
         // Put setup code here. This method is called before the invocation of each test method in the class.
         Provider.default.update(server: RPCServer(url: URL(string: "http://45.40.197.46:48132")!))
+        LogConfig.instance.isEnable = true
     }
 
     override func tearDown() {
@@ -41,7 +41,7 @@ class RPCTests: XCTestCase {
             expect.fulfill()
         }
         waitForExpectations(timeout: 6000000, handler: nil)
-        print("🍺🍺🍺🍺🍺🍺")
+        printLog("🍺🍺🍺🍺🍺🍺")
 
     }
 
@@ -49,10 +49,10 @@ class RPCTests: XCTestCase {
         async { (completion) in
             Provider.default.getSnapshotChainHeight()
                 .done { (ret) in
-                    print(ret)
+                    printLog(ret)
                 }
                 .catch { (error) in
-                    print(error)
+                    printLog(error)
                     XCTAssert(false)
                 }.finally {
                     completion()
@@ -64,10 +64,10 @@ class RPCTests: XCTestCase {
         async { (completion) in
             Provider.default.getToken(for: Box.viteTokenId)
                 .done { (ret) in
-                    print(ret)
+                    printLog(ret)
                 }
                 .catch { (error) in
-                    print(error)
+                    printLog(error)
                     XCTAssert(false)
                 }.finally {
                     completion()
@@ -79,10 +79,10 @@ class RPCTests: XCTestCase {
         async { (completion) in
             Provider.default.getTestToken(address: Box.firstAccount.address)
                 .done { (ret) in
-                    print(ret)
+                    printLog(ret)
                 }
                 .catch { (error) in
-                    print(error)
+                    printLog(error)
                     XCTAssert(false)
                 }.finally {
                     completion()
@@ -94,10 +94,10 @@ class RPCTests: XCTestCase {
         async { (completion) in
             Provider.default.getBalanceInfos(address: Box.firstAccount.address)
                 .done { (ret) in
-                    print(ret)
+                    printLog(ret)
                 }
                 .catch { (error) in
-                    print(error)
+                    printLog(error)
                     XCTAssert(false)
                 }.finally {
                     completion()
@@ -109,10 +109,10 @@ class RPCTests: XCTestCase {
         async { (completion) in
             Provider.default.getTransactions(address: Box.firstAccount.address, hash: nil, count: 11)
                 .done { (ret) in
-                    print(ret)
+                    printLog(ret)
                 }
                 .catch { (error) in
-                    print(error)
+                    printLog(error)
                     XCTAssert(false)
                 }.finally {
                     completion()
@@ -126,10 +126,10 @@ class RPCTests: XCTestCase {
         async { (completion) in
             Provider.default.recoverAddresses(addresses)
                 .done { (ret) in
-                    print(ret)
+                    printLog(ret)
                 }
                 .catch { (error) in
-                    print(error)
+                    printLog(error)
                     XCTAssert(false)
                 }.finally {
                     completion()
@@ -141,10 +141,14 @@ class RPCTests: XCTestCase {
         async { (completion) in
             Provider.default.receiveLatestTransactionIfHasWithoutPow(account: Box.secondAccount)
                 .done { (ret) in
-                    print(ret)
+                    if let ret = ret {
+                        printLog(ret)
+                    } else {
+                        printLog("Don't need receive")
+                    }
                 }
                 .catch { (error) in
-                    print(error)
+                    printLog(error)
                     XCTAssert(false)
                 }.finally {
                     completion()
@@ -156,10 +160,14 @@ class RPCTests: XCTestCase {
         async { (completion) in
             Provider.default.receiveLatestTransactionIfHasWithPow(account: Box.secondAccount, difficulty: ViteWalletConst.DefaultDifficulty.receive.value)
                 .done { (ret) in
-                    print(ret)
+                    if let ret = ret {
+                        printLog(ret)
+                    } else {
+                        printLog("Don't need receive")
+                    }
                 }
                 .catch { (error) in
-                    print(error)
+                    printLog(error)
                     XCTAssert(false)
                 }.finally {
                     completion()
@@ -177,10 +185,10 @@ class RPCTests: XCTestCase {
                                                        amount: amount,
                                                        note: note)
                 .done { (ret) in
-                    print(ret)
+                    printLog(ret)
                 }
                 .catch { (error) in
-                    print(error)
+                    printLog(error)
                     XCTAssert(false)
                 }.finally {
                     completion()
@@ -199,10 +207,10 @@ class RPCTests: XCTestCase {
                                                     note: note,
                                                     difficulty: ViteWalletConst.DefaultDifficulty.send.value)
                 .done { (ret) in
-                    print(ret)
+                    printLog(ret)
                 }
                 .catch { (error) in
-                    print(error)
+                    printLog(error)
                     XCTAssert(false)
                 }.finally {
                     completion()
@@ -214,10 +222,25 @@ class RPCTests: XCTestCase {
         async { (completion) in
             Provider.default.getPledges(address: Box.firstAccount.address, index: 0, count: 10)
                 .done { (ret) in
-                    print(ret)
+                    printLog(ret)
                 }
                 .catch { (error) in
-                    print(error)
+                    printLog(error)
+                    XCTAssert(false)
+                }.finally {
+                    completion()
+            }
+        }
+    }
+
+    func testGetPledgeQuota() {
+        async { (completion) in
+            Provider.default.getPledgeQuota(address: Box.firstAccount.address)
+                .done { (ret) in
+                    printLog(ret)
+                }
+                .catch { (error) in
+                    printLog(error)
                     XCTAssert(false)
                 }.finally {
                     completion()
@@ -230,10 +253,10 @@ class RPCTests: XCTestCase {
         async { (completion) in
             Provider.default.pledgeWithoutPow(account: Box.firstAccount, beneficialAddress: Box.firstAccount.address, amount: amount)
                 .done { (ret) in
-                    print(ret)
+                    printLog(ret)
                 }
                 .catch { (error) in
-                    print(error)
+                    printLog(error)
                     XCTAssert(false)
                 }.finally {
                     completion()
@@ -246,10 +269,10 @@ class RPCTests: XCTestCase {
         async { (completion) in
             Provider.default.pledgeWithPow(account: Box.firstAccount, beneficialAddress: Box.firstAccount.address, amount: amount, difficulty: ViteWalletConst.DefaultDifficulty.pledge.value)
                 .done { (ret) in
-                    print(ret)
+                    printLog(ret)
                 }
                 .catch { (error) in
-                    print(error)
+                    printLog(error)
                     XCTAssert(false)
                 }.finally {
                     completion()
@@ -261,10 +284,10 @@ class RPCTests: XCTestCase {
         async { (completion) in
             Provider.default.getCandidateList(gid: ViteWalletConst.ConsensusGroup.snapshot.id)
                 .done { (ret) in
-                    print(ret)
+                    printLog(ret)
                 }
                 .catch { (error) in
-                    print(error)
+                    printLog(error)
                     XCTAssert(false)
                 }.finally {
                     completion()
@@ -277,13 +300,13 @@ class RPCTests: XCTestCase {
             Provider.default.getVoteInfo(gid: ViteWalletConst.ConsensusGroup.snapshot.id, address: Box.secondAccount.address)
                 .done { (ret) in
                     if let ret = ret {
-                        print(ret)
+                        printLog(ret)
                     } else {
-                        print("nil")
+                        printLog("nil")
                     }
                 }
                 .catch { (error) in
-                    print(error)
+                    printLog(error)
                     XCTAssert(false)
                 }.finally {
                     completion()
@@ -296,10 +319,10 @@ class RPCTests: XCTestCase {
         async { (completion) in
             Provider.default.voteWithoutPow(account: Box.firstAccount, gid: ViteWalletConst.ConsensusGroup.snapshot.id, name: name)
                 .done { (ret) in
-                    print(ret)
+                    printLog(ret)
                 }
                 .catch { (error) in
-                    print(error)
+                    printLog(error)
                     XCTAssert(false)
                 }.finally {
                     completion()
@@ -312,10 +335,10 @@ class RPCTests: XCTestCase {
         async { (completion) in
             Provider.default.voteWithPow(account: Box.secondAccount, gid: ViteWalletConst.ConsensusGroup.snapshot.id, name: name, difficulty: ViteWalletConst.DefaultDifficulty.vote.value)
                 .done { (ret) in
-                    print(ret)
+                    printLog(ret)
                 }
                 .catch { (error) in
-                    print(error)
+                    printLog(error)
                     XCTAssert(false)
                 }.finally {
                     completion()
@@ -328,10 +351,10 @@ class RPCTests: XCTestCase {
         async { (completion) in
             Provider.default.cancelVoteWithoutPow(account: Box.firstAccount, gid: ViteWalletConst.ConsensusGroup.snapshot.id, name: name)
                 .done { (ret) in
-                    print(ret)
+                    printLog(ret)
                 }
                 .catch { (error) in
-                    print(error)
+                    printLog(error)
                     XCTAssert(false)
                 }.finally {
                     completion()
@@ -344,10 +367,10 @@ class RPCTests: XCTestCase {
         async { (completion) in
             Provider.default.cancelVoteWithPow(account: Box.secondAccount, gid: ViteWalletConst.ConsensusGroup.snapshot.id, name: name, difficulty: ViteWalletConst.DefaultDifficulty.cancelVote.value)
                 .done { (ret) in
-                    print(ret)
+                    printLog(ret)
                 }
                 .catch { (error) in
-                    print(error)
+                    printLog(error)
                     XCTAssert(false)
                 }.finally {
                     completion()

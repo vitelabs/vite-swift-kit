@@ -39,6 +39,7 @@ DEPENDENCIES:
   - JSONRPCKit (= 3.0.0)
   - ObjectMapper (= 3.3.0)
   - PromiseKit (= 6.5.2)
+  - Result (= 3.2.4)
   - Vite_HDWalletKit (= 1.2.0)
   - ViteWallet (from `../`)
 
@@ -70,8 +71,8 @@ SPEC CHECKSUMS:
   SipHash: fad90a4683e420c52ef28063063dbbce248ea6d4
   TrezorCryptoEd25519WithBlake2b: e70fc022094a2f2aa8b86117ab1085d7a7b62098
   Vite_HDWalletKit: 8d3f78883b58def92610e44704a93db7b566656c
-  ViteWallet: c831392a05201d8ca46f481bf53fc441c8aac7b1
+  ViteWallet: 382ab10ba912014b64d103ef0324760259d584ae
 
-PODFILE CHECKSUM: d0bdd6e3226097d69e8f53edde656a6ccbf0619e
+PODFILE CHECKSUM: 01abaa9752b8e69696276854c8541d01a291dd5a
 
 COCOAPODS: 1.5.3

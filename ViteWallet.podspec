@@ -41,7 +41,6 @@ TODO: Add long description of the pod here.
   s.dependency 'JSONRPCKit'
   s.dependency 'PromiseKit'
   
-  
   # s.resource_bundles = {
   #   'ViteWallet' => ['ViteWallet/Assets/*.png']
   # }

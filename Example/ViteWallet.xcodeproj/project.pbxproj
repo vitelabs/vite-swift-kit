@@ -121,8 +121,8 @@
 		607FACE81AFB9204008FA782 /* Tests */ = {
 			isa = PBXGroup;
 			children = (
-				607FACEB1AFB9204008FA782 /* Tests.swift */,
 				8EF4BB2821BFBD75005C1EFB /* Box.swift */,
+				607FACEB1AFB9204008FA782 /* Tests.swift */,
 				8EF4BB2421BE45A5005C1EFB /* RPCTests.swift */,
 				8EF4BB2621BFBCF0005C1EFB /* ServiceTests.swift */,
 				607FACE91AFB9204008FA782 /* Supporting Files */,
