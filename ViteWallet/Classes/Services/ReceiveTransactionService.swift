@@ -17,12 +17,13 @@ public class ReceiveTransactionService: PollService {
     }
 
     public let account: Wallet.Account
-    public init(account: Wallet.Account, completion: ((Result<AccountBlock?>) -> ())? = nil) {
+    public init(account: Wallet.Account, interval: TimeInterval, completion: ((Result<AccountBlock?>) -> ())? = nil) {
         self.account = account
+        self.interval = interval
         self.completion = completion
     }
 
-    public var registerCount: Int = 0
+    public var taskId: String = ""
     public var isPolling: Bool = false
     public var interval: TimeInterval = 0
     public var completion: ((Result<AccountBlock?>) -> ())?

@@ -36,14 +36,14 @@ class Tests: XCTestCase {
         let encryptedKey = "123456"
 
         let wallet = Wallet(uuid: uuid, name: name, mnemonic: mnemonic, language: language, encryptedKey: encryptedKey)
-        let jsonString = wallet.toCipherJSONString()
+        let jsonString = wallet.toJSONString() ?? ""
 
         guard let unlockWallet = Wallet(JSONString: jsonString) else {
             XCTAssert(false)
             return
         }
 
-        XCTAssertEqual(unlockWallet.toCipherJSONString(), wallet.toCipherJSONString())
+        XCTAssertEqual(unlockWallet.toJSONString(), wallet.toJSONString())
 
         for index in 0..<10 {
             do {

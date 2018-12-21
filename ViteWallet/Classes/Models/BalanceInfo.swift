@@ -21,7 +21,7 @@ public struct BalanceInfo: Mappable {
 
     }
 
-    init(token: Token, balance: Balance, unconfirmedBalance: Balance, unconfirmedCount: UInt64) {
+    public init(token: Token, balance: Balance, unconfirmedBalance: Balance, unconfirmedCount: UInt64) {
         self.token = token
         self.balance = balance
         self.unconfirmedBalance = unconfirmedBalance
@@ -46,8 +46,8 @@ extension BalanceInfo: Equatable {
 }
 
 extension BalanceInfo {
-
-    static func mergeBalanceInfos(_ balanceInfos: [BalanceInfo], onroadInfos: [OnroadInfo]) -> [BalanceInfo] {
+    
+    public static func mergeBalanceInfos(_ balanceInfos: [BalanceInfo], onroadInfos: [OnroadInfo]) -> [BalanceInfo] {
         let infos = NSMutableArray(array: balanceInfos)
         let ret = NSMutableArray()
 

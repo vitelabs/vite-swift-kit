@@ -13,6 +13,11 @@ public struct ViteErrorCode {
     public let type: CodeType
     public let id: Int
 
+    public init(type: CodeType, id: Int) {
+        self.type = type
+        self.id = id
+    }
+
     public enum CodeType: String {
 
         // session task error
@@ -35,12 +40,9 @@ public struct ViteErrorCode {
         // cancel error
         case cancel         // cancel operation
 
-        // unknown
-        case unknown
+        // custom
+        case custom
     }
-
-    // unknown error
-    public static let unknown = ViteErrorCode(type: .unknown, id: 0)
 
     // rpc error
     public static let rpcNotEnoughBalance = ViteErrorCode(type: .rpc, id: -35001)
@@ -54,15 +56,18 @@ public struct ViteErrorCode {
     public static let rpcSignatureVerifyFailure = ViteErrorCode(type: .rpc, id: -36003)
     public static let rpcPowNonceVerifyFailure = ViteErrorCode(type: .rpc, id: -36004)
     public static let rpcRefrenceSnapshootBlockIllegal = ViteErrorCode(type: .rpc, id: -36005)
+
+    public static let JSONType = ViteErrorCode(type: .json_t_e, id: 0)
+    public static let cancel = ViteErrorCode(type: .cancel, id: 0)
 }
 
 extension ViteError {
     public static var JSONTypeError: ViteError {
-        return ViteError(code: ViteErrorCode(type: .json_t_e, id: 0), message: "JSON Type Error", rawError: nil)
+        return ViteError(code: ViteErrorCode.JSONType, message: "JSON Type Error", rawError: nil)
     }
 
     public static var cancelError: ViteError {
-        return ViteError(code: ViteErrorCode(type: .cancel, id: 0), message: "Cancel Operation", rawError: nil)
+        return ViteError(code: ViteErrorCode.cancel, message: "Cancel Operation", rawError: nil)
     }
 }
 

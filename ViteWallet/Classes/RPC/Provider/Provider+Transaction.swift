@@ -16,7 +16,7 @@ extension Provider {
     public func sendTransactionWithoutPow(account: Wallet.Account,
                                           toAddress: Address,
                                           tokenId: String,
-                                          amount: BigInt,
+                                          amount: Balance,
                                           note: String?) -> Promise<Void> {
 
         return sendRawTxWithoutPow(account: account,
@@ -26,21 +26,13 @@ extension Provider {
                                    data:note?.bytes.toBase64())
     }
 
-    public func sendTransactionWithPow(account: Wallet.Account,
-                                       toAddress: Address,
-                                       tokenId: String,
-                                       amount: BigInt,
-                                       note: String?,
-                                       difficulty: BigInt,
-                                       cancel: @escaping () -> (Bool) = { return false } ) -> Promise<Void> {
-
-        return sendRawTxWithPow(account: account,
-                                toAddress: toAddress,
-                                tokenId: tokenId,
-                                amount: amount,
-                                data:note?.bytes.toBase64(),
-                                difficulty: difficulty,
-                                cancel: cancel)
+    public func getPowForSendTransaction(account: Wallet.Account,
+                                         toAddress: Address,
+                                         tokenId: String,
+                                         amount: Balance,
+                                         note: String?,
+                                         difficulty: BigInt) -> Promise<SendRawTxContext> {
+        return getPowForSendRawTx(account: account, toAddress: toAddress, tokenId: tokenId, amount: amount, data: note?.bytes.toBase64(), difficulty: difficulty)
     }
 
     public func receiveTransactionWithoutPow(account: Wallet.Account, onroadBlock: AccountBlock) -> Promise<AccountBlock> {

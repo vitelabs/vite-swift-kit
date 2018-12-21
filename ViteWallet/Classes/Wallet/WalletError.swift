@@ -7,7 +7,7 @@
 
 import Foundation
 
-extension  Wallet {
+extension Wallet {
 
     public enum WalletError: Error {
         case invalidEncryptedKey

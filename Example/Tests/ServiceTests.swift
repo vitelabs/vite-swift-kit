@@ -45,41 +45,45 @@ class ServiceTests: XCTestCase {
     }
 
     func testReceiveTransactionService() {
-        let service = ReceiveTransactionService(account: Box.secondAccount) { r in
+        let service = ReceiveTransactionService(account: Box.secondAccount, interval: 2) { r in
             printLog(r)
         }
 
         async { (completion) in
-            service.register(interval: 2)
+            service.startPoll()
 
             DispatchQueue.main.asyncAfter(deadline: .now() + 10, execute: {
                 printLog("stop")
-                service.unregister()
+                service.stopPoll()
             })
         }
     }
 
     func testFetchBalanceInfoService() {
-        let service = FetchBalanceInfoService(address: Box.secondAccount.address) { r in
+        let service = FetchBalanceInfoService(address: Box.secondAccount.address, interval: 1) { r in
             printLog(r)
         }
 
         async { (completion) in
-            service.register(interval: 1)
+            service.startPoll()
             DispatchQueue.main.asyncAfter(deadline: .now() + 3, execute: {
                 printLog("stop")
-                service.unregister()
+                service.stopPoll()
             })
         }
     }
 
     func testFetchPledgeQuotaService() {
-        let service = FetchPledgeQuotaService(address: Box.firstAccount.address) { r in
+        let service = FetchPledgeQuotaService(address: Box.firstAccount.address, interval: 5) { r in
             printLog(r)
         }
 
         async { (completion) in
-            service.register(interval: 1)
+            service.startPoll()
+            DispatchQueue.main.asyncAfter(deadline: .now() + 2, execute: {
+                service.stopPoll()
+                service.startPoll()
+            })
         }
     }
 }

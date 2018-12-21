@@ -30,34 +30,29 @@ extension Provider {
                 return self.sendRawTxWithoutPow(account: account,
                                                 toAddress: ViteWalletConst.ContractAddress.vote.address,
                                                 tokenId: ViteWalletConst.viteToken.id,
-                                                amount: 0,
+                                                amount: Balance(value: BigInt(0)),
                                                 data: data)
         }
     }
 
-    public func voteWithPow(account: Wallet.Account,
-                            gid: String,
-                            name: String,
-                            difficulty: BigInt,
-                            cancel: @escaping () -> (Bool) = { return false } ) -> Promise<Void> {
+    public func getPowForVote(account: Wallet.Account,
+                              gid: String,
+                              name: String,
+                              difficulty: BigInt) -> Promise<SendRawTxContext> {
         let request = GetVoteDataRequest(gid: gid, name: name)
         return RPCRequest(for: server, batch: BatchFactory().create(request)).promise
-            .then { [weak self] data -> Promise<Void> in
+            .then { [weak self] data -> Promise<SendRawTxContext> in
                 guard let `self` = self else { return Promise(error: ViteError.cancelError) }
-                guard cancel() == false else { return Promise(error: ViteError.cancelError) }
-                return self.sendRawTxWithPow(account: account,
-                                             toAddress: ViteWalletConst.ContractAddress.vote.address,
-                                             tokenId: ViteWalletConst.viteToken.id,
-                                             amount: 0,
-                                             data: data,
-                                             difficulty: difficulty,
-                                             cancel: cancel)
+                return self.getPowForSendRawTx(account: account,
+                                               toAddress: ViteWalletConst.ContractAddress.vote.address,
+                                               tokenId: ViteWalletConst.viteToken.id,
+                                               amount: Balance(value: BigInt(0)),
+                                               data: data,
+                                               difficulty: difficulty)
         }
     }
 
-    public func cancelVoteWithoutPow(account: Wallet.Account,
-                                     gid: String,
-                                     name: String) -> Promise<Void> {
+    public func cancelVoteWithoutPow(account: Wallet.Account, gid: String) -> Promise<Void> {
         let request = GetCancelVoteDataRequest(gid: gid)
         return RPCRequest(for: server, batch: BatchFactory().create(request)).promise
             .then { [weak self] data -> Promise<Void> in
@@ -65,28 +60,24 @@ extension Provider {
                 return self.sendRawTxWithoutPow(account: account,
                                                 toAddress: ViteWalletConst.ContractAddress.vote.address,
                                                 tokenId: ViteWalletConst.viteToken.id,
-                                                amount: 0,
+                                                amount: Balance(value: BigInt(0)),
                                                 data: data)
         }
     }
 
-    public func cancelVoteWithPow(account: Wallet.Account,
-                                  gid: String,
-                                  name: String,
-                                  difficulty: BigInt,
-                                  cancel: @escaping () -> (Bool) = { return false } ) -> Promise<Void> {
+    public func getPowForCancelVote(account: Wallet.Account,
+                                    gid: String,
+                                    difficulty: BigInt) -> Promise<SendRawTxContext> {
         let request = GetCancelVoteDataRequest(gid: gid)
         return RPCRequest(for: server, batch: BatchFactory().create(request)).promise
-            .then { [weak self] data -> Promise<Void> in
+            .then { [weak self] data -> Promise<SendRawTxContext> in
                 guard let `self` = self else { return Promise(error: ViteError.cancelError) }
-                guard cancel() == false else { return Promise(error: ViteError.cancelError) }
-                return self.sendRawTxWithPow(account: account,
-                                             toAddress: ViteWalletConst.ContractAddress.vote.address,
-                                             tokenId: ViteWalletConst.viteToken.id,
-                                             amount: 0,
-                                             data: data,
-                                             difficulty: difficulty,
-                                             cancel: cancel)
+                return self.getPowForSendRawTx(account: account,
+                                               toAddress: ViteWalletConst.ContractAddress.vote.address,
+                                               tokenId: ViteWalletConst.viteToken.id,
+                                               amount: Balance(value: BigInt(0)),
+                                               data: data,
+                                               difficulty: difficulty)
         }
     }
 }

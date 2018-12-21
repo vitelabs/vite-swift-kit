@@ -24,7 +24,7 @@ public protocol PollService: class {
 
     associatedtype Ret
 
-    var registerCount: Int { get set }
+    var taskId: String { get set }
     var isPolling: Bool { get set }
     var interval: TimeInterval { get set }
     var completion: ((Ret) -> ())? { get set }
@@ -32,52 +32,51 @@ public protocol PollService: class {
     func handle(completion: @escaping (Ret) -> ())
 }
 
+private struct PollServiceStruct {
+    static let queue = DispatchQueue(label: "net.vite.file.poll.service")
+}
+
 extension PollService {
 
-    public func register(interval: TimeInterval) {
-        printLog("interval: \(interval), registerCount: \(registerCount + 1)")
-        DispatchQueue.main.async {
-            self.interval = interval
-            self.registerCount += 1
-            self.startPoll()
-        }
-
-    }
-
-    public func unregister() {
-        printLog(", registerCount: \(max(registerCount - 1, 0))")
-        DispatchQueue.main.async {
-            self.registerCount = max(self.registerCount - 1, 0)
-            if self.registerCount == 0 {
-                self.stopPoll()
+    private func run(taskId: String) {
+        PollServiceStruct.queue.sync {
+            guard self.taskId == taskId else {
+                printLog("exit 1 taskId invalid")
+                return
+            }
+            printLog("start")
+            DispatchQueue.main.async {
+                self.handle(completion: { [weak self] r in
+                    PollServiceStruct.queue.sync {
+                        guard let `self` = self else { return }
+                        guard self.taskId == taskId else {
+                            printLog("exit 2 taskId invalid")
+                            return
+                        }
+                        printLog("end")
+                        if let c = self.completion { DispatchQueue.main.async { c(r) } }
+                        guard self.isPolling else { return }
+                        printLog("will run again after \(self.interval)")
+                        DispatchQueue.main.asyncAfter(deadline: .now() + self.interval, execute: { self.run(taskId: taskId) })
+                    }
+                })
             }
         }
     }
 
-    private func run() {
-        printLog("start")
-        handle(completion: { [weak self] r in
-            printLog("end")
-            guard let `self` = self else { return }
-            if let c = self.completion { c(r) }
-            guard self.isPolling else { return }
-            printLog("will run again after \(self.interval)")
-            DispatchQueue.main.asyncAfter(deadline: .now() + self.interval, execute: self.run)
-        })
-    }
-
-    private func startPoll() {
-        printLog("")
-        DispatchQueue.main.async {
+    public func startPoll() {
+        PollServiceStruct.queue.sync {
+            printLog("")
             guard self.isPolling == false else { return }
             self.isPolling = true
-            self.run()
+            self.taskId = UUID().uuidString
+            DispatchQueue.main.async { self.run(taskId: self.taskId) }
         }
     }
 
-    private func stopPoll() {
-        printLog("")
-        DispatchQueue.main.async {
+    public func stopPoll() {
+        PollServiceStruct.queue.sync {
+            printLog("")
             self.isPolling = false
         }
     }

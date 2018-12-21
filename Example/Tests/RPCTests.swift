@@ -176,7 +176,7 @@ class RPCTests: XCTestCase {
     }
 
     func testSendTransactionWithoutPow() {
-        let amount = BigInt("1000000000000000000")!
+        let amount = Balance(value: BigInt("1000000000000000000")!)
         let note = "hahaha"
         async { (completion) in
             Provider.default.sendTransactionWithoutPow(account: Box.secondAccount,
@@ -197,7 +197,7 @@ class RPCTests: XCTestCase {
     }
 
     func testSendTransactionWithPow() {
-        let amount = BigInt("1000000000000000000")!
+        let amount = Balance(value: BigInt("1000000000000000000")!)
         let note = "hahaha"
         async { (completion) in
             Provider.default.sendTransactionWithPow(account: Box.secondAccount,
@@ -249,7 +249,7 @@ class RPCTests: XCTestCase {
     }
 
     func testPledgeWithoutPow() {
-        let amount = BigInt("10000000000000000000")!
+        let amount = Balance(value: BigInt("10000000000000000000")!)
         async { (completion) in
             Provider.default.pledgeWithoutPow(account: Box.firstAccount, beneficialAddress: Box.firstAccount.address, amount: amount)
                 .done { (ret) in
@@ -265,7 +265,7 @@ class RPCTests: XCTestCase {
     }
 
     func testPledgeWithPow() {
-        let amount = BigInt("10000000000000000000")!
+        let amount = Balance(value: BigInt("10000000000000000000")!)
         async { (completion) in
             Provider.default.pledgeWithPow(account: Box.firstAccount, beneficialAddress: Box.firstAccount.address, amount: amount, difficulty: ViteWalletConst.DefaultDifficulty.pledge.value)
                 .done { (ret) in
@@ -347,9 +347,8 @@ class RPCTests: XCTestCase {
     }
 
     func testCancelVoteWithoutPow() {
-        let name = "Han"
         async { (completion) in
-            Provider.default.cancelVoteWithoutPow(account: Box.firstAccount, gid: ViteWalletConst.ConsensusGroup.snapshot.id, name: name)
+            Provider.default.cancelVoteWithoutPow(account: Box.firstAccount, gid: ViteWalletConst.ConsensusGroup.snapshot.id)
                 .done { (ret) in
                     printLog(ret)
                 }
@@ -363,9 +362,8 @@ class RPCTests: XCTestCase {
     }
 
     func testCancelVoteWithPow() {
-        let name = "Han"
         async { (completion) in
-            Provider.default.cancelVoteWithPow(account: Box.secondAccount, gid: ViteWalletConst.ConsensusGroup.snapshot.id, name: name, difficulty: ViteWalletConst.DefaultDifficulty.cancelVote.value)
+            Provider.default.cancelVoteWithPow(account: Box.secondAccount, gid: ViteWalletConst.ConsensusGroup.snapshot.id, difficulty: ViteWalletConst.DefaultDifficulty.cancelVote.value)
                 .done { (ret) in
                     printLog(ret)
                 }

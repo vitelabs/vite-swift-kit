@@ -44,10 +44,10 @@ public struct AccountBlock: Mappable {
     public fileprivate(set) var signature: String?
     public fileprivate(set) var height: UInt64?
     public fileprivate(set) var quota: UInt64?
-    public fileprivate(set) var amount: BigInt?
-    public fileprivate(set) var fee: BigInt?
+    public fileprivate(set) var amount: Balance?
+    public fileprivate(set) var fee: Balance?
     public fileprivate(set) var confirmedTimes: UInt64?
-    public fileprivate(set) var tokenInfo: Token?
+    public fileprivate(set) var token: Token?
 
     public init() {
 
@@ -78,26 +78,26 @@ public struct AccountBlock: Mappable {
         signature <- (map["signature"], JSONTransformer.hexTobase64)
         height <- (map["height"], JSONTransformer.uint64)
         quota <- (map["quota"], JSONTransformer.uint64)
-        amount <- (map["amount"], JSONTransformer.bigint)
-        fee <- (map["fee"], JSONTransformer.bigint)
+        amount <- (map["amount"], JSONTransformer.balance)
+        fee <- (map["fee"], JSONTransformer.balance)
         confirmedTimes <- (map["confirmedTimes"], JSONTransformer.uint64)
-        tokenInfo <- map["tokenInfo"]
+        token <- map["tokenInfo"]
     }
 }
 
 extension AccountBlock {
 
     public static func makeSendAccountBlock(secretKey: String,
-                                     publicKey: String,
-                                     address: Address,
-                                     latest: AccountBlock?,
-                                     snapshotHash: String,
-                                     toAddress: Address,
-                                     tokenId: String,
-                                     amount: BigInt,
-                                     data: String?,
-                                     nonce: String?,
-                                     difficulty: BigInt?) -> AccountBlock {
+                                            publicKey: String,
+                                            address: Address,
+                                            latest: AccountBlock?,
+                                            snapshotHash: String,
+                                            toAddress: Address,
+                                            tokenId: String,
+                                            amount: Balance,
+                                            data: String?,
+                                            nonce: String?,
+                                            difficulty: BigInt?) -> AccountBlock {
 
         var block = makeBaseAccountBlock(secretKey: secretKey,
                                          publicKey: publicKey,
@@ -169,7 +169,7 @@ extension AccountBlock {
 
         block.accountAddress = address
 
-        block.fee = BigInt(0)
+        block.fee = Balance(value: BigInt(0))
         block.snapshotHash = snapshotHash
         block.timestamp = Int64(Date().timeIntervalSince1970)
         block.logHash = nil
@@ -210,7 +210,7 @@ extension AccountBlock {
                 }
 
                 if let amount = accountBlock.amount {
-                    source.append(contentsOf: [UInt8](BigUInt(amount).serialize()))
+                    source.append(contentsOf: [UInt8](BigUInt(amount.value).serialize()))
                 }
 
                 if let tokenId = accountBlock.tokenId {
@@ -226,7 +226,7 @@ extension AccountBlock {
         }
 
         if let fee = accountBlock.fee {
-            source.append(contentsOf: [UInt8](BigUInt(fee).serialize()))
+            source.append(contentsOf: [UInt8](BigUInt(fee.value).serialize()))
         }
 
         if let snapshotHash = accountBlock.snapshotHash {

@@ -18,12 +18,13 @@ public class FetchPledgeQuotaService: PollService {
     }
 
     public let address: Address
-    public init(address: Address, completion: ((Result<(UInt64, UInt64)>) -> ())? = nil) {
+    public init(address: Address, interval: TimeInterval, completion: ((Result<(UInt64, UInt64)>) -> ())? = nil) {
         self.address = address
+        self.interval = interval
         self.completion = completion
     }
 
-    public var registerCount: Int = 0
+    public var taskId: String = ""
     public var isPolling: Bool = false
     public var interval: TimeInterval = 0
     public var completion: ((Result<(UInt64, UInt64)>) -> ())?

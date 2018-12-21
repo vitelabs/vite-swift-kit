@@ -25,7 +25,7 @@ extension Provider {
 
     public func pledgeWithoutPow(account: Wallet.Account,
                                  beneficialAddress: Address,
-                                 amount: BigInt) -> Promise<Void> {
+                                 amount: Balance) -> Promise<Void> {
         let request = GetPledgeDataRequest(beneficialAddress: beneficialAddress.description)
         return RPCRequest(for: server, batch: BatchFactory().create(request)).promise
             .then { [weak self] data -> Promise<Void> in
@@ -38,23 +38,20 @@ extension Provider {
         }
     }
 
-    public func pledgeWithPow(account: Wallet.Account,
-                                 beneficialAddress: Address,
-                                 amount: BigInt,
-                                 difficulty: BigInt,
-                                 cancel: @escaping () -> (Bool) = { return false } ) -> Promise<Void> {
+    public func getPowForPledge(account: Wallet.Account,
+                                beneficialAddress: Address,
+                                amount: Balance,
+                                difficulty: BigInt) -> Promise<SendRawTxContext> {
         let request = GetPledgeDataRequest(beneficialAddress: beneficialAddress.description)
         return RPCRequest(for: server, batch: BatchFactory().create(request)).promise
-            .then { [weak self] data -> Promise<Void> in
+            .then { [weak self] data -> Promise<SendRawTxContext> in
                 guard let `self` = self else { return Promise(error: ViteError.cancelError) }
-                guard cancel() == false else { return Promise(error: ViteError.cancelError) }
-                return self.sendRawTxWithPow(account: account,
-                                             toAddress: ViteWalletConst.ContractAddress.pledge.address,
-                                             tokenId: ViteWalletConst.viteToken.id,
-                                             amount: amount,
-                                             data: data,
-                                             difficulty: difficulty,
-                                             cancel: cancel)
+                return self.getPowForSendRawTx(account: account,
+                                               toAddress: ViteWalletConst.ContractAddress.pledge.address,
+                                               tokenId: ViteWalletConst.viteToken.id,
+                                               amount: amount,
+                                               data: data,
+                                               difficulty: difficulty)
         }
     }
 }

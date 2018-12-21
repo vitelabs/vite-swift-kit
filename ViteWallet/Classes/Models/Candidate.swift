@@ -9,10 +9,10 @@
 import Foundation
 import ObjectMapper
 
-public struct Candidate: Mappable {
+public class Candidate: Mappable {
     public typealias VoteNum = Balance
 
-    public init?(map: Map) {
+    required public init?(map: Map) {
 
     }
 
@@ -21,13 +21,13 @@ public struct Candidate: Mappable {
     public fileprivate(set) var voteNum: VoteNum = VoteNum()
     public fileprivate(set) var rank: Int = 0
 
-    public mutating func mapping(map: Map) {
+    public func mapping(map: Map) {
         name <- map["name"]
         nodeAddr <- (map["nodeAddr"], JSONTransformer.address)
         voteNum <- (map["voteNum"], JSONTransformer.balance)
     }
 
-    public mutating func updateRank(_ rank: Int) {
+    public func updateRank(_ rank: Int) {
         self.rank = rank
     }
 }

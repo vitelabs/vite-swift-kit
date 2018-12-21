@@ -16,20 +16,32 @@ public struct ViteError: Error {
     public let message: String
     public let rawError: Error?
 
-    init(code: ViteErrorCode, message: String, rawError: Error?) {
+    public init(code: ViteErrorCode, message: String, rawError: Error?) {
         self.code = code
         self.message = "\(message)(\(code.toString()))"
         self.rawError = rawError
     }
 }
 
+extension ViteError: Hashable {
+    public static func == (lhs: ViteError, rhs: ViteError) -> Bool {
+        return lhs.code == rhs.code
+    }
+
+    public var hashValue: Int {
+        return code.toString().hashValue
+    }
+}
+
 extension ViteError {
 
     public static func conversion(from error: Error) -> ViteError {
-        if let error = error as? APIKit.SessionTaskError {
+        if let error = error as? ViteError {
+            return error
+        } else if let error = error as? APIKit.SessionTaskError {
 
             var rawError: NSError!
-            var code = ViteErrorCode.unknown
+            var code = ViteErrorCode(type: .custom, id: 0)
             var message = ""
 
             switch error {
@@ -52,13 +64,13 @@ extension ViteError {
             }
             return ViteError(code: code, message: message, rawError: rawError)
         } else {
-            return ViteError(code: ViteErrorCode(type: .unknown, id: (error as NSError).code), message: (error as NSError).localizedDescription, rawError: error)
+            return ViteError(code: ViteErrorCode(type: .custom, id: (error as NSError).code), message: (error as NSError).localizedDescription, rawError: error)
         }
     }
 
     fileprivate static func conversionJSONRPCError(from error: JSONRPCError) -> ViteError {
         var rawError = (error as NSError)
-        var code = ViteErrorCode.unknown
+        var code = ViteErrorCode(type: .custom, id: 0)
         var message = ""
 
         switch error {
