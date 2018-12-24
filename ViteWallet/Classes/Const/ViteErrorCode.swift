@@ -63,11 +63,11 @@ public struct ViteErrorCode {
 
 extension ViteError {
     public static var JSONTypeError: ViteError {
-        return ViteError(code: ViteErrorCode.JSONType, message: "JSON Type Error", rawError: nil)
+        return ViteError(code: ViteErrorCode.JSONType, rawMessage: "JSON Type Error", rawError: nil)
     }
 
     public static var cancelError: ViteError {
-        return ViteError(code: ViteErrorCode.cancel, message: "Cancel Operation", rawError: nil)
+        return ViteError(code: ViteErrorCode.cancel, rawMessage: "Cancel Operation", rawError: nil)
     }
 }
 
