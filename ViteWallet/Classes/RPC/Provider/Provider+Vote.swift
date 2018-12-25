@@ -38,10 +38,10 @@ extension Provider {
     public func getPowForVote(account: Wallet.Account,
                               gid: String,
                               name: String,
-                              difficulty: BigInt) -> Promise<SendRawTxContext> {
+                              difficulty: BigInt) -> Promise<SendBlockContext> {
         let request = GetVoteDataRequest(gid: gid, name: name)
         return RPCRequest(for: server, batch: BatchFactory().create(request)).promise
-            .then { [weak self] data -> Promise<SendRawTxContext> in
+            .then { [weak self] data -> Promise<SendBlockContext> in
                 guard let `self` = self else { return Promise(error: ViteError.cancelError) }
                 return self.getPowForSendRawTx(account: account,
                                                toAddress: ViteWalletConst.ContractAddress.vote.address,
@@ -67,10 +67,10 @@ extension Provider {
 
     public func getPowForCancelVote(account: Wallet.Account,
                                     gid: String,
-                                    difficulty: BigInt) -> Promise<SendRawTxContext> {
+                                    difficulty: BigInt) -> Promise<SendBlockContext> {
         let request = GetCancelVoteDataRequest(gid: gid)
         return RPCRequest(for: server, batch: BatchFactory().create(request)).promise
-            .then { [weak self] data -> Promise<SendRawTxContext> in
+            .then { [weak self] data -> Promise<SendBlockContext> in
                 guard let `self` = self else { return Promise(error: ViteError.cancelError) }
                 return self.getPowForSendRawTx(account: account,
                                                toAddress: ViteWalletConst.ContractAddress.vote.address,

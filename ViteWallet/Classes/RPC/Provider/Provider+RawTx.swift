@@ -43,7 +43,7 @@ extension Provider {
                                    tokenId: String,
                                    amount: Balance,
                                    data: String?,
-                                   difficulty: BigInt) -> Promise<SendRawTxContext> {
+                                   difficulty: BigInt) -> Promise<SendBlockContext> {
         let batch = BatchFactory().create(GetLatestAccountBlockRequest(address: account.address.description),
                                           GetFittestSnapshotHashRequest(address: account.address.description))
         return RPCRequest(for: server, batch: batch).promise
@@ -51,8 +51,8 @@ extension Provider {
                 guard let `self` = self else { return Promise(error: ViteError.cancelError) }
                 let request = GetPowNonceRequest(address: account.address, preHash: latestAccountBlock?.hash, difficulty: difficulty)
                 return RPCRequest(for: self.server, batch: BatchFactory().create(request)).promise.map { (latestAccountBlock, fittestSnapshotHash, $0) }
-            }.map { (latestAccountBlock, fittestSnapshotHash, nonce) -> SendRawTxContext in
-                SendRawTxContext(account: account,
+            }.map { (latestAccountBlock, fittestSnapshotHash, nonce) -> SendBlockContext in
+                SendBlockContext(account: account,
                                  latest: latestAccountBlock,
                                  snapshotHash: fittestSnapshotHash,
                                  toAddress: toAddress,
@@ -64,7 +64,7 @@ extension Provider {
             }
     }
 
-    public func sendRawTxContext(_ context: SendRawTxContext) -> Promise<Void> {
+    public func sendRawTxWithContext(_ context: SendBlockContext) -> Promise<Void> {
         let send = AccountBlock.makeSendAccountBlock(secretKey: context.account.secretKey,
                                                      publicKey: context.account.publicKey,
                                                      address: context.account.address,
@@ -79,7 +79,19 @@ extension Provider {
         return RPCRequest(for: self.server, batch: BatchFactory().create(SendRawTxRequest(accountBlock: send))).promise.map { _ in Void() }
     }
 
-    public struct SendRawTxContext {
+    public func sendRawTxWithContext(_ context: ReceiveBlockContext) -> Promise<AccountBlock> {
+        let receive = AccountBlock.makeReceiveAccountBlock(secretKey: context.account.secretKey,
+                                                         publicKey: context.account.publicKey,
+                                                         address: context.account.address,
+                                                         onroadBlock: context.onroadBlock,
+                                                         latest: context.latest,
+                                                         snapshotHash: context.snapshotHash,
+                                                         nonce: context.nonce,
+                                                         difficulty: context.difficulty)
+        return RPCRequest(for: self.server, batch: BatchFactory().create(SendRawTxRequest(accountBlock: receive))).promise.map { _ in context.onroadBlock }
+    }
+
+    public struct SendBlockContext {
         let account: Wallet.Account
         let latest: AccountBlock?
         let snapshotHash: String
@@ -87,6 +99,15 @@ extension Provider {
         let tokenId: String
         let amount: Balance
         let data: String?
+        let nonce: String?
+        let difficulty: BigInt?
+    }
+
+    public struct ReceiveBlockContext {
+        let account: Wallet.Account
+        let onroadBlock: AccountBlock
+        let latest: AccountBlock?
+        let snapshotHash: String
         let nonce: String?
         let difficulty: BigInt?
     }

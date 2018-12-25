@@ -41,10 +41,10 @@ extension Provider {
     public func getPowForPledge(account: Wallet.Account,
                                 beneficialAddress: Address,
                                 amount: Balance,
-                                difficulty: BigInt) -> Promise<SendRawTxContext> {
+                                difficulty: BigInt) -> Promise<SendBlockContext> {
         let request = GetPledgeDataRequest(beneficialAddress: beneficialAddress.description)
         return RPCRequest(for: server, batch: BatchFactory().create(request)).promise
-            .then { [weak self] data -> Promise<SendRawTxContext> in
+            .then { [weak self] data -> Promise<SendBlockContext> in
                 guard let `self` = self else { return Promise(error: ViteError.cancelError) }
                 return self.getPowForSendRawTx(account: account,
                                                toAddress: ViteWalletConst.ContractAddress.pledge.address,

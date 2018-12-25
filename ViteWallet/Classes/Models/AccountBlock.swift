@@ -125,7 +125,7 @@ extension AccountBlock {
     public static func makeReceiveAccountBlock(secretKey: String,
                                                publicKey: String,
                                                address: Address,
-                                               unconfirmed: AccountBlock,
+                                               onroadBlock: AccountBlock,
                                                latest: AccountBlock?,
                                                snapshotHash: String,
                                                nonce: String?,
@@ -140,7 +140,7 @@ extension AccountBlock {
                                          difficulty: difficulty)
 
         block.type = .receive
-        block.fromHash = unconfirmed.hash
+        block.fromHash = onroadBlock.hash
 
         let (hash, signature) = sign(accountBlock: block,
                                      secretKeyHexString: secretKey,

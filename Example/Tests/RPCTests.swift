@@ -9,6 +9,7 @@
 import XCTest
 import ViteWallet
 import BigInt
+import PromiseKit
 
 class RPCTests: XCTestCase {
 
@@ -200,12 +201,15 @@ class RPCTests: XCTestCase {
         let amount = Balance(value: BigInt("1000000000000000000")!)
         let note = "hahaha"
         async { (completion) in
-            Provider.default.sendTransactionWithPow(account: Box.secondAccount,
+            Provider.default.getPowForSendTransaction(account: Box.secondAccount,
                                                     toAddress: Box.secondAccount.address,
                                                     tokenId: Box.viteTokenId,
                                                     amount: amount,
                                                     note: note,
                                                     difficulty: ViteWalletConst.DefaultDifficulty.send.value)
+                .then { context -> Promise<Void> in
+                    return Provider.default.sendRawTxWithContext(context)
+                }
                 .done { (ret) in
                     printLog(ret)
                 }
@@ -267,7 +271,10 @@ class RPCTests: XCTestCase {
     func testPledgeWithPow() {
         let amount = Balance(value: BigInt("10000000000000000000")!)
         async { (completion) in
-            Provider.default.pledgeWithPow(account: Box.firstAccount, beneficialAddress: Box.firstAccount.address, amount: amount, difficulty: ViteWalletConst.DefaultDifficulty.pledge.value)
+            Provider.default.getPowForPledge(account: Box.firstAccount, beneficialAddress: Box.firstAccount.address, amount: amount, difficulty: ViteWalletConst.DefaultDifficulty.pledge.value)
+                .then { context -> Promise<Void> in
+                    return Provider.default.sendRawTxWithContext(context)
+                }
                 .done { (ret) in
                     printLog(ret)
                 }
@@ -333,7 +340,10 @@ class RPCTests: XCTestCase {
     func testVoteWithPow() {
         let name = "Han"
         async { (completion) in
-            Provider.default.voteWithPow(account: Box.secondAccount, gid: ViteWalletConst.ConsensusGroup.snapshot.id, name: name, difficulty: ViteWalletConst.DefaultDifficulty.vote.value)
+            Provider.default.getPowForVote(account: Box.secondAccount, gid: ViteWalletConst.ConsensusGroup.snapshot.id, name: name, difficulty: ViteWalletConst.DefaultDifficulty.vote.value)
+                .then { context -> Promise<Void> in
+                    return Provider.default.sendRawTxWithContext(context)
+                }
                 .done { (ret) in
                     printLog(ret)
                 }
@@ -363,7 +373,10 @@ class RPCTests: XCTestCase {
 
     func testCancelVoteWithPow() {
         async { (completion) in
-            Provider.default.cancelVoteWithPow(account: Box.secondAccount, gid: ViteWalletConst.ConsensusGroup.snapshot.id, difficulty: ViteWalletConst.DefaultDifficulty.cancelVote.value)
+            Provider.default.getPowForCancelVote(account: Box.secondAccount, gid: ViteWalletConst.ConsensusGroup.snapshot.id, difficulty: ViteWalletConst.DefaultDifficulty.cancelVote.value)
+                .then { context -> Promise<Void> in
+                    return Provider.default.sendRawTxWithContext(context)
+                }
                 .done { (ret) in
                     printLog(ret)
                 }
