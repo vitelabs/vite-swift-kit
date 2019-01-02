@@ -35,7 +35,7 @@ public struct JSONTransformer {
         return String(bigint)
     })
 
-    public static let hexTobase64 = TransformOf<String, String>(fromJSON: { (base64) -> String? in
+    public static let hexToBase64 = TransformOf<String, String>(fromJSON: { (base64) -> String? in
         guard let base64 = base64, let string = Data(base64Encoded: base64)?.toHexString() else { return nil }
         return string
     }, toJSON: { (string) -> String? in

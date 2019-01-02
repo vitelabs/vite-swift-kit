@@ -64,7 +64,7 @@ public struct AccountBlock: Mappable {
         hash <- map["hash"]
         prevHash <- map["prevHash"]
         accountAddress <- (map["accountAddress"], JSONTransformer.address)
-        publicKey <- (map["publicKey"], JSONTransformer.hexTobase64)
+        publicKey <- (map["publicKey"], JSONTransformer.hexToBase64)
         fromAddress <- (map["fromAddress"], JSONTransformer.address)
         toAddress <- (map["toAddress"], JSONTransformer.address)
         fromHash <- map["fromBlockHash"]
@@ -73,9 +73,9 @@ public struct AccountBlock: Mappable {
         data <- map["data"]
         timestamp <- map["timestamp"]
         logHash <- map["logHash"]
-        nonce <- (map["nonce"], JSONTransformer.hexTobase64)
+        nonce <- (map["nonce"], JSONTransformer.hexToBase64)
         difficulty <- (map["difficulty"], JSONTransformer.bigint)
-        signature <- (map["signature"], JSONTransformer.hexTobase64)
+        signature <- (map["signature"], JSONTransformer.hexToBase64)
         height <- (map["height"], JSONTransformer.uint64)
         quota <- (map["quota"], JSONTransformer.uint64)
         amount <- (map["amount"], JSONTransformer.balance)
