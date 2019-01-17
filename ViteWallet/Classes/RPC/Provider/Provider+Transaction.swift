@@ -17,7 +17,7 @@ extension Provider {
                                           toAddress: Address,
                                           tokenId: String,
                                           amount: Balance,
-                                          note: String?) -> Promise<Void> {
+                                          note: String?) -> Promise<AccountBlock> {
 
         return sendRawTxWithoutPow(account: account,
                                    toAddress: toAddress,

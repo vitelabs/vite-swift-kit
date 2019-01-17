@@ -22,10 +22,10 @@ extension Provider {
 
     public func voteWithoutPow(account: Wallet.Account,
                                gid: String,
-                               name: String) -> Promise<Void> {
+                               name: String) -> Promise<AccountBlock> {
         let request = GetVoteDataRequest(gid: gid, name: name)
         return RPCRequest(for: server, batch: BatchFactory().create(request)).promise
-            .then { [weak self] data -> Promise<Void> in
+            .then { [weak self] data -> Promise<AccountBlock> in
                 guard let `self` = self else { return Promise(error: ViteError.cancelError) }
                 return self.sendRawTxWithoutPow(account: account,
                                                 toAddress: ViteWalletConst.ContractAddress.vote.address,
@@ -52,10 +52,10 @@ extension Provider {
         }
     }
 
-    public func cancelVoteWithoutPow(account: Wallet.Account, gid: String) -> Promise<Void> {
+    public func cancelVoteWithoutPow(account: Wallet.Account, gid: String) -> Promise<AccountBlock> {
         let request = GetCancelVoteDataRequest(gid: gid)
         return RPCRequest(for: server, batch: BatchFactory().create(request)).promise
-            .then { [weak self] data -> Promise<Void> in
+            .then { [weak self] data -> Promise<AccountBlock> in
                 guard let `self` = self else { return Promise(error: ViteError.cancelError) }
                 return self.sendRawTxWithoutPow(account: account,
                                                 toAddress: ViteWalletConst.ContractAddress.vote.address,

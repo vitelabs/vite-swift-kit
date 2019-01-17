@@ -25,10 +25,10 @@ extension Provider {
 
     public func pledgeWithoutPow(account: Wallet.Account,
                                  beneficialAddress: Address,
-                                 amount: Balance) -> Promise<Void> {
+                                 amount: Balance) -> Promise<AccountBlock> {
         let request = GetPledgeDataRequest(beneficialAddress: beneficialAddress.description)
         return RPCRequest(for: server, batch: BatchFactory().create(request)).promise
-            .then { [weak self] data -> Promise<Void> in
+            .then { [weak self] data -> Promise<AccountBlock> in
                 guard let `self` = self else { return Promise(error: ViteError.cancelError) }
                 return self.sendRawTxWithoutPow(account: account,
                                                 toAddress: ViteWalletConst.ContractAddress.pledge.address,

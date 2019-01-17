@@ -16,12 +16,12 @@ extension Provider {
                                     toAddress: Address,
                                     tokenId: String,
                                     amount: Balance,
-                                    data: String?) -> Promise<Void> {
+                                    data: String?) -> Promise<AccountBlock> {
 
         let batch = BatchFactory().create(GetLatestAccountBlockRequest(address: account.address.description),
                                           GetFittestSnapshotHashRequest(address: account.address.description))
         return RPCRequest(for: server, batch: batch).promise
-            .then { [weak self] (latestAccountBlock, fittestSnapshotHash) -> Promise<Void> in
+            .then { [weak self] (latestAccountBlock, fittestSnapshotHash) -> Promise<AccountBlock> in
                 guard let `self` = self else { return Promise(error: ViteError.cancelError) }
                 let send = AccountBlock.makeSendAccountBlock(secretKey: account.secretKey,
                                                              publicKey: account.publicKey,
@@ -34,7 +34,7 @@ extension Provider {
                                                              data: data,
                                                              nonce: nil,
                                                              difficulty: nil)
-                return RPCRequest(for: self.server, batch: BatchFactory().create(SendRawTxRequest(accountBlock: send))).promise.map { _ in Void() }
+                return RPCRequest(for: self.server, batch: BatchFactory().create(SendRawTxRequest(accountBlock: send))).promise.map { _ in send }
         }
     }
 
@@ -64,7 +64,7 @@ extension Provider {
             }
     }
 
-    public func sendRawTxWithContext(_ context: SendBlockContext) -> Promise<Void> {
+    public func sendRawTxWithContext(_ context: SendBlockContext) -> Promise<AccountBlock> {
         let send = AccountBlock.makeSendAccountBlock(secretKey: context.account.secretKey,
                                                      publicKey: context.account.publicKey,
                                                      address: context.account.address,
@@ -76,7 +76,7 @@ extension Provider {
                                                      data: context.data,
                                                      nonce: context.nonce,
                                                      difficulty: context.difficulty)
-        return RPCRequest(for: self.server, batch: BatchFactory().create(SendRawTxRequest(accountBlock: send))).promise.map { _ in Void() }
+        return RPCRequest(for: self.server, batch: BatchFactory().create(SendRawTxRequest(accountBlock: send))).promise.map { _ in send }
     }
 
     public func sendRawTxWithContext(_ context: ReceiveBlockContext) -> Promise<AccountBlock> {
@@ -88,7 +88,7 @@ extension Provider {
                                                          snapshotHash: context.snapshotHash,
                                                          nonce: context.nonce,
                                                          difficulty: context.difficulty)
-        return RPCRequest(for: self.server, batch: BatchFactory().create(SendRawTxRequest(accountBlock: receive))).promise.map { _ in context.onroadBlock }
+        return RPCRequest(for: self.server, batch: BatchFactory().create(SendRawTxRequest(accountBlock: receive))).promise.map { _ in receive }
     }
 
     public struct SendBlockContext {
