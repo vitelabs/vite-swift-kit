@@ -30,19 +30,15 @@ extension Provider {
                                          toAddress: Address,
                                          tokenId: String,
                                          amount: Balance,
-                                         note: String?,
-                                         difficulty: BigInt) -> Promise<SendBlockContext> {
-        return getPowForSendRawTx(account: account, toAddress: toAddress, tokenId: tokenId, amount: amount, data: note?.bytes.toBase64(), difficulty: difficulty)
+                                         note: String?) -> Promise<SendBlockContext> {
+        return getPowForSendRawTx(account: account, toAddress: toAddress, tokenId: tokenId, amount: amount, data: note?.bytes.toBase64())
     }
 
     public func receiveTransactionWithoutPow(account: Wallet.Account, onroadBlock: AccountBlock) -> Promise<AccountBlock> {
 
-        return RPCRequest(for: server, batch: BatchFactory().create(GetLatestAccountBlockRequest(address: account.address.description))).promise
-            .then { [weak self] (latestAccountBlock) -> Promise<(latestAccountBlock: AccountBlock?, fittestSnapshotHash: String)> in
-                guard let `self` = self else { return Promise(error: ViteError.cancelError) }
-                let request = GetFittestSnapshotHashRequest(address: account.address.description, sendAccountBlockHash: onroadBlock.hash)
-                return RPCRequest(for: self.server, batch: BatchFactory().create(request)).promise.map { (latestAccountBlock, $0) }
-            }.then { [weak self] (latestAccountBlock, fittestSnapshotHash) -> Promise<AccountBlock> in
+        return RPCRequest(for: server, batch: BatchFactory().create(GetLatestAccountBlockRequest(address: account.address.description),
+                                                                    GetFittestSnapshotHashRequest(address: account.address.description, sendAccountBlockHash: onroadBlock.hash))).promise
+            .then { [weak self] (latestAccountBlock, fittestSnapshotHash) -> Promise<AccountBlock> in
                 guard let `self` = self else { return Promise(error: ViteError.cancelError) }
                 let receive = AccountBlock.makeReceiveAccountBlock(secretKey: account.secretKey,
                                                                    publicKey: account.publicKey,
@@ -57,18 +53,26 @@ extension Provider {
     }
 
     public func getPowForReceiveTransaction(account: Wallet.Account,
-                                            onroadBlock: AccountBlock,
-                                            difficulty: BigInt) -> Promise<ReceiveBlockContext> {
-        return RPCRequest(for: server, batch: BatchFactory().create(GetLatestAccountBlockRequest(address: account.address.description))).promise
-            .then { [weak self] (latestAccountBlock) -> Promise<(latestAccountBlock: AccountBlock?, nonce: String)> in
+                                            onroadBlock: AccountBlock) -> Promise<ReceiveBlockContext> {
+        return RPCRequest(for: server, batch: BatchFactory().create(GetLatestAccountBlockRequest(address: account.address.description),
+                                                                    GetFittestSnapshotHashRequest(address: account.address.description, sendAccountBlockHash: onroadBlock.hash))).promise
+            .then { [weak self] (latestAccountBlock, fittestSnapshotHash) -> Promise<(latestAccountBlock: AccountBlock?, fittestSnapshotHash: String, difficulty: BigInt)> in
+                guard let `self` = self else { return Promise(error: ViteError.cancelError) }
+                let request = GetPowDifficultyRequest(accountAddress: account.address,
+                                                      prevHash: latestAccountBlock?.hash ?? AccountBlock.Const.defaultHash,
+                                                      snapshotHash: fittestSnapshotHash,
+                                                      type: .receive,
+                                                      toAddress: nil,
+                                                      data: nil,
+                                                      usePledgeQuota: false)
+                return RPCRequest(for: self.server, batch: BatchFactory().create(request)).promise.map { (latestAccountBlock, fittestSnapshotHash, $0) }
+            }
+            .then { [weak self] (latestAccountBlock, fittestSnapshotHash, difficulty) -> Promise<(latestAccountBlock: AccountBlock?, fittestSnapshotHash: String, difficulty: BigInt, nonce: String)> in
                 guard let `self` = self else { return Promise(error: ViteError.cancelError) }
                 let request = GetPowNonceRequest(address: account.address, preHash: latestAccountBlock?.hash, difficulty: difficulty)
-                return RPCRequest(for: self.server, batch: BatchFactory().create(request)).promise.map { (latestAccountBlock, $0) }
-            }.then { [weak self] (latestAccountBlock, nonce) -> Promise<(latestAccountBlock: AccountBlock?, nonce: String, fittestSnapshotHash: String)> in
-                guard let `self` = self else { return Promise(error: ViteError.cancelError) }
-                let request = GetFittestSnapshotHashRequest(address: account.address.description, sendAccountBlockHash: onroadBlock.hash)
-                return RPCRequest(for: self.server, batch: BatchFactory().create(request)).promise.map { (latestAccountBlock, nonce, $0) }
-            }.map { (latestAccountBlock, nonce, fittestSnapshotHash) -> ReceiveBlockContext in
+                return RPCRequest(for: self.server, batch: BatchFactory().create(request)).promise.map { (latestAccountBlock, fittestSnapshotHash, difficulty, $0) }
+            }
+            .map { (latestAccountBlock, fittestSnapshotHash, difficulty, nonce) -> ReceiveBlockContext in
                 ReceiveBlockContext(account: account,
                                     onroadBlock: onroadBlock,
                                     latest: latestAccountBlock,
@@ -88,14 +92,13 @@ extension Provider {
         }
     }
 
-    public func receiveLatestTransactionIfHasWithPow(account: Wallet.Account,
-                                                     difficulty: BigInt) -> Promise<AccountBlock?> {
+    public func receiveLatestTransactionIfHasWithPow(account: Wallet.Account) -> Promise<AccountBlock?> {
         let request = GetOnroadBlocksRequest(address: account.address.description, index: 0, count: 1)
         return RPCRequest(for: server, batch: BatchFactory().create(request)).promise
             .then { [weak self] onroadBlocks -> Promise<ReceiveBlockContext?> in
                 guard let `self` = self else { return Promise(error: ViteError.cancelError) }
                 guard let onroadBlock = onroadBlocks.first else { return Promise.value(nil) }
-                return self.getPowForReceiveTransaction(account: account, onroadBlock: onroadBlock, difficulty: difficulty).map { context -> ReceiveBlockContext? in context }
+                return self.getPowForReceiveTransaction(account: account, onroadBlock: onroadBlock).map { context -> ReceiveBlockContext? in context }
             }
             .then { [weak self] context -> Promise<AccountBlock?> in
                 guard let `self` = self else { return Promise(error: ViteError.cancelError) }

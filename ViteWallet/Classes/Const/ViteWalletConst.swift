@@ -33,24 +33,5 @@ public struct ViteWalletConst {
         }
     }
 
-    public enum DefaultDifficulty {
-        case send
-        case receive
-        case pledge
-        case vote
-        case cancelVote
-
-        public var value: BigInt {
-            switch self {
-            case .send:
-                return BigInt("157108864")!
-            case .receive, .pledge:
-                return BigInt("67108864")!
-            case .vote, .cancelVote:
-                return BigInt("201564160")!
-            }
-        }
-    }
-
     public static let viteToken = Token(id: "tti_5649544520544f4b454e6e40", name: "vite", symbol: "VITE", decimals: 18)
 }

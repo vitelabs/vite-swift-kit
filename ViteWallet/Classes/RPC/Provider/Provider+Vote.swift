@@ -37,8 +37,7 @@ extension Provider {
 
     public func getPowForVote(account: Wallet.Account,
                               gid: String,
-                              name: String,
-                              difficulty: BigInt) -> Promise<SendBlockContext> {
+                              name: String) -> Promise<SendBlockContext> {
         let request = GetVoteDataRequest(gid: gid, name: name)
         return RPCRequest(for: server, batch: BatchFactory().create(request)).promise
             .then { [weak self] data -> Promise<SendBlockContext> in
@@ -47,8 +46,7 @@ extension Provider {
                                                toAddress: ViteWalletConst.ContractAddress.vote.address,
                                                tokenId: ViteWalletConst.viteToken.id,
                                                amount: Balance(value: BigInt(0)),
-                                               data: data,
-                                               difficulty: difficulty)
+                                               data: data)
         }
     }
 
@@ -66,8 +64,7 @@ extension Provider {
     }
 
     public func getPowForCancelVote(account: Wallet.Account,
-                                    gid: String,
-                                    difficulty: BigInt) -> Promise<SendBlockContext> {
+                                    gid: String) -> Promise<SendBlockContext> {
         let request = GetCancelVoteDataRequest(gid: gid)
         return RPCRequest(for: server, batch: BatchFactory().create(request)).promise
             .then { [weak self] data -> Promise<SendBlockContext> in
@@ -76,8 +73,7 @@ extension Provider {
                                                toAddress: ViteWalletConst.ContractAddress.vote.address,
                                                tokenId: ViteWalletConst.viteToken.id,
                                                amount: Balance(value: BigInt(0)),
-                                               data: data,
-                                               difficulty: difficulty)
+                                               data: data)
         }
     }
 }

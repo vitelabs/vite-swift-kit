@@ -14,7 +14,7 @@ import Vite_HDWalletKit
 
 public struct AccountBlock: Mappable {
 
-    struct Const {
+    public struct Const {
         static let defaultHash = "0000000000000000000000000000000000000000000000000000000000000000"
     }
 

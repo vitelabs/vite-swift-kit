@@ -34,8 +34,7 @@ public class ReceiveTransactionService: PollService {
             .recover { (e) -> Promise<AccountBlock?> in
                 if ViteError.conversion(from: e).code == ViteErrorCode.rpcNotEnoughQuota {
                     printLog("Use PoW")
-                    let d = ViteWalletConst.DefaultDifficulty.receive.value
-                    return Provider.default.receiveLatestTransactionIfHasWithPow(account: a, difficulty: d)
+                    return Provider.default.receiveLatestTransactionIfHasWithPow(account: a)
                 } else {
                     return Promise(error: e)
                 }

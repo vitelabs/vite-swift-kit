@@ -1,5 +1,5 @@
 //
-//  GetBalanceInfosRequest.swift
+//  GetCreateContractToAddressRequest.swift
 //  Vite
 //
 //  Created by Stone on 2018/9/9.
@@ -9,41 +9,41 @@
 import Foundation
 import JSONRPCKit
 
-//public struct GetBalanceInfosRequest: JSONRPCKit.Request {
-//    public typealias Response = [BalanceInfo]
-//
-//    let address: String
-//
-//    public var method: String {
-//        return "ledger_getAccountByAccAddr"
-//    }
-//
-//    public var parameters: Any? {
-//        return [address]
-//    }
-//
-//    public init(address: String) {
-//        self.address = address
-//    }
-//
-//    public func response(from resultObject: Any) throws -> Response {
-//
-//        if let _ = resultObject as? NSNull {
-//            return []
-//        }
-//
-//        guard let response = resultObject as? [String: Any] else {
-//            throw ViteError.JSONTypeError
-//        }
-//
-//        var balanceInfoArray = [[String: Any]]()
-//        if let map = response["tokenBalanceInfoMap"] as?  [String: Any],
-//            let array = Array(map.values) as? [[String: Any]] {
-//            balanceInfoArray = array
-//        }
-//
-//        let balanceInfos = balanceInfoArray.map({ BalanceInfo(JSON: $0) })
-//        let ret = balanceInfos.compactMap { $0 }
-//        return ret
-//    }
-//}
+public struct GetCreateContractToAddressRequest: JSONRPCKit.Request {
+    public typealias Response = Address
+
+    let address: String
+    let height: UInt64
+    let prevHash: String
+    let snapshotHash: String
+
+    public var method: String {
+        return "contract_getCreateContractToAddress"
+    }
+
+    public var parameters: Any? {
+        return [address, height, prevHash, snapshotHash]
+    }
+
+    public init(address: String, height: UInt64, prevHash: String, snapshotHash: String) {
+        self.address = address
+        self.height = height
+        self.prevHash = prevHash
+        self.snapshotHash = snapshotHash
+    }
+
+    public func response(from resultObject: Any) throws -> Response {
+
+        guard let response = resultObject as? String else {
+            throw ViteError.JSONTypeError
+        }
+
+        let address = Address(string: response)
+
+        guard address.isValid else {
+            throw ViteError.JSONTypeError
+        }
+
+        return address
+    }
+}

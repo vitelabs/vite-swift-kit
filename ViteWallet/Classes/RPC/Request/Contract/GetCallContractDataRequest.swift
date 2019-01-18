@@ -1,5 +1,5 @@
 //
-//  GetPledgeQuotaRequest.swift
+//  GetCallContractDataRequest.swift
 //  Vite
 //
 //  Created by Stone on 2018/10/24.
@@ -9,39 +9,32 @@
 import Foundation
 import JSONRPCKit
 
-//public struct GetCallContractDataRequest: JSONRPCKit.Request {
-//    public typealias Response = Address
-//
-//    let address: String
-//    let height: UInt64
-//    let prevHash: String
-//    let snapshotHash: String
-//
-//    public var method: String {
-//        return "pledge_getPledgeQuota"
-//    }
-//
-//    public var parameters: Any? {
-//        return [address]
-//    }
-//
-//    public init(address: String) {
-//        self.address = address
-//    }
-//
-//    public func response(from resultObject: Any) throws -> Response {
-//
-//        guard let response = resultObject as? [String: Any] else {
-//            throw ViteError.JSONTypeError
-//        }
-//
-//        if let quotaString = response["quota"] as? String,
-//            let maxTxCountString = response["txNum"] as? String,
-//            let quota = UInt64(quotaString),
-//             let maxTxCount = UInt64(maxTxCountString) {
-//            return (quota, maxTxCount)
-//        } else {
-//            throw ViteError.JSONTypeError
-//        }
-//    }
-//}
+public struct GetCallContractDataRequest: JSONRPCKit.Request {
+    public typealias Response = String
+
+    let abi: String
+    let functionName: String
+    let contractParameters: [String]
+
+    public var method: String {
+        return "contract_getCallContractData"
+    }
+
+    public var parameters: Any? {
+        return [abi, functionName, contractParameters]
+    }
+
+    public init(abi: String, functionName: String, contractParameters: [String]) {
+        self.abi = abi
+        self.functionName = functionName
+        self.contractParameters = contractParameters
+    }
+
+    public func response(from resultObject: Any) throws -> Response {
+        if let response = resultObject as? Response {
+            return response
+        } else {
+            throw ViteError.JSONTypeError
+        }
+    }
+}
