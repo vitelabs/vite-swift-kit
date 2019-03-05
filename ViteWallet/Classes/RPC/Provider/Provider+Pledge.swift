@@ -11,8 +11,8 @@ import JSONRPCKit
 import PromiseKit
 import BigInt
 
+// MARK: Get Info
 extension Provider {
-
     public func getPledgeQuota(address: Address) -> Promise<(UInt64, UInt64)> {
         let request = GetPledgeQuotaRequest(address: address.description)
         return RPCRequest(for: server, batch: BatchFactory().create(request)).promise
@@ -22,7 +22,10 @@ extension Provider {
         let request = GetPledgesRequest(address: address.description, index: index, count: count)
         return RPCRequest(for: server, batch: BatchFactory().create(request)).promise
     }
+}
 
+// MARK: Pledge
+extension Provider {
     public func pledgeWithoutPow(account: Wallet.Account,
                                  beneficialAddress: Address,
                                  amount: Balance) -> Promise<AccountBlock> {
@@ -49,6 +52,39 @@ extension Provider {
                                                toAddress: ViteWalletConst.ContractAddress.pledge.address,
                                                tokenId: ViteWalletConst.viteToken.id,
                                                amount: amount,
+                                               data: data)
+        }
+    }
+}
+
+// MARK: Cancel Pledge
+extension Provider {
+    public func cancelPledgeWithoutPow(account: Wallet.Account,
+                                       beneficialAddress: Address,
+                                       amount: Balance) -> Promise<AccountBlock> {
+        let request = GetCancelPledgeDataRequest(beneficialAddress: beneficialAddress.description, amount: amount)
+        return RPCRequest(for: server, batch: BatchFactory().create(request)).promise
+            .then { [weak self] data -> Promise<AccountBlock> in
+                guard let `self` = self else { return Promise(error: ViteError.cancelError) }
+                return self.sendRawTxWithoutPow(account: account,
+                                                toAddress: ViteWalletConst.ContractAddress.pledge.address,
+                                                tokenId: ViteWalletConst.viteToken.id,
+                                                amount: Balance(),
+                                                data: data)
+        }
+    }
+
+    public func getPowForCancelPledge(account: Wallet.Account,
+                                      beneficialAddress: Address,
+                                      amount: Balance) -> Promise<SendBlockContext> {
+        let request = GetCancelPledgeDataRequest(beneficialAddress: beneficialAddress.description, amount: amount)
+        return RPCRequest(for: server, batch: BatchFactory().create(request)).promise
+            .then { [weak self] data -> Promise<SendBlockContext> in
+                guard let `self` = self else { return Promise(error: ViteError.cancelError) }
+                return self.getPowForSendRawTx(account: account,
+                                               toAddress: ViteWalletConst.ContractAddress.pledge.address,
+                                               tokenId: ViteWalletConst.viteToken.id,
+                                               amount: Balance(),
                                                data: data)
         }
     }

@@ -19,7 +19,7 @@ PODS:
   - Result (3.2.4)
   - SipHash (1.2.2)
   - TrezorCryptoEd25519WithBlake2b (0.0.1)
-  - Vite_HDWalletKit (1.2.0):
+  - Vite_HDWalletKit (1.2.1):
     - BigInt (~> 3.0)
     - CryptoSwift (~> 0.12.0)
     - TrezorCryptoEd25519WithBlake2b (~> 0.0.1)
@@ -40,7 +40,7 @@ DEPENDENCIES:
   - ObjectMapper (= 3.3.0)
   - PromiseKit (= 6.5.2)
   - Result (= 3.2.4)
-  - Vite_HDWalletKit (= 1.2.0)
+  - Vite_HDWalletKit (from `https://github.com/vitelabs/vite-keystore-ios.git`, tag `1.2.1`)
   - ViteWallet (from `../`)
 
 SPEC REPOS:
@@ -54,11 +54,18 @@ SPEC REPOS:
     - Result
     - SipHash
     - TrezorCryptoEd25519WithBlake2b
-    - Vite_HDWalletKit
 
 EXTERNAL SOURCES:
+  Vite_HDWalletKit:
+    :git: https://github.com/vitelabs/vite-keystore-ios.git
+    :tag: 1.2.1
   ViteWallet:
     :path: "../"
+
+CHECKOUT OPTIONS:
+  Vite_HDWalletKit:
+    :git: https://github.com/vitelabs/vite-keystore-ios.git
+    :tag: 1.2.1
 
 SPEC CHECKSUMS:
   APIKit: a39ff72ac44efc15513fd1b98800f63c525be61b
@@ -70,9 +77,9 @@ SPEC CHECKSUMS:
   Result: d2d07204ce72856f1fd9130bbe42c35a7b0fea10
   SipHash: fad90a4683e420c52ef28063063dbbce248ea6d4
   TrezorCryptoEd25519WithBlake2b: e70fc022094a2f2aa8b86117ab1085d7a7b62098
-  Vite_HDWalletKit: 8d3f78883b58def92610e44704a93db7b566656c
+  Vite_HDWalletKit: c6d112f585e21b182bda6731f904d09db71ec7fe
   ViteWallet: 382ab10ba912014b64d103ef0324760259d584ae
 
-PODFILE CHECKSUM: 01abaa9752b8e69696276854c8541d01a291dd5a
+PODFILE CHECKSUM: 6bb13ff32bc93fb2463dfa419f2373e2ea355993
 
 COCOAPODS: 1.5.3

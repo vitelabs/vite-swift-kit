@@ -159,7 +159,7 @@ class RPCTests: XCTestCase {
 
     func testReceiveTransactionWithPow() {
         async { (completion) in
-            Provider.default.receiveLatestTransactionIfHasWithPow(account: Box.secondAccount, difficulty: ViteWalletConst.DefaultDifficulty.receive.value)
+            Provider.default.receiveLatestTransactionIfHasWithPow(account: Box.secondAccount)
                 .done { (ret) in
                     if let ret = ret {
                         printLog(ret)
@@ -205,9 +205,8 @@ class RPCTests: XCTestCase {
                                                     toAddress: Box.secondAccount.address,
                                                     tokenId: Box.viteTokenId,
                                                     amount: amount,
-                                                    note: note,
-                                                    difficulty: ViteWalletConst.DefaultDifficulty.send.value)
-                .then { context -> Promise<Void> in
+                                                    note: note)
+                .then { context -> Promise<AccountBlock> in
                     return Provider.default.sendRawTxWithContext(context)
                 }
                 .done { (ret) in
@@ -271,8 +270,8 @@ class RPCTests: XCTestCase {
     func testPledgeWithPow() {
         let amount = Balance(value: BigInt("10000000000000000000")!)
         async { (completion) in
-            Provider.default.getPowForPledge(account: Box.firstAccount, beneficialAddress: Box.firstAccount.address, amount: amount, difficulty: ViteWalletConst.DefaultDifficulty.pledge.value)
-                .then { context -> Promise<Void> in
+            Provider.default.getPowForPledge(account: Box.firstAccount, beneficialAddress: Box.firstAccount.address, amount: amount)
+                .then { context -> Promise<AccountBlock> in
                     return Provider.default.sendRawTxWithContext(context)
                 }
                 .done { (ret) in
@@ -340,8 +339,8 @@ class RPCTests: XCTestCase {
     func testVoteWithPow() {
         let name = "Han"
         async { (completion) in
-            Provider.default.getPowForVote(account: Box.secondAccount, gid: ViteWalletConst.ConsensusGroup.snapshot.id, name: name, difficulty: ViteWalletConst.DefaultDifficulty.vote.value)
-                .then { context -> Promise<Void> in
+            Provider.default.getPowForVote(account: Box.secondAccount, gid: ViteWalletConst.ConsensusGroup.snapshot.id, name: name)
+                .then { context -> Promise<AccountBlock> in
                     return Provider.default.sendRawTxWithContext(context)
                 }
                 .done { (ret) in
@@ -373,8 +372,8 @@ class RPCTests: XCTestCase {
 
     func testCancelVoteWithPow() {
         async { (completion) in
-            Provider.default.getPowForCancelVote(account: Box.secondAccount, gid: ViteWalletConst.ConsensusGroup.snapshot.id, difficulty: ViteWalletConst.DefaultDifficulty.cancelVote.value)
-                .then { context -> Promise<Void> in
+            Provider.default.getPowForCancelVote(account: Box.secondAccount, gid: ViteWalletConst.ConsensusGroup.snapshot.id)
+                .then { context -> Promise<AccountBlock> in
                     return Provider.default.sendRawTxWithContext(context)
                 }
                 .done { (ret) in

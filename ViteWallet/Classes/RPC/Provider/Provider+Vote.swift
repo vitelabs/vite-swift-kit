@@ -11,6 +11,7 @@ import JSONRPCKit
 import PromiseKit
 import BigInt
 
+// MARK: Get Info
 extension Provider {
     public func getCandidateList(gid: String) -> Promise<[Candidate]> {
         return RPCRequest(for: server, batch: BatchFactory().create(GetCandidateListRequest(gid: gid))).promise
@@ -19,10 +20,11 @@ extension Provider {
     public func getVoteInfo(gid: String, address: Address) -> Promise<VoteInfo?> {
         return RPCRequest(for: server, batch: BatchFactory().create(GetVoteInfoRequest(gid: gid, address: address.description))).promise
     }
+}
 
-    public func voteWithoutPow(account: Wallet.Account,
-                               gid: String,
-                               name: String) -> Promise<AccountBlock> {
+// MARK: Vote
+extension Provider {
+    public func voteWithoutPow(account: Wallet.Account, gid: String, name: String) -> Promise<AccountBlock> {
         let request = GetVoteDataRequest(gid: gid, name: name)
         return RPCRequest(for: server, batch: BatchFactory().create(request)).promise
             .then { [weak self] data -> Promise<AccountBlock> in
@@ -35,9 +37,7 @@ extension Provider {
         }
     }
 
-    public func getPowForVote(account: Wallet.Account,
-                              gid: String,
-                              name: String) -> Promise<SendBlockContext> {
+    public func getPowForVote(account: Wallet.Account, gid: String, name: String) -> Promise<SendBlockContext> {
         let request = GetVoteDataRequest(gid: gid, name: name)
         return RPCRequest(for: server, batch: BatchFactory().create(request)).promise
             .then { [weak self] data -> Promise<SendBlockContext> in
@@ -49,7 +49,10 @@ extension Provider {
                                                data: data)
         }
     }
+}
 
+// MARK: Cancel Vote
+extension Provider {
     public func cancelVoteWithoutPow(account: Wallet.Account, gid: String) -> Promise<AccountBlock> {
         let request = GetCancelVoteDataRequest(gid: gid)
         return RPCRequest(for: server, batch: BatchFactory().create(request)).promise

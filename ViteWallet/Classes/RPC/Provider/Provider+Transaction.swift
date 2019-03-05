@@ -11,8 +11,8 @@ import JSONRPCKit
 import PromiseKit
 import BigInt
 
+// MARK: Send
 extension Provider {
-
     public func sendTransactionWithoutPow(account: Wallet.Account,
                                           toAddress: Address,
                                           tokenId: String,
@@ -33,7 +33,10 @@ extension Provider {
                                          note: String?) -> Promise<SendBlockContext> {
         return getPowForSendRawTx(account: account, toAddress: toAddress, tokenId: tokenId, amount: amount, data: note?.bytes.toBase64())
     }
+}
 
+// MARK: Receive
+extension Provider {
     public func receiveTransactionWithoutPow(account: Wallet.Account, onroadBlock: AccountBlock) -> Promise<AccountBlock> {
 
         return RPCRequest(for: server, batch: BatchFactory().create(GetLatestAccountBlockRequest(address: account.address.description),
