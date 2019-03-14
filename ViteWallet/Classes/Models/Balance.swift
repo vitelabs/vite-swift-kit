@@ -18,14 +18,14 @@ public struct Balance: BalanceType {
     }
 
     public func amountShort(decimals: Int) -> String {
-        return pri_amount(decimals: decimals, count: 4)
+        return amount(decimals: decimals, count: 4)
     }
 
     public func amountFull(decimals: Int) -> String {
-        return pri_amount(decimals: decimals, count: 8)
+        return amount(decimals: decimals, count: 8)
     }
 
-    fileprivate func pri_amount(decimals: Int, count: Int) -> String {
+    public func amount(decimals: Int, count: Int) -> String {
         let denominator = BigInt(10).power(decimals)
         let integer = (value/denominator).description
         var decimal = (value%denominator).description
