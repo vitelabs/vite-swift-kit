@@ -35,6 +35,7 @@ public struct Transaction: Equatable, Mappable {
     public fileprivate(set) var fromAddress = Address()
     public fileprivate(set) var toAddress = Address()
     public fileprivate(set) var hash = ""
+    public fileprivate(set) var publicKey = ""
     public fileprivate(set) var amount = Balance()
     public fileprivate(set) var token = Token()
     public fileprivate(set) var data: String?
@@ -105,6 +106,7 @@ public struct Transaction: Equatable, Mappable {
         fromAddress <- (map["fromAddress"], JSONTransformer.address)
         toAddress <- (map["toAddress"], JSONTransformer.address)
         hash <- map["hash"]
+        publicKey <- (map["publicKey"], JSONTransformer.hexToBase64)
         amount <- (map["amount"], JSONTransformer.balance)
         token <- map["tokenInfo"]
         data <- map["data"]
