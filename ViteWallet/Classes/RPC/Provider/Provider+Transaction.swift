@@ -85,17 +85,17 @@ extension Provider {
         }
     }
 
-    public func receiveLatestTransactionIfHasWithoutPow(account: Wallet.Account) -> Promise<AccountBlock?> {
+    public func receiveLatestTransactionIfHasWithoutPow(account: Wallet.Account) -> Promise<(AccountBlock, AccountBlock)?> {
         let request = GetOnroadBlocksRequest(address: account.address.description, index: 0, count: 1)
         return RPCRequest(for: server, batch: BatchFactory().create(request)).promise
-            .then { [weak self] onroadBlocks -> Promise<AccountBlock?> in
+            .then { [weak self] onroadBlocks -> Promise<(AccountBlock, AccountBlock)?> in
                 guard let `self` = self else { return Promise(error: ViteError.cancelError) }
                 guard let onroadBlock = onroadBlocks.first else { return Promise.value(nil) }
-                return self.receiveTransactionWithoutPow(account: account, onroadBlock: onroadBlock).map { block -> AccountBlock? in block }
+                return self.receiveTransactionWithoutPow(account: account, onroadBlock: onroadBlock).map { block -> (AccountBlock, AccountBlock)? in (onroadBlock , block) }
         }
     }
 
-    public func receiveLatestTransactionIfHasWithPow(account: Wallet.Account) -> Promise<AccountBlock?> {
+    public func receiveLatestTransactionIfHasWithPow(account: Wallet.Account) -> Promise<(AccountBlock, AccountBlock)?> {
         let request = GetOnroadBlocksRequest(address: account.address.description, index: 0, count: 1)
         return RPCRequest(for: server, batch: BatchFactory().create(request)).promise
             .then { [weak self] onroadBlocks -> Promise<ReceiveBlockContext?> in
@@ -103,10 +103,10 @@ extension Provider {
                 guard let onroadBlock = onroadBlocks.first else { return Promise.value(nil) }
                 return self.getPowForReceiveTransaction(account: account, onroadBlock: onroadBlock).map { context -> ReceiveBlockContext? in context }
             }
-            .then { [weak self] context -> Promise<AccountBlock?> in
+            .then { [weak self] context -> Promise<(AccountBlock, AccountBlock)?> in
                 guard let `self` = self else { return Promise(error: ViteError.cancelError) }
                 guard let context = context else { return Promise.value(nil) }
-                return self.sendRawTxWithContext(context).map { block -> AccountBlock? in block }
+                return self.sendRawTxWithContext(context).map { block -> (AccountBlock, AccountBlock)? in (context.onroadBlock, block) }
         }
     }
 }
