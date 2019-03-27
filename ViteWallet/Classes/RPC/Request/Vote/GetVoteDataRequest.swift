@@ -10,7 +10,7 @@ import Foundation
 import JSONRPCKit
 
 public struct GetVoteDataRequest: JSONRPCKit.Request {
-    public typealias Response = String
+    public typealias Response = Data
 
     let gid: String
     let name: String
@@ -29,8 +29,9 @@ public struct GetVoteDataRequest: JSONRPCKit.Request {
     }
 
     public func response(from resultObject: Any) throws -> Response {
-        if let response = resultObject as? String {
-            return response
+        if let response = resultObject as? String,
+            let ret = Data(base64Encoded: response) {
+            return ret
         } else {
             throw ViteError.JSONTypeError
         }

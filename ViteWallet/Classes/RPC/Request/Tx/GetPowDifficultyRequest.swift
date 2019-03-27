@@ -30,7 +30,7 @@ public struct GetPowDifficultyRequest: JSONRPCKit.Request {
                 snapshotHash: String,
                 type: AccountBlock.BlockType,
                 toAddress: Address?,
-                data: String?,
+                data: Data?,
                 usePledgeQuota: Bool) {
 
         self.context = GetPowDifficultyContext(accountAddress: accountAddress,
@@ -59,7 +59,7 @@ extension GetPowDifficultyRequest {
         fileprivate(set) var snapshotHash: String?
         fileprivate(set) var type: AccountBlock.BlockType?
         fileprivate(set) var toAddress: Address?
-        fileprivate(set) var data: String?
+        fileprivate(set) var data: Data?
         fileprivate(set) var usePledgeQuota: Bool?
 
         public init?(map: Map) { }
@@ -70,7 +70,7 @@ extension GetPowDifficultyRequest {
             snapshotHash <- map["snapshotHash"]
             type <- map["blockType"]
             toAddress <- (map["toAddr"], JSONTransformer.address)
-            data <- map["data"]
+            data <- (map["data"], JSONTransformer.dataToBase64)
             usePledgeQuota <- map["usePledgeQuota"]
         }
 
@@ -79,7 +79,7 @@ extension GetPowDifficultyRequest {
                     snapshotHash: String,
                     type: AccountBlock.BlockType,
                     toAddress: Address?,
-                    data: String?,
+                    data: Data?,
                     usePledgeQuota: Bool) {
 
             self.accountAddress = accountAddress

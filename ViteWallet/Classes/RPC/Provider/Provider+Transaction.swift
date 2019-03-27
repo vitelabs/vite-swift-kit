@@ -23,7 +23,7 @@ extension Provider {
                                    toAddress: toAddress,
                                    tokenId: tokenId,
                                    amount: amount,
-                                   data:note?.bytes.toBase64())
+                                   data:note?.data(using: .utf8))
     }
 
     public func getPowForSendTransaction(account: Wallet.Account,
@@ -31,7 +31,7 @@ extension Provider {
                                          tokenId: String,
                                          amount: Balance,
                                          note: String?) -> Promise<SendBlockContext> {
-        return getPowForSendRawTx(account: account, toAddress: toAddress, tokenId: tokenId, amount: amount, data: note?.bytes.toBase64())
+        return getPowForSendRawTx(account: account, toAddress: toAddress, tokenId: tokenId, amount: amount, data: note?.data(using: .utf8))
     }
 }
 

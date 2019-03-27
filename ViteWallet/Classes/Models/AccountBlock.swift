@@ -36,7 +36,7 @@ public struct AccountBlock: Mappable {
     public fileprivate(set) var fromHash: String?
     public fileprivate(set) var tokenId: String?
     public fileprivate(set) var snapshotHash: String?
-    public fileprivate(set) var data: String?
+    public fileprivate(set) var data: Data?
     public fileprivate(set) var timestamp: Int64?
     public fileprivate(set) var logHash: String?
     public fileprivate(set) var nonce: String?
@@ -70,7 +70,7 @@ public struct AccountBlock: Mappable {
         fromHash <- map["fromBlockHash"]
         tokenId <- map["tokenId"]
         snapshotHash <- map["snapshotHash"]
-        data <- map["data"]
+        data <- (map["data"], JSONTransformer.dataToBase64)
         timestamp <- map["timestamp"]
         logHash <- map["logHash"]
         nonce <- (map["nonce"], JSONTransformer.hexToBase64)
@@ -95,7 +95,7 @@ extension AccountBlock {
                                             toAddress: Address,
                                             tokenId: String,
                                             amount: Balance,
-                                            data: String?,
+                                            data: Data?,
                                             nonce: String?,
                                             difficulty: BigInt?) -> AccountBlock {
 
@@ -233,8 +233,8 @@ extension AccountBlock {
             source.append(contentsOf: snapshotHash.hex2Bytes)
         }
 
-        if let data = accountBlock.data, let ret = Data(base64Encoded: data) {
-            source.append(contentsOf: ret)
+        if let data = accountBlock.data {
+            source.append(contentsOf: Bytes(data))
         }
 
         if let timestamp = accountBlock.timestamp {

@@ -16,7 +16,7 @@ extension Provider {
                                     toAddress: Address,
                                     tokenId: String,
                                     amount: Balance,
-                                    data: String?) -> Promise<AccountBlock> {
+                                    data: Data?) -> Promise<AccountBlock> {
 
         let batch = BatchFactory().create(GetLatestAccountBlockRequest(address: account.address.description),
                                           GetFittestSnapshotHashRequest(address: account.address.description))
@@ -42,7 +42,7 @@ extension Provider {
                                    toAddress: Address,
                                    tokenId: String,
                                    amount: Balance,
-                                   data: String?) -> Promise<SendBlockContext> {
+                                   data: Data?) -> Promise<SendBlockContext> {
         let batch = BatchFactory().create(GetLatestAccountBlockRequest(address: account.address.description),
                                           GetFittestSnapshotHashRequest(address: account.address.description))
         return RPCRequest(for: server, batch: batch).promise
@@ -108,7 +108,7 @@ extension Provider {
         let toAddress: Address
         let tokenId: String
         let amount: Balance
-        let data: String?
+        let data: Data?
         let nonce: String?
         let difficulty: BigInt?
     }

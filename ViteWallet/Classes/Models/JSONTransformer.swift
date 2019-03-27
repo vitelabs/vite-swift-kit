@@ -9,6 +9,7 @@
 import Foundation
 import ObjectMapper
 import BigInt
+import Vite_HDWalletKit
 
 public struct JSONTransformer {
     public static let timestamp = TransformOf<Date, UInt64>(fromJSON: { (timestamp) -> Date? in
@@ -41,6 +42,14 @@ public struct JSONTransformer {
     }, toJSON: { (string) -> String? in
         guard let string = string else { return nil }
         return Data(bytes: string.hex2Bytes).base64EncodedString()
+    })
+
+    public static let dataToBase64 = TransformOf<Data, String>(fromJSON: { (base64) -> Data? in
+        guard let base64 = base64, let data = Data(base64Encoded: base64) else { return nil }
+        return data
+    }, toJSON: { (data) -> String? in
+        guard let data = data else { return nil }
+        return data.base64EncodedString()
     })
 
     public static let stringToBase64 = TransformOf<String, String>(fromJSON: { (base64) -> String? in

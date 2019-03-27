@@ -10,7 +10,7 @@ import Foundation
 import JSONRPCKit
 
 public struct GetCallContractDataRequest: JSONRPCKit.Request {
-    public typealias Response = String
+    public typealias Response = Data
 
     let abi: String
     let functionName: String
@@ -31,8 +31,9 @@ public struct GetCallContractDataRequest: JSONRPCKit.Request {
     }
 
     public func response(from resultObject: Any) throws -> Response {
-        if let response = resultObject as? Response {
-            return response
+        if let response = resultObject as? String,
+            let ret = Data(base64Encoded: response) {
+            return ret
         } else {
             throw ViteError.JSONTypeError
         }

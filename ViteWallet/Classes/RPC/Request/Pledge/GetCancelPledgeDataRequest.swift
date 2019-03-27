@@ -10,7 +10,7 @@ import Foundation
 import JSONRPCKit
 
 public struct GetCancelPledgeDataRequest: JSONRPCKit.Request {
-    public typealias Response = String
+    public typealias Response = Data
 
     let beneficialAddress: String
     let amount: Balance
@@ -29,8 +29,9 @@ public struct GetCancelPledgeDataRequest: JSONRPCKit.Request {
     }
 
     public func response(from resultObject: Any) throws -> Response {
-        if let response = resultObject as? Response {
-            return response
+        if let response = resultObject as? String,
+            let ret = Data(base64Encoded: response) {
+            return ret
         } else {
             throw ViteError.JSONTypeError
         }
