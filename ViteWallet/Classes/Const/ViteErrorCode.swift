@@ -56,6 +56,8 @@ public struct ViteErrorCode {
     public static let rpcSignatureVerifyFailure = ViteErrorCode(type: .rpc, id: -36003)
     public static let rpcPowNonceVerifyFailure = ViteErrorCode(type: .rpc, id: -36004)
     public static let rpcRefrenceSnapshootBlockIllegal = ViteErrorCode(type: .rpc, id: -36005)
+    public static let rpcRefrencePrevBlockFailed = ViteErrorCode(type: .rpc, id: -36006)
+    public static let rpcRefrenceBlockIsPending = ViteErrorCode(type: .rpc, id: -36007)
 
     public static let JSONType = ViteErrorCode(type: .json_t_e, id: 0)
     public static let cancel = ViteErrorCode(type: .cancel, id: 0)
