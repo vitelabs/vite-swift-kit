@@ -24,6 +24,8 @@ public struct AccountBlock: Mappable {
         case rewardSend = 3
         case receive = 4
         case receiveError = 5
+        case refundSend = 6
+        case genesisReceive = 7
     }
 
     public fileprivate(set) var type: BlockType?
@@ -180,7 +182,7 @@ extension AccountBlock {
         return block
     }
 
-    private static func sign(accountBlock: AccountBlock,
+    public static func sign(accountBlock: AccountBlock,
                              secretKeyHexString: String,
                              publicKeyHexString: String) -> (hash: String, signature: String) {
         var source = Bytes()
@@ -210,7 +212,8 @@ extension AccountBlock {
                 }
 
                 if let amount = accountBlock.amount {
-                    source.append(contentsOf: [UInt8](BigUInt(amount.value).serialize()))
+                    let raw = [UInt8](BigUInt(amount.value).serialize())
+                    source.append(contentsOf: raw.padding(toCount: 32))
                 }
 
                 if let tokenId = accountBlock.tokenId {
@@ -225,29 +228,30 @@ extension AccountBlock {
             }
         }
 
-        if let fee = accountBlock.fee {
-            source.append(contentsOf: [UInt8](BigUInt(fee.value).serialize()))
-        }
-
-        if let snapshotHash = accountBlock.snapshotHash {
-            source.append(contentsOf: snapshotHash.hex2Bytes)
-        }
-
+        // hash
         if let data = accountBlock.data {
-            source.append(contentsOf: Bytes(data))
+            let hash = Blake2b.hash(outLength: 32, in: Bytes(data)) ?? Bytes()
+            source.append(contentsOf: hash)
         }
 
-        if let timestamp = accountBlock.timestamp {
-            source.append(contentsOf: timestamp.toBytes)
+        var feeBytes: Bytes = Bytes()
+        if let fee = accountBlock.fee {
+            feeBytes = [UInt8](BigUInt(fee.value).serialize())
+
         }
+        feeBytes = feeBytes.padding(toCount: 32)
+        source.append(contentsOf: feeBytes)
 
         if let logHash = accountBlock.logHash {
             source.append(contentsOf: logHash.hex2Bytes)
         }
 
+        var nonceBytes: Bytes = Bytes()
         if let nonce = accountBlock.nonce {
-            source.append(contentsOf: nonce.hex2Bytes)
+            nonceBytes = nonce.hex2Bytes
         }
+        nonceBytes = nonceBytes.padding(toCount: 8)
+        source.append(contentsOf: nonceBytes)
 
         let hash = Blake2b.hash(outLength: 32, in: source) ?? Bytes()
         let hashString = hash.toHexString()
@@ -262,5 +266,15 @@ extension FixedWidthInteger {
         let data = Data(bytes: &bigEndian, count: MemoryLayout.size(ofValue: bigEndian))
         let bytes = [UInt8](data)
         return bytes
+    }
+}
+
+extension Array where Element == UInt8 {
+    func padding(toCount newCount: Int, withPad pad: UInt8 = 0, isLeftPadding: Bool = true) -> Bytes {
+        if count < newCount {
+            return Bytes(repeating: pad, count: newCount - count) + self
+        } else {
+            return self
+        }
     }
 }

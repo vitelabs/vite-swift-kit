@@ -39,6 +39,7 @@ public struct Transaction: Equatable, Mappable {
     public fileprivate(set) var amount = Balance()
     public fileprivate(set) var token = Token()
     public fileprivate(set) var data: String?
+    public fileprivate(set) var confirmedTimes: UInt64?
 
     fileprivate static let transactionTypeDataPrefixMap: [String: TransactionType] = [
         "f29c6ce2": .register,
@@ -49,17 +50,17 @@ public struct Transaction: Equatable, Mappable {
         "a629c531": .cancelVote,
         "8de7dcfd": .pledge,
         "9ff9c7b6": .cancelPledge,
-        "46d0ce8b": .coin,
-        "9b9125f5": .cancelCoin,
+        "27ad872e": .coin,
+        "7d925ef1": .cancelCoin,
         ]
 
     fileprivate static let transactionTypeToAddressMap: [TransactionType: String] = [
-        .register: ViteWalletConst.ContractAddress.register.rawValue,
-        .registerUpdate: ViteWalletConst.ContractAddress.register.rawValue,
-        .cancelRegister: ViteWalletConst.ContractAddress.register.rawValue,
-        .extractReward: ViteWalletConst.ContractAddress.register.rawValue,
-        .vote: ViteWalletConst.ContractAddress.vote.rawValue,
-        .cancelVote: ViteWalletConst.ContractAddress.vote.rawValue,
+        .register: ViteWalletConst.ContractAddress.consensus.rawValue,
+        .registerUpdate: ViteWalletConst.ContractAddress.consensus.rawValue,
+        .cancelRegister: ViteWalletConst.ContractAddress.consensus.rawValue,
+        .extractReward: ViteWalletConst.ContractAddress.consensus.rawValue,
+        .vote: ViteWalletConst.ContractAddress.consensus.rawValue,
+        .cancelVote: ViteWalletConst.ContractAddress.consensus.rawValue,
         .pledge: ViteWalletConst.ContractAddress.pledge.rawValue,
         .cancelPledge: ViteWalletConst.ContractAddress.pledge.rawValue,
         .coin: ViteWalletConst.ContractAddress.coin.rawValue,
@@ -72,9 +73,9 @@ public struct Transaction: Equatable, Mappable {
         }
 
         switch blockType {
-        case .createSend, .rewardSend:
+        case .createSend, .rewardSend, .refundSend:
             return .send
-        case .receiveError:
+        case .receiveError, .genesisReceive:
             return .receive
         case .send:
             guard let base64 = data, let string = Data(base64Encoded: base64)?.toHexString() else { return .send }
@@ -110,5 +111,6 @@ public struct Transaction: Equatable, Mappable {
         amount <- (map["amount"], JSONTransformer.balance)
         token <- map["tokenInfo"]
         data <- map["data"]
+        confirmedTimes <- (map["confirmedTimes"], JSONTransformer.uint64)
     }
 }

@@ -14,6 +14,7 @@
 		607FACDD1AFB9204008FA782 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 607FACDC1AFB9204008FA782 /* Images.xcassets */; };
 		607FACE01AFB9204008FA782 /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = 607FACDE1AFB9204008FA782 /* LaunchScreen.xib */; };
 		607FACEC1AFB9204008FA782 /* Tests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 607FACEB1AFB9204008FA782 /* Tests.swift */; };
+		8E31D126225B39A60061264A /* OnroadTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8E31D124225B399D0061264A /* OnroadTests.swift */; };
 		8EF4BB2521BE45A5005C1EFB /* RPCTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8EF4BB2421BE45A5005C1EFB /* RPCTests.swift */; };
 		8EF4BB2721BFBCF0005C1EFB /* ServiceTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8EF4BB2621BFBCF0005C1EFB /* ServiceTests.swift */; };
 		8EF4BB2921BFBD75005C1EFB /* Box.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8EF4BB2821BFBD75005C1EFB /* Box.swift */; };
@@ -46,6 +47,7 @@
 		6EEEAEFBFC7248E951738098 /* Pods-ViteWallet_Tests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ViteWallet_Tests.debug.xcconfig"; path = "Pods/Target Support Files/Pods-ViteWallet_Tests/Pods-ViteWallet_Tests.debug.xcconfig"; sourceTree = "<group>"; };
 		7AC58C5C8C2A47542D27AA35 /* Pods-ViteWallet_Example.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ViteWallet_Example.release.xcconfig"; path = "Pods/Target Support Files/Pods-ViteWallet_Example/Pods-ViteWallet_Example.release.xcconfig"; sourceTree = "<group>"; };
 		8CD90FAF75FCA454D1F38C42 /* ViteWallet.podspec */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text; name = ViteWallet.podspec; path = ../ViteWallet.podspec; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.ruby; };
+		8E31D124225B399D0061264A /* OnroadTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnroadTests.swift; sourceTree = "<group>"; };
 		8EF4BB2421BE45A5005C1EFB /* RPCTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RPCTests.swift; sourceTree = "<group>"; };
 		8EF4BB2621BFBCF0005C1EFB /* ServiceTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ServiceTests.swift; sourceTree = "<group>"; };
 		8EF4BB2821BFBD75005C1EFB /* Box.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Box.swift; sourceTree = "<group>"; };
@@ -124,6 +126,7 @@
 				8EF4BB2821BFBD75005C1EFB /* Box.swift */,
 				607FACEB1AFB9204008FA782 /* Tests.swift */,
 				8EF4BB2421BE45A5005C1EFB /* RPCTests.swift */,
+				8EBF1689225B3842005EE24F /* RPC */,
 				8EF4BB2621BFBCF0005C1EFB /* ServiceTests.swift */,
 				607FACE91AFB9204008FA782 /* Supporting Files */,
 			);
@@ -146,6 +149,14 @@
 				2964EF204EF8A368B8BF11AB /* LICENSE */,
 			);
 			name = "Podspec Metadata";
+			sourceTree = "<group>";
+		};
+		8EBF1689225B3842005EE24F /* RPC */ = {
+			isa = PBXGroup;
+			children = (
+				8E31D124225B399D0061264A /* OnroadTests.swift */,
+			);
+			path = RPC;
 			sourceTree = "<group>";
 		};
 		C5EECFF7D5B3136CBD347D45 /* Frameworks */ = {
@@ -237,6 +248,7 @@
 			developmentRegion = English;
 			hasScannedForEncodings = 0;
 			knownRegions = (
+				English,
 				en,
 				Base,
 			);
@@ -375,6 +387,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				607FACEC1AFB9204008FA782 /* Tests.swift in Sources */,
+				8E31D126225B39A60061264A /* OnroadTests.swift in Sources */,
 				8EF4BB2921BFBD75005C1EFB /* Box.swift in Sources */,
 				8EF4BB2721BFBCF0005C1EFB /* ServiceTests.swift in Sources */,
 				8EF4BB2521BE45A5005C1EFB /* RPCTests.swift in Sources */,

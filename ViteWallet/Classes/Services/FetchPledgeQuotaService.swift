@@ -11,14 +11,14 @@ import PromiseKit
 
 public class FetchPledgeQuotaService: PollService {
 
-    public typealias Ret = Result<(UInt64, UInt64)>
+    public typealias Ret = Result<Quota>
 
     deinit {
         printLog("")
     }
 
     public let address: Address
-    public init(address: Address, interval: TimeInterval, completion: ((Result<(UInt64, UInt64)>) -> ())? = nil) {
+    public init(address: Address, interval: TimeInterval, completion: ((Ret) -> ())? = nil) {
         self.address = address
         self.interval = interval
         self.completion = completion
@@ -27,9 +27,9 @@ public class FetchPledgeQuotaService: PollService {
     public var taskId: String = ""
     public var isPolling: Bool = false
     public var interval: TimeInterval = 0
-    public var completion: ((Result<(UInt64, UInt64)>) -> ())?
+    public var completion: ((Ret) -> ())?
 
-    public func handle(completion: @escaping (Result<(UInt64, UInt64)>) -> ()) {
+    public func handle(completion: @escaping (Ret) -> ()) {
 
         Provider.default.getPledgeQuota(address: address)
             .done { (ret) in

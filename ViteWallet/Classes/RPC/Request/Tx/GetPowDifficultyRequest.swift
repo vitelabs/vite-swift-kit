@@ -43,7 +43,9 @@ public struct GetPowDifficultyRequest: JSONRPCKit.Request {
     }
 
     public func response(from resultObject: Any) throws -> Response {
-        if let response = resultObject as? String, let difficulty = BigInt(response) {
+        if let response = resultObject as? [String: Any],
+            let string = response["difficulty"] as? String,
+            let difficulty = BigInt(string) {
             return difficulty
         } else {
             throw ViteError.JSONTypeError

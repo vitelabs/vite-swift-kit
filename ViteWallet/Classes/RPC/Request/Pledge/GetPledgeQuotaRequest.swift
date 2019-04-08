@@ -10,7 +10,7 @@ import Foundation
 import JSONRPCKit
 
 public struct GetPledgeQuotaRequest: JSONRPCKit.Request {
-    public typealias Response = (UInt64, UInt64)
+    public typealias Response = Quota
 
     let address: String
 
@@ -32,11 +32,8 @@ public struct GetPledgeQuotaRequest: JSONRPCKit.Request {
             throw ViteError.JSONTypeError
         }
 
-        if let quotaString = response["quota"] as? String,
-            let maxTxCountString = response["txNum"] as? String,
-            let quota = UInt64(quotaString),
-             let maxTxCount = UInt64(maxTxCountString) {
-            return (quota, maxTxCount)
+        if let quota = Quota(JSON: response) {
+            return quota
         } else {
             throw ViteError.JSONTypeError
         }

@@ -18,14 +18,20 @@ public struct GetTokenTransactionsRequest: JSONRPCKit.Request {
     let count: Int
 
     public var method: String {
-        return "ledger_getBlocksByHashInToken"
+//        return "ledger_getBlocksByHashInToken"
+        return "ledger_getBlocksByHash"
     }
 
     public var parameters: Any? {
+//        if let hash = hash {
+//            return [address, hash, tokenId, count + 1]
+//        } else {
+//            return [address, nil, tokenId, count + 1]
+//        }
         if let hash = hash {
-            return [address, hash, tokenId, count + 1]
+            return [address, hash, count + 1]
         } else {
-            return [address, nil, tokenId, count + 1]
+            return [address, nil, count + 1]
         }
     }
 

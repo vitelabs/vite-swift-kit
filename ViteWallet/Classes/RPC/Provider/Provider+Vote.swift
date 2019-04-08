@@ -30,7 +30,7 @@ extension Provider {
             .then { [weak self] data -> Promise<AccountBlock> in
                 guard let `self` = self else { return Promise(error: ViteError.cancelError) }
                 return self.sendRawTxWithoutPow(account: account,
-                                                toAddress: ViteWalletConst.ContractAddress.vote.address,
+                                                toAddress: ViteWalletConst.ContractAddress.consensus.address,
                                                 tokenId: ViteWalletConst.viteToken.id,
                                                 amount: Balance(value: BigInt(0)),
                                                 data: data)
@@ -43,7 +43,7 @@ extension Provider {
             .then { [weak self] data -> Promise<SendBlockContext> in
                 guard let `self` = self else { return Promise(error: ViteError.cancelError) }
                 return self.getPowForSendRawTx(account: account,
-                                               toAddress: ViteWalletConst.ContractAddress.vote.address,
+                                               toAddress: ViteWalletConst.ContractAddress.consensus.address,
                                                tokenId: ViteWalletConst.viteToken.id,
                                                amount: Balance(value: BigInt(0)),
                                                data: data)
@@ -59,7 +59,7 @@ extension Provider {
             .then { [weak self] data -> Promise<AccountBlock> in
                 guard let `self` = self else { return Promise(error: ViteError.cancelError) }
                 return self.sendRawTxWithoutPow(account: account,
-                                                toAddress: ViteWalletConst.ContractAddress.vote.address,
+                                                toAddress: ViteWalletConst.ContractAddress.consensus.address,
                                                 tokenId: ViteWalletConst.viteToken.id,
                                                 amount: Balance(value: BigInt(0)),
                                                 data: data)
@@ -73,7 +73,7 @@ extension Provider {
             .then { [weak self] data -> Promise<SendBlockContext> in
                 guard let `self` = self else { return Promise(error: ViteError.cancelError) }
                 return self.getPowForSendRawTx(account: account,
-                                               toAddress: ViteWalletConst.ContractAddress.vote.address,
+                                               toAddress: ViteWalletConst.ContractAddress.consensus.address,
                                                tokenId: ViteWalletConst.viteToken.id,
                                                amount: Balance(value: BigInt(0)),
                                                data: data)

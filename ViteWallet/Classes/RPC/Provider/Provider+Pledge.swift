@@ -13,7 +13,7 @@ import BigInt
 
 // MARK: Get Info
 extension Provider {
-    public func getPledgeQuota(address: Address) -> Promise<(UInt64, UInt64)> {
+    public func getPledgeQuota(address: Address) -> Promise<Quota> {
         let request = GetPledgeQuotaRequest(address: address.description)
         return RPCRequest(for: server, batch: BatchFactory().create(request)).promise
     }

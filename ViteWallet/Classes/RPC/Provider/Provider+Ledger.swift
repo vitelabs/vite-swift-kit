@@ -31,10 +31,6 @@ extension Provider {
             .map { BalanceInfo.mergeBalanceInfos($0, onroadInfos: $1) }
     }
 
-    public func getOnroadInfos(address: Address) -> Promise<[OnroadInfo]> {
-        return RPCRequest(for: server, batch: BatchFactory().create(GetOnroadInfosRequest(address: address.description))).promise
-    }
-
     public func getTransactions(address: Address, hash: String?, count: Int) -> Promise<(transactions: [Transaction], nextHash: String?)> {
         return RPCRequest(for: server, batch: BatchFactory().create(GetTransactionsRequest(address: address.description, hash: hash, count: count))).promise
     }
