@@ -31,7 +31,7 @@ public class FetchOnroadInfoService: PollService {
 
     public func handle(completion: @escaping (Result<[OnroadInfo]>) -> ()) {
 
-        Provider.default.getOnroadInfos(address: address)
+        GetOnroadInfosRequest(address: address.description).defaultProviderPromise
             .done { (ret) in
                 completion(Result(value: ret))
             }.catch { (e) in

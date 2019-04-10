@@ -10,14 +10,14 @@ import Foundation
 import PromiseKit
 
 public class ReceiveTransactionService: PollService {
-    public typealias Ret = Result<(AccountBlock, AccountBlock)?>
+    public typealias Ret = Result<AccountBlockPair?>
 
     deinit {
         printLog("")
     }
 
     public let account: Wallet.Account
-    public init(account: Wallet.Account, interval: TimeInterval, completion: ((Result<(AccountBlock, AccountBlock)?>) -> ())? = nil) {
+    public init(account: Wallet.Account, interval: TimeInterval, completion: ((Result<AccountBlockPair?>) -> ())? = nil) {
         self.account = account
         self.interval = interval
         self.completion = completion
@@ -26,15 +26,15 @@ public class ReceiveTransactionService: PollService {
     public var taskId: String = ""
     public var isPolling: Bool = false
     public var interval: TimeInterval = 0
-    public var completion: ((Result<(AccountBlock, AccountBlock)?>) -> ())?
+    public var completion: ((Result<AccountBlockPair?>) -> ())?
 
-    public func handle(completion: @escaping (Result<(AccountBlock, AccountBlock)?>) -> ()) {
+    public func handle(completion: @escaping (Result<AccountBlockPair?>) -> ()) {
         let a = account
-        Provider.default.receiveLatestTransactionIfHasWithoutPow(account: a)
-            .recover { (e) -> Promise<(AccountBlock, AccountBlock)?> in
+        ViteNode.utils.receive.latestRawTxIfHasWithoutPow(account: a)
+            .recover { (e) -> Promise<AccountBlockPair?> in
                 if ViteError.conversion(from: e).code == ViteErrorCode.rpcNotEnoughQuota {
                     printLog("Use PoW")
-                    return Provider.default.receiveLatestTransactionIfHasWithPow(account: a)
+                    return ViteNode.utils.receive.latestRawTxIfHasWithPow(account: a)
                 } else {
                     return Promise(error: e)
                 }

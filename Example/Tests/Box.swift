@@ -61,7 +61,7 @@ extension Box {
     struct f {
         static func afterLatestAccountBlockConfirmed(address: Address) -> Promise<AccountBlock> {
             func getPromise() -> Promise<AccountBlock> {
-                return Provider.default.getLatestAccountBlockRequest(address: address)
+                return GetLatestAccountBlockRequest(address: address.description).defaultProviderPromise
                     .then { ret -> Promise<AccountBlock> in
                         if let accountBlock = ret {
                             if let confirmedTimes = accountBlock.confirmedTimes, confirmedTimes > 0 {
@@ -83,11 +83,10 @@ extension Box {
         }
 
         static func receiveAll(_ block: @escaping () -> ()) {
-
-            Provider.default.receiveLatestTransactionIfHasWithPow(account: Box.testWallet.firstAccount)
+            ViteNode.utils.receive.latestRawTxIfHasWithPow(account: Box.testWallet.firstAccount)
                 .then { (ret) -> Promise<AccountBlock?> in
                     if let ret = ret {
-                        printLog("receive: \(ret.0.amount!.value.description)")
+                        printLog("receive: \(ret.send.amount!.value.description)")
                         return afterLatestAccountBlockConfirmed(address: Box.testWallet.firstAccount.address).map { ret -> AccountBlock? in  ret }
                     } else {
                         printLog("no need to receive")
@@ -106,9 +105,9 @@ extension Box {
         }
 
         static func sendViteToSelf(account: Wallet.Account, amount: Balance, note: String? = nil) -> Promise<AccountBlock> {
-            return Provider.default.getPowForSendTransaction(account: account, toAddress: account.address, tokenId: ViteWalletConst.viteToken.id, amount: amount, note: note)
+            return ViteNode.transaction.getPow(account: account, toAddress: account.address, tokenId: ViteWalletConst.viteToken.id, amount: amount, note: note)
                 .then { context -> Promise<AccountBlock> in
-                    return Provider.default.sendRawTxWithContext(context)
+                    return ViteNode.rawTx.send.context(context)
                 }.then { _ in
                     return afterLatestAccountBlockConfirmed(address: account.address)
             }

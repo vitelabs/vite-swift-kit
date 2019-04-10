@@ -27,7 +27,6 @@ public struct GetPowDifficultyRequest: JSONRPCKit.Request {
 
     public init(accountAddress: Address,
                 prevHash: String,
-                snapshotHash: String,
                 type: AccountBlock.BlockType,
                 toAddress: Address?,
                 data: Data?,
@@ -35,7 +34,6 @@ public struct GetPowDifficultyRequest: JSONRPCKit.Request {
 
         self.context = GetPowDifficultyContext(accountAddress: accountAddress,
                                                prevHash: prevHash,
-                                               snapshotHash: snapshotHash,
                                                type: type,
                                                toAddress: toAddress,
                                                data: data,
@@ -58,7 +56,6 @@ extension GetPowDifficultyRequest {
 
         fileprivate(set) var accountAddress: Address?
         fileprivate(set) var prevHash: String?
-        fileprivate(set) var snapshotHash: String?
         fileprivate(set) var type: AccountBlock.BlockType?
         fileprivate(set) var toAddress: Address?
         fileprivate(set) var data: Data?
@@ -69,7 +66,6 @@ extension GetPowDifficultyRequest {
         public mutating func mapping(map: Map) {
             accountAddress <- (map["selfAddr"], JSONTransformer.address)
             prevHash <- map["prevHash"]
-            snapshotHash <- map["snapshotHash"]
             type <- map["blockType"]
             toAddress <- (map["toAddr"], JSONTransformer.address)
             data <- (map["data"], JSONTransformer.dataToBase64)
@@ -78,7 +74,6 @@ extension GetPowDifficultyRequest {
 
         public init(accountAddress: Address,
                     prevHash: String,
-                    snapshotHash: String,
                     type: AccountBlock.BlockType,
                     toAddress: Address?,
                     data: Data?,
@@ -86,7 +81,6 @@ extension GetPowDifficultyRequest {
 
             self.accountAddress = accountAddress
             self.prevHash = prevHash
-            self.snapshotHash = snapshotHash
             self.type = type
             self.toAddress = toAddress
             self.data = data

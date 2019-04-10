@@ -93,7 +93,6 @@ extension AccountBlock {
                                             publicKey: String,
                                             address: Address,
                                             latest: AccountBlock?,
-                                            snapshotHash: String,
                                             toAddress: Address,
                                             tokenId: String,
                                             amount: Balance,
@@ -105,7 +104,6 @@ extension AccountBlock {
                                          publicKey: publicKey,
                                          address: address,
                                          latest: latest,
-                                         snapshotHash: snapshotHash,
                                          nonce: nonce,
                                          difficulty: difficulty)
 
@@ -129,7 +127,6 @@ extension AccountBlock {
                                                address: Address,
                                                onroadBlock: AccountBlock,
                                                latest: AccountBlock?,
-                                               snapshotHash: String,
                                                nonce: String?,
                                                difficulty: BigInt?) -> AccountBlock {
 
@@ -137,7 +134,6 @@ extension AccountBlock {
                                          publicKey: publicKey,
                                          address: address,
                                          latest: latest,
-                                         snapshotHash: snapshotHash,
                                          nonce: nonce,
                                          difficulty: difficulty)
 
@@ -157,7 +153,6 @@ extension AccountBlock {
                                                  publicKey: String,
                                                  address: Address,
                                                  latest: AccountBlock?,
-                                                 snapshotHash: String,
                                                  nonce: String?,
                                                  difficulty: BigInt?) -> AccountBlock {
         var block = AccountBlock()
@@ -172,8 +167,6 @@ extension AccountBlock {
         block.accountAddress = address
 
         block.fee = Balance(value: BigInt(0))
-        block.snapshotHash = snapshotHash
-        block.timestamp = Int64(Date().timeIntervalSince1970)
         block.logHash = nil
         block.nonce = nonce
         block.difficulty = difficulty

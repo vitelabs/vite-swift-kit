@@ -17,13 +17,13 @@ class Tests: XCTestCase {
     }
 
     func testGetTestToken() {
-        let address = "vite_847e1672c9a775ca0f3c3a2d3bf389ca466e5501cbecdb7107"
+        let address = Box.testWallet.secondAccount.address
         let amount = "10000"
         let balance = Balance(value: BigInt("1000000000000000000") * BigInt(amount)!)
         async { (c) in
-            Provider.default.getPowForSendTransaction(account: Box.genesisWallet.secondAccount, toAddress: Address(string: address), tokenId: ViteWalletConst.viteToken.id, amount: balance, note: nil)
+            ViteNode.transaction.getPow(account: Box.genesisWallet.secondAccount, toAddress: address, tokenId: ViteWalletConst.viteToken.id, amount: balance, note: nil)
                 .then { context -> Promise<AccountBlock> in
-                    return Provider.default.sendRawTxWithContext(context)
+                    return ViteNode.rawTx.send.context(context)
                 }.done { (ret) in
                     printLog("get \(ret.amount!.value.description)")
                 }.catch { (error) in

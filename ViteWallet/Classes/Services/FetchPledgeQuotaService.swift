@@ -31,7 +31,7 @@ public class FetchPledgeQuotaService: PollService {
 
     public func handle(completion: @escaping (Ret) -> ()) {
 
-        Provider.default.getPledgeQuota(address: address)
+        ViteNode.pledge.info.getPledgeQuota(address: address)
             .done { (ret) in
                 completion(Result(value: ret))
             }.catch { (e) in

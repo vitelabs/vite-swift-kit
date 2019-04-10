@@ -54,18 +54,3 @@ public struct RPCRequest<Batch: JSONRPCKit.Batch>: APIKit.Request {
         return try batch.responses(from: object)
     }
 }
-
-extension APIKit.Request {
-    public var promise: Promise<Response> {
-        return Promise<Response> { seal in
-            Session.send(self) { result in
-                switch result {
-                case .success(let r):
-                    seal.fulfill(r)
-                case .failure(let e):
-                    seal.reject(e)
-                }
-            }
-        }
-    }
-}

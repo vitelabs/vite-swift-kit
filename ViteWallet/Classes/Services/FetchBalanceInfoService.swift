@@ -31,7 +31,7 @@ public class FetchBalanceInfoService: PollService {
 
     public func handle(completion: @escaping (Result<[BalanceInfo]>) -> ()) {
 
-        Provider.default.getBalanceInfos(address: address)
+        ViteNode.utils.getBalanceInfos(address: address)
             .done { (ret) in
                 completion(Result(value: ret))
             }.catch { (e) in

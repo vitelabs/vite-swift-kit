@@ -45,14 +45,14 @@ class OnroadTests: XCTestCase {
                     printLog("send self \(ret.amount!.value.description)")
                     return Promise.value(Void())
                 }.then { () -> Promise<[AccountBlock]> in
-                    return Provider.default.getOnroaBlocks(address: address, index: 0, count: 10)
+                    return GetOnroadBlocksRequest(address: address.description, index: 0, count: 10).defaultProviderPromise
                 }.then { ret -> Promise<[OnroadInfo]> in
                     XCTAssert(ret.count == 2)
                     let first = ret[0]
                     let second = ret[1]
                     XCTAssert(first.amount?.value == firstAmount.value)
                     XCTAssert(second.amount?.value == secondAmount.value)
-                    return Provider.default.getOnroadInfos(address: address)
+                    return GetOnroadInfosRequest(address: address.description).defaultProviderPromise
                 }.done { ret in
 //                    XCTAssert(ret.count == 1)
 //                    let info = ret[0]
