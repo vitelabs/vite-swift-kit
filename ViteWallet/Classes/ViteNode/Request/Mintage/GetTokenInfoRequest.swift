@@ -15,7 +15,7 @@ public struct GetTokenInfoRequest: JSONRPCKit.Request {
     let tokenId: String
 
     public var method: String {
-        return "ledger_getTokenMintage"
+        return "mintage_getTokenInfoById"
     }
 
     public var parameters: Any? {

@@ -17,54 +17,121 @@ class TxTests: XCTestCase {
         super.setUp()
         Box.setUp()
         async { (c) in
-            Box.f.receiveAll(c)
+            Box.f.receiveAll(account: Box.testWallet.firstAccount, {
+                Box.f.receiveAll(account: Box.testWallet.secondAccount, c)
+            })
         }
     }
 
     override func tearDown() {
         async { (c) in
-            Box.f.receiveAll(c)
+            Box.f.receiveAll(account: Box.testWallet.firstAccount, {
+                Box.f.receiveAll(account: Box.testWallet.secondAccount, c)
+            })
         }
         super.tearDown()
     }
 
-    func testExample() {
+    func testWithPow() {
         
         async { (c) in
-//            let address = Box.testWallet.firstAccount.address
-//            let amount = Balance(value: BigInt("1000000000000000000")!)
-//            printLog("start")
-//            
-//            Box.f.sendViteToSelf(account: Box.testWallet.firstAccount, amount: firstAmount)
-//                .then { ret -> Promise<Void> in
-//                    printLog("send self \(ret.amount!.value.description)")
-//                    return Promise.value(())
-//                }.then { () -> Promise<AccountBlock> in
-//                    return Box.f.sendViteToSelf(account: Box.testWallet.firstAccount, amount: secondAmount)
-//                }.then { ret -> Promise<Void> in
-//                    printLog("send self \(ret.amount!.value.description)")
-//                    return Promise.value(Void())
-//                }.then { () -> Promise<[AccountBlock]> in
-//                    return GetOnroadBlocksRequest(address: address.description, index: 0, count: 10).defaultProviderPromise
-//                }.then { ret -> Promise<[OnroadInfo]> in
-//                    XCTAssert(ret.count == 2)
-//                    let first = ret[0]
-//                    let second = ret[1]
-//                    XCTAssert(first.amount?.value == firstAmount.value)
-//                    XCTAssert(second.amount?.value == secondAmount.value)
-//                    return GetOnroadInfosRequest(address: address.description).defaultProviderPromise
-//                }.done { ret in
-////                    XCTAssert(ret.count == 1)
-////                    let info = ret[0]
-////                    XCTAssert(info.unconfirmedCount == 2)
-////                    XCTAssert(info.unconfirmedBalance.value == (firstAmount.value + secondAmount.value))
-//                }.catch { (error) in
-//                    printLog(error)
-//                    XCTAssert(false)
-//                }.finally {
-//                    printLog("end")
-//                    c()
-//            }
+            let account = Box.testWallet.firstAccount
+            let address = account.address
+            let tokenId = ViteWalletConst.viteToken.id
+            let amount = Balance(value: BigInt("1000000000000000000")!)
+            let data = Data("00112233aabbcc".hex2Bytes)
+
+            firstly(execute: { () -> Promise<SendBlockContext> in
+                printLog("start")
+                printLog("=============== send with pow ===============")
+                printLog("🚀 tx_calcPoWDifficulty")
+                return ViteNode.rawTx.send.getPow(account: account, toAddress: address, tokenId: tokenId, amount: amount, data: data)
+            }).then({ (context) -> Promise<AccountBlock> in
+                printLog("✅tx_calcPoWDifficulty")
+                printLog("🚀tx_sendRawTx")
+                return ViteNode.rawTx.send.context(context)
+            }).then({ (_) -> Promise<AccountBlock> in
+                printLog("✅tx_sendRawTx")
+                return Box.f.afterLatestAccountBlockConfirmed(address: address)
+            }).then({ (accountBlock) -> Promise<[AccountBlock]> in
+                XCTAssert(accountBlock.toAddress == address)
+                XCTAssert(accountBlock.tokenId == tokenId)
+                XCTAssert(accountBlock.amount?.value == amount.value)
+                XCTAssert(accountBlock.data == data)
+                printLog("=============== receive with pow ===============")
+                return ViteNode.onroad.getOnroadBlocks(address: account.address, index: 0, count: 1)
+            }).then({ (accountBlocks) -> Promise<ReceiveBlockContext> in
+                XCTAssert(accountBlocks.count == 1)
+                let accountBlock = accountBlocks[0]
+                printLog("🚀 tx_calcPoWDifficulty")
+                return ViteNode.rawTx.receive.getPow(account: account, onroadBlock: accountBlock)
+            }).then({ (context) -> Promise<AccountBlock> in
+                printLog("✅tx_calcPoWDifficulty")
+                printLog("🚀tx_sendRawTx")
+                return ViteNode.rawTx.receive.context(context)
+            }).then({ (_) -> Promise<AccountBlock> in
+                printLog("✅tx_sendRawTx")
+                return Box.f.afterLatestAccountBlockConfirmed(address: address)
+            }).then({ (_) -> Promise<[AccountBlock]> in
+                return ViteNode.onroad.getOnroadBlocks(address: account.address, index: 0, count: 1)
+            }).done({ (accountBlocks) in
+                XCTAssert(accountBlocks.count == 0)
+            }).catch({ (error) in
+                printLog(error)
+                XCTAssert(false)
+            }).finally({
+                printLog("end")
+                c()
+            })
+        }
+    }
+
+    func testWithoutPow() {
+
+        async { (c) in
+            let account = Box.testWallet.secondAccount
+            let address = account.address
+            let tokenId = ViteWalletConst.viteToken.id
+            let amount = Balance(value: BigInt("1000000000000000000")!)
+            let data = Data("00112233aabbcc".hex2Bytes)
+
+            firstly(execute: { () -> Promise<Quota> in
+                printLog("start")
+                return ViteNode.pledge.info.getPledgeQuota(address: address)
+            }).then({ (quota) -> Promise<AccountBlock> in
+                XCTAssert(quota.utps > 0, "❌ need pledge")
+                printLog("=============== send without pow ===============")
+                printLog("🚀tx_sendRawTx")
+                return ViteNode.rawTx.send.withoutPow(account: account, toAddress: address, tokenId: tokenId, amount: amount, data: data)
+            }).then({ (_) -> Promise<AccountBlock> in
+                printLog("✅tx_sendRawTx")
+                return Box.f.afterLatestAccountBlockConfirmed(address: address)
+            }).then({ (accountBlock) -> Promise<[AccountBlock]> in
+                XCTAssert(accountBlock.toAddress == address)
+                XCTAssert(accountBlock.tokenId == tokenId)
+                XCTAssert(accountBlock.amount?.value == amount.value)
+                XCTAssert(accountBlock.data == data)
+                printLog("=============== receive without pow ===============")
+                return ViteNode.onroad.getOnroadBlocks(address: account.address, index: 0, count: 1)
+            }).then({ (accountBlocks) -> Promise<AccountBlock> in
+                XCTAssert(accountBlocks.count == 1)
+                let accountBlock = accountBlocks[0]
+                printLog("🚀 tx_sendRawTx")
+                return ViteNode.rawTx.receive.withoutPow(account: account, onroadBlock: accountBlock)
+            }).then({ (_) -> Promise<AccountBlock> in
+                printLog("✅tx_sendRawTx")
+                return Box.f.afterLatestAccountBlockConfirmed(address: address)
+            }).then({ (_) -> Promise<[AccountBlock]> in
+                return ViteNode.onroad.getOnroadBlocks(address: account.address, index: 0, count: 1)
+            }).done({ (accountBlocks) in
+                XCTAssert(accountBlocks.count == 0)
+            }).catch({ (error) in
+                printLog(error)
+                XCTAssert(false)
+            }).finally({
+                printLog("end")
+                c()
+            })
         }
     }
 }

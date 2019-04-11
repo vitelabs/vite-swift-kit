@@ -17,18 +17,18 @@ class OnroadTests: XCTestCase {
         super.setUp()
         Box.setUp()
         async { (c) in
-            Box.f.receiveAll(c)
+            Box.f.receiveAll(account: Box.testWallet.firstAccount, c)
         }
     }
 
     override func tearDown() {
         async { (c) in
-            Box.f.receiveAll(c)
+            Box.f.receiveAll(account: Box.testWallet.firstAccount, c)
         }
         super.tearDown()
     }
 
-    func testExample() {
+    func testAll() {
         
         async { (c) in
             let address = Box.testWallet.firstAccount.address
@@ -45,14 +45,14 @@ class OnroadTests: XCTestCase {
                     printLog("send self \(ret.amount!.value.description)")
                     return Promise.value(Void())
                 }.then { () -> Promise<[AccountBlock]> in
-                    return GetOnroadBlocksRequest(address: address.description, index: 0, count: 10).defaultProviderPromise
+                    return ViteNode.onroad.getOnroadBlocks(address: address, index: 0, count: 10)
                 }.then { ret -> Promise<[OnroadInfo]> in
                     XCTAssert(ret.count == 2)
                     let first = ret[0]
                     let second = ret[1]
                     XCTAssert(first.amount?.value == firstAmount.value)
                     XCTAssert(second.amount?.value == secondAmount.value)
-                    return GetOnroadInfosRequest(address: address.description).defaultProviderPromise
+                    return ViteNode.onroad.getOnroadInfos(address: address)
                 }.done { ret in
 //                    XCTAssert(ret.count == 1)
 //                    let info = ret[0]

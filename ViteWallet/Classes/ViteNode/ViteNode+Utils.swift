@@ -19,7 +19,7 @@ public extension ViteNode.utils {
 public extension ViteNode.utils.receive {
 
     static func latestRawTxIfHasWithoutPow(account: Wallet.Account) -> Promise<AccountBlockPair?> {
-        return GetOnroadBlocksRequest(address: account.address.description, index: 0, count: 1).defaultProviderPromise
+        return ViteNode.onroad.getOnroadBlocks(address: account.address, index: 0, count: 1)
             .then { onroadBlocks -> Promise<AccountBlockPair?> in
                 guard let onroadBlock = onroadBlocks.first else { return Promise.value(nil) }
                 return ViteNode.rawTx.receive.withoutPow(account: account, onroadBlock: onroadBlock).map { block -> AccountBlockPair? in AccountBlockPair(send: onroadBlock, receive: block) }
@@ -27,7 +27,7 @@ public extension ViteNode.utils.receive {
     }
 
     static func latestRawTxIfHasWithPow(account: Wallet.Account) -> Promise<AccountBlockPair?> {
-        return GetOnroadBlocksRequest(address: account.address.description, index: 0, count: 1).defaultProviderPromise
+        return ViteNode.onroad.getOnroadBlocks(address: account.address, index: 0, count: 1)
             .then { onroadBlocks -> Promise<ReceiveBlockContext?> in
                 guard let onroadBlock = onroadBlocks.first else { return Promise.value(nil) }
                 return ViteNode.rawTx.receive.getPow(account: account, onroadBlock: onroadBlock).map { context -> ReceiveBlockContext? in context }

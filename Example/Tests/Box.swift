@@ -14,7 +14,7 @@ import BigInt
 struct Box {
 
     static func setUp() {
-        Provider.default.update(server: RPCServer(url: URL(string: "http://148.70.30.139:48132")!))
+        Provider.default.update(server: RPCServer(url: URL(string: "http://148.70.30.139:48132/123")!))
         LogConfig.instance.isEnable = true
     }
 
@@ -61,7 +61,7 @@ extension Box {
     struct f {
         static func afterLatestAccountBlockConfirmed(address: Address) -> Promise<AccountBlock> {
             func getPromise() -> Promise<AccountBlock> {
-                return GetLatestAccountBlockRequest(address: address.description).defaultProviderPromise
+                return ViteNode.ledger.getLatestAccountBlock(address: address)
                     .then { ret -> Promise<AccountBlock> in
                         if let accountBlock = ret {
                             if let confirmedTimes = accountBlock.confirmedTimes, confirmedTimes > 0 {
@@ -82,26 +82,34 @@ extension Box {
             return getPromise()
         }
 
-        static func receiveAll(_ block: @escaping () -> ()) {
-            ViteNode.utils.receive.latestRawTxIfHasWithPow(account: Box.testWallet.firstAccount)
-                .then { (ret) -> Promise<AccountBlock?> in
-                    if let ret = ret {
-                        printLog("receive: \(ret.send.amount!.value.description)")
-                        return afterLatestAccountBlockConfirmed(address: Box.testWallet.firstAccount.address).map { ret -> AccountBlock? in  ret }
-                    } else {
-                        printLog("no need to receive")
-                        return Promise.value(nil)
-                    }
-                }.done { (ret) in
-                    if let _ = ret {
-                        self.receiveAll(block)
-                    } else {
-                        block()
-                    }
-                }.catch { (error) in
+        static func receiveAll(account: Wallet.Account, _ block: @escaping () -> ()) {
+            receiveAll(account: account)
+                .done({ _ in
+                    block()
+                }).catch({ (error) in
                     printLog(error)
                     XCTAssert(false)
+                })
+        }
+
+        static func receiveAll(account: Wallet.Account) -> Promise<Void> {
+            func getPromise() -> Promise<Void> {
+                return ViteNode.utils.receive.latestRawTxIfHasWithPow(account: account)
+                    .then({ (ret) -> Promise<Void> in
+                        if let ret = ret {
+                            printLog("receive: \(ret.send.amount!.value.description)")
+                            return afterLatestAccountBlockConfirmed(address: account.address)
+                                .then({ (_) -> Promise<Void> in
+                                    return getPromise()
+                                })
+                        } else {
+                            printLog("no need to receive")
+                            return Promise.value(Void())
+                        }
+                    })
             }
+
+            return getPromise()
         }
 
         static func sendViteToSelf(account: Wallet.Account, amount: Balance, note: String? = nil) -> Promise<AccountBlock> {
@@ -111,6 +119,16 @@ extension Box {
                 }.then { _ in
                     return afterLatestAccountBlockConfirmed(address: account.address)
             }
+        }
+
+        static func getTestToken(account: Wallet.Account, amount: Balance) -> Promise<Void> {
+            let address = account.address
+            return ViteNode.transaction.getPow(account: Box.genesisWallet.secondAccount, toAddress: address, tokenId: ViteWalletConst.viteToken.id, amount: amount, note: nil)
+                .then({ context -> Promise<AccountBlock> in
+                    return ViteNode.rawTx.send.context(context)
+                }).then({ _ -> Promise<Void> in
+                    return receiveAll(account: account)
+                })
         }
     }
 }

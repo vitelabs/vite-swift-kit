@@ -21,7 +21,7 @@ public extension ViteNode.rawTx.send {
                            tokenId: String,
                            amount: Balance,
                            data: Data?) -> Promise<AccountBlock> {
-        return GetLatestAccountBlockRequest(address: account.address.description).defaultProviderPromise
+        return ViteNode.ledger.getLatestAccountBlock(address: account.address)
             .then { latestAccountBlock -> Promise<AccountBlock> in
                 let send = AccountBlock.makeSendAccountBlock(secretKey: account.secretKey,
                                                              publicKey: account.publicKey,
@@ -33,7 +33,7 @@ public extension ViteNode.rawTx.send {
                                                              data: data,
                                                              nonce: nil,
                                                              difficulty: nil)
-                return SendRawTxRequest(accountBlock: send).defaultProviderPromise.map({ _ in send })
+                return ViteNode.tx.sendRawTx(accountBlock: send)
         }
     }
 
@@ -42,19 +42,19 @@ public extension ViteNode.rawTx.send {
                        tokenId: String,
                        amount: Balance,
                        data: Data?) -> Promise<SendBlockContext> {
-        return GetLatestAccountBlockRequest(address: account.address.description).defaultProviderPromise
+        return ViteNode.ledger.getLatestAccountBlock(address: account.address)
             .then { latestAccountBlock -> Promise<(latestAccountBlock: AccountBlock?, difficulty: BigInt)> in
-                GetPowDifficultyRequest(accountAddress: account.address,
-                                        prevHash: latestAccountBlock?.hash ?? AccountBlock.Const.defaultHash,
-                                        type: .send,
-                                        toAddress: toAddress,
-                                        data: data,
-                                        usePledgeQuota: false).defaultProviderPromise.map { (latestAccountBlock, $0) }
+                ViteNode.tx.getPowDifficulty(accountAddress: account.address,
+                                             prevHash: latestAccountBlock?.hash ?? AccountBlock.Const.defaultHash,
+                                             type: .send,
+                                             toAddress: toAddress,
+                                             data: data,
+                                             usePledgeQuota: false).map { (latestAccountBlock, $0) }
             }
             .then { (latestAccountBlock, difficulty) -> Promise<(latestAccountBlock: AccountBlock?, difficulty: BigInt, nonce: String)> in
-                GetPowNonceRequest(address: account.address,
-                                   preHash: latestAccountBlock?.hash,
-                                   difficulty: difficulty).defaultProviderPromise.map { (latestAccountBlock, difficulty, $0) }
+                ViteNode.pow.getNonce(address: account.address,
+                                      preHash: latestAccountBlock?.hash,
+                                      difficulty: difficulty).map { (latestAccountBlock, difficulty, $0) }
             }
             .map { (latestAccountBlock, difficulty, nonce) -> SendBlockContext in
                 SendBlockContext(account: account,
@@ -80,14 +80,14 @@ public extension ViteNode.rawTx.send {
                                                      data: context.data,
                                                      nonce: context.nonce,
                                                      difficulty: context.difficulty)
-        return SendRawTxRequest(accountBlock: send).defaultProviderPromise.map { _ in send }
+        return ViteNode.tx.sendRawTx(accountBlock: send)
     }
 }
 
 public extension ViteNode.rawTx.receive {
     static func withoutPow(account: Wallet.Account, onroadBlock: AccountBlock) -> Promise<AccountBlock> {
 
-        return GetLatestAccountBlockRequest(address: account.address.description).defaultProviderPromise
+        return ViteNode.ledger.getLatestAccountBlock(address: account.address)
             .then { latestAccountBlock -> Promise<AccountBlock> in
                 let receive = AccountBlock.makeReceiveAccountBlock(secretKey: account.secretKey,
                                                                    publicKey: account.publicKey,
@@ -96,24 +96,24 @@ public extension ViteNode.rawTx.receive {
                                                                    latest: latestAccountBlock,
                                                                    nonce: nil,
                                                                    difficulty: nil)
-                return SendRawTxRequest(accountBlock: receive).defaultProviderPromise.map { _ in onroadBlock }
+                return ViteNode.tx.sendRawTx(accountBlock: receive)
         }
     }
 
     static func getPow(account: Wallet.Account, onroadBlock: AccountBlock) -> Promise<ReceiveBlockContext> {
-        return GetLatestAccountBlockRequest(address: account.address.description).defaultProviderPromise
+        return ViteNode.ledger.getLatestAccountBlock(address: account.address)
             .then { latestAccountBlock -> Promise<(latestAccountBlock: AccountBlock?, difficulty: BigInt)> in
-                GetPowDifficultyRequest(accountAddress: account.address,
-                                        prevHash: latestAccountBlock?.hash ?? AccountBlock.Const.defaultHash,
-                                        type: .receive,
-                                        toAddress: nil,
-                                        data: nil,
-                                        usePledgeQuota: false).defaultProviderPromise.map { (latestAccountBlock, $0) }
+                ViteNode.tx.getPowDifficulty(accountAddress: account.address,
+                                             prevHash: latestAccountBlock?.hash ?? AccountBlock.Const.defaultHash,
+                                             type: .receive,
+                                             toAddress: nil,
+                                             data: nil,
+                                             usePledgeQuota: false).map { (latestAccountBlock, $0) }
             }
             .then { (latestAccountBlock, difficulty) -> Promise<(latestAccountBlock: AccountBlock?, difficulty: BigInt, nonce: String)> in
-                GetPowNonceRequest(address: account.address,
-                                   preHash: latestAccountBlock?.hash,
-                                   difficulty: difficulty).defaultProviderPromise.map { (latestAccountBlock, difficulty, $0) }
+                ViteNode.pow.getNonce(address: account.address,
+                                      preHash: latestAccountBlock?.hash,
+                                      difficulty: difficulty).map { (latestAccountBlock, difficulty, $0) }
             }
             .map { (latestAccountBlock, difficulty, nonce) -> ReceiveBlockContext in
                 ReceiveBlockContext(account: account,
@@ -132,6 +132,6 @@ public extension ViteNode.rawTx.receive {
                                                            latest: context.latest,
                                                            nonce: context.nonce,
                                                            difficulty: context.difficulty)
-        return SendRawTxRequest(accountBlock: receive).defaultProviderPromise.map { _ in receive }
+        return ViteNode.tx.sendRawTx(accountBlock: receive)
     }
 }

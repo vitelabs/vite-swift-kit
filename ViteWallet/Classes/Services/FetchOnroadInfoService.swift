@@ -31,7 +31,7 @@ public class FetchOnroadInfoService: PollService {
 
     public func handle(completion: @escaping (Result<[OnroadInfo]>) -> ()) {
 
-        GetOnroadInfosRequest(address: address.description).defaultProviderPromise
+        ViteNode.onroad.getOnroadInfos(address: address)
             .done { (ret) in
                 completion(Result(value: ret))
             }.catch { (e) in
