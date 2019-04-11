@@ -14,7 +14,7 @@ import BigInt
 struct Box {
 
     static func setUp() {
-        Provider.default.update(server: RPCServer(url: URL(string: "http://148.70.30.139:48132/123")!))
+        Provider.default.update(server: RPCServer(url: URL(string: "http://148.70.30.139:48132")!))
         LogConfig.instance.isEnable = true
     }
 

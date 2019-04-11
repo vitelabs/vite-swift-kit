@@ -271,3 +271,74 @@ extension Array where Element == UInt8 {
         }
     }
 }
+
+extension AccountBlock {
+    public enum TransactionType: Int {
+        case register
+        case registerUpdate
+        case cancelRegister
+        case extractReward
+        case vote
+        case cancelVote
+        case pledge
+        case cancelPledge
+        case coin
+        case cancelCoin
+        case send
+        case receive
+    }
+
+    public var transactionType: TransactionType {
+        guard let type = type else {
+            return .receive
+        }
+
+        switch type {
+        case .createSend, .rewardSend, .refundSend:
+            return .send
+        case .receiveError, .genesisReceive:
+            return .receive
+        case .send:
+            guard let base64 = data, let string = Data(base64Encoded: base64)?.toHexString() else { return .send }
+            guard string.count >= 8 else { return .send }
+            let prefix = (string as NSString).substring(to: 8) as String
+            if let type = AccountBlock.transactionTypeDataPrefixMap[prefix] {
+                if AccountBlock.transactionTypeToAddressMap[type] == toAddress?.description {
+                    return type
+                } else {
+                    return .send
+                }
+            } else {
+                return .send
+            }
+        case .receive:
+            return .receive
+        }
+    }
+
+    fileprivate static let transactionTypeDataPrefixMap: [String: TransactionType] = [
+        "f29c6ce2": .register,
+        "3b7bdf74": .registerUpdate,
+        "60862fe2": .cancelRegister,
+        "ce1f27a7": .extractReward,
+        "fdc17f25": .vote,
+        "a629c531": .cancelVote,
+        "8de7dcfd": .pledge,
+        "9ff9c7b6": .cancelPledge,
+        "27ad872e": .coin,
+        "7d925ef1": .cancelCoin,
+    ]
+
+    fileprivate static let transactionTypeToAddressMap: [TransactionType: String] = [
+        .register: ViteWalletConst.ContractAddress.consensus.rawValue,
+        .registerUpdate: ViteWalletConst.ContractAddress.consensus.rawValue,
+        .cancelRegister: ViteWalletConst.ContractAddress.consensus.rawValue,
+        .extractReward: ViteWalletConst.ContractAddress.consensus.rawValue,
+        .vote: ViteWalletConst.ContractAddress.consensus.rawValue,
+        .cancelVote: ViteWalletConst.ContractAddress.consensus.rawValue,
+        .pledge: ViteWalletConst.ContractAddress.pledge.rawValue,
+        .cancelPledge: ViteWalletConst.ContractAddress.pledge.rawValue,
+        .coin: ViteWalletConst.ContractAddress.coin.rawValue,
+        .cancelCoin: ViteWalletConst.ContractAddress.coin.rawValue,
+    ]
+}

@@ -16,6 +16,7 @@
 		607FACEC1AFB9204008FA782 /* Tests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 607FACEB1AFB9204008FA782 /* Tests.swift */; };
 		8E31D126225B39A60061264A /* OnroadTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8E31D124225B399D0061264A /* OnroadTests.swift */; };
 		8E31D168225DD07E0061264A /* TxTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8E31D166225DCB020061264A /* TxTests.swift */; };
+		8E4E7B9D225F67F500AA0F99 /* PledgeTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8E4E7B9C225F67F400AA0F99 /* PledgeTests.swift */; };
 		8E5A5723225F20B400B21CB1 /* LedgerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8E5A5722225F20B400B21CB1 /* LedgerTests.swift */; };
 		8EF4BB2521BE45A5005C1EFB /* RPCTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8EF4BB2421BE45A5005C1EFB /* RPCTests.swift */; };
 		8EF4BB2721BFBCF0005C1EFB /* ServiceTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8EF4BB2621BFBCF0005C1EFB /* ServiceTests.swift */; };
@@ -51,6 +52,7 @@
 		8CD90FAF75FCA454D1F38C42 /* ViteWallet.podspec */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text; name = ViteWallet.podspec; path = ../ViteWallet.podspec; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.ruby; };
 		8E31D124225B399D0061264A /* OnroadTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnroadTests.swift; sourceTree = "<group>"; };
 		8E31D166225DCB020061264A /* TxTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TxTests.swift; sourceTree = "<group>"; };
+		8E4E7B9C225F67F400AA0F99 /* PledgeTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PledgeTests.swift; sourceTree = "<group>"; };
 		8E5A5722225F20B400B21CB1 /* LedgerTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LedgerTests.swift; sourceTree = "<group>"; };
 		8EF4BB2421BE45A5005C1EFB /* RPCTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RPCTests.swift; sourceTree = "<group>"; };
 		8EF4BB2621BFBCF0005C1EFB /* ServiceTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ServiceTests.swift; sourceTree = "<group>"; };
@@ -161,6 +163,7 @@
 				8E31D124225B399D0061264A /* OnroadTests.swift */,
 				8E31D166225DCB020061264A /* TxTests.swift */,
 				8E5A5722225F20B400B21CB1 /* LedgerTests.swift */,
+				8E4E7B9C225F67F400AA0F99 /* PledgeTests.swift */,
 			);
 			path = RPC;
 			sourceTree = "<group>";
@@ -392,6 +395,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				8E4E7B9D225F67F500AA0F99 /* PledgeTests.swift in Sources */,
 				607FACEC1AFB9204008FA782 /* Tests.swift in Sources */,
 				8E31D168225DD07E0061264A /* TxTests.swift in Sources */,
 				8E5A5723225F20B400B21CB1 /* LedgerTests.swift in Sources */,

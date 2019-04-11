@@ -1,5 +1,5 @@
 //
-//  GetTokenTransactionsRequest.swift
+//  GetAccountBlocksByHashRequest.swift
 //  Vite
 //
 //  Created by Stone on 2018/9/6.
@@ -9,25 +9,18 @@
 import Foundation
 import JSONRPCKit
 
-public struct GetTokenTransactionsRequest: JSONRPCKit.Request {
-    public typealias Response = (transactions: [Transaction], nextHash: String?)
+public struct GetAccountBlocksByHashRequest: JSONRPCKit.Request {
+    public typealias Response = (accountBlocks: [AccountBlock], nextHash: String?)
 
     let address: String
     let hash: String?
-    let tokenId: String
     let count: Int
 
     public var method: String {
-//        return "ledger_getBlocksByHashInToken"
         return "ledger_getBlocksByHash"
     }
 
     public var parameters: Any? {
-//        if let hash = hash {
-//            return [address, hash, tokenId, count + 1]
-//        } else {
-//            return [address, nil, tokenId, count + 1]
-//        }
         if let hash = hash {
             return [address, hash, count + 1]
         } else {
@@ -35,10 +28,9 @@ public struct GetTokenTransactionsRequest: JSONRPCKit.Request {
         }
     }
 
-    public init(address: String, hash: String? = nil, tokenId: String, count: Int) {
+    public init(address: String, hash: String? = nil, count: Int) {
         self.address = address
         self.hash = hash
-        self.tokenId = tokenId
         self.count = count
     }
 
@@ -48,7 +40,7 @@ public struct GetTokenTransactionsRequest: JSONRPCKit.Request {
             response = object
         }
 
-        let transactions = response.map({ Transaction(JSON: $0) })
+        let transactions = response.map({ AccountBlock(JSON: $0) })
         let ret = transactions.compactMap { $0 }
 
         if ret.count > count {

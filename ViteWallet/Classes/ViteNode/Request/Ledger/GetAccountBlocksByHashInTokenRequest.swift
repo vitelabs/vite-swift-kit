@@ -1,5 +1,5 @@
 //
-//  GetTransactionsRequest.swift
+//  GetAccountBlocksByHashInTokenRequest.swift
 //  Vite
 //
 //  Created by Stone on 2018/9/6.
@@ -9,27 +9,29 @@
 import Foundation
 import JSONRPCKit
 
-public struct GetTransactionsRequest: JSONRPCKit.Request {
-    public typealias Response = (transactions: [Transaction], nextHash: String?)
+public struct GetAccountBlocksByHashInTokenRequest: JSONRPCKit.Request {
+    public typealias Response = (accountBlocks: [AccountBlock], nextHash: String?)
 
     let address: String
     let hash: String?
+    let tokenId: String
     let count: Int
 
     public var method: String {
-        return "ledger_getBlocksByHash"
+        return "ledger_getBlocksByHashInToken"
     }
 
     public var parameters: Any? {
         if let hash = hash {
-            return [address, hash, count + 1]
+            return [address, hash, tokenId, count + 1]
         } else {
-            return [address, nil, count + 1]
+            return [address, nil, tokenId, count + 1]
         }
     }
 
-    public init(address: String, hash: String? = nil, count: Int) {
+    public init(address: String, tokenId: String, hash: String? = nil, count: Int) {
         self.address = address
+        self.tokenId = tokenId
         self.hash = hash
         self.count = count
     }
@@ -40,7 +42,7 @@ public struct GetTransactionsRequest: JSONRPCKit.Request {
             response = object
         }
 
-        let transactions = response.map({ Transaction(JSON: $0) })
+        let transactions = response.map({ AccountBlock(JSON: $0) })
         let ret = transactions.compactMap { $0 }
 
         if ret.count > count {
