@@ -21,8 +21,12 @@ public extension ViteNode.pledge.info {
         return GetPledgeQuotaRequest(address: address.description).defaultProviderPromise
     }
 
-    static func getPledges(address: Address, index: Int, count: Int) -> Promise<[Pledge]> {
-        return GetPledgesRequest(address: address.description, index: index, count: count).defaultProviderPromise
+    static func getPledgeDetail(address: Address, index: Int, count: Int) -> Promise<PledgeDetail> {
+        return GetPledgeDetailRequest(address: address.description, index: index, count: count).defaultProviderPromise
+    }
+
+    static func getPledgeBeneficialAmount(address: Address) -> Promise<Balance> {
+        return GetPledgeBeneficialAmountRequest(address: address.description).defaultProviderPromise
     }
 }
 

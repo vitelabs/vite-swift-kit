@@ -59,6 +59,96 @@ extension Box {
         case dataError
     }
     struct f {
+
+        fileprivate static func waitUntil<T>(promise: @autoclosure @escaping () -> Promise<T>, isReady: @escaping (T) -> Bool) -> Promise<Void> {
+            return promise()
+                .then({ ret -> Promise<Void> in
+                    if isReady(ret) {
+                        return .value(())
+                    } else {
+                        return after(seconds: 1).then({
+                            return waitUntil(promise: promise, isReady: isReady)
+                        })
+                    }
+                })
+        }
+
+        static func watiUntilHasQuota(address: Address) -> Promise<Void> {
+            return waitUntil(promise: ViteNode.pledge.info.getPledgeQuota(address: address), isReady: { $0.utps > 0 })
+
+        }
+
+        static func watiUntilHasNoQuota(address: Address) -> Promise<Void> {
+            return waitUntil(promise: ViteNode.pledge.info.getPledgeQuota(address: address), isReady: { $0.total == 0 })
+        }
+
+        static func makeSureHasEnoughViteAmount(account: Wallet.Account) -> Promise<Balance> {
+
+            return ViteNode.ledger.getBalanceInfosWithoutOnroad(address: account.address)
+                .map({ balanceInfos -> Balance in
+                    for balanceInfo in balanceInfos where balanceInfo.token.id == ViteWalletConst.viteToken.id {
+                        return balanceInfo.balance
+                    }
+                    return Balance()
+                }).then({ (balance) -> Promise<Balance> in
+                    let amount = Balance(value: BigInt("20000000000000000000000"))
+                    if balance.value > amount.value {
+                        return .value(balance)
+                    } else {
+                        return getTestToken(account: account, amount: amount)
+                        .then({ () -> Promise<Balance> in
+                            return makeSureHasEnoughViteAmount(account: account)
+                        })
+                    }
+                })
+        }
+
+        static func makeSureHasNoPledge(account: Wallet.Account) -> Promise<Void> {
+
+            func cancelPledge(amount: Balance) -> Promise<Void> {
+                return ViteNode.pledge.cancel.withoutPow(account: account, beneficialAddress: account.address, amount: amount)
+                    .then({ (_) -> Promise<Void> in
+                        return watiUntilHasNoQuota(address: account.address)
+                    }).then({ () -> Promise<Void> in
+                        return makeSureHasNoPledge(account: account)
+                    })
+            }
+
+
+            return ViteNode.pledge.info.getPledgeBeneficialAmount(address: account.address)
+                .then({ (balance) -> Promise<Void> in
+                    if balance.value == 0 {
+                        return .value(())
+                    } else {
+                        return cancelPledge(amount: balance)
+                    }
+                })
+        }
+
+        static func makeSureHasPledge(account: Wallet.Account) -> Promise<Balance> {
+
+            let pledgeAmount = Balance(value: BigInt("1000000000000000000000"))
+            func pledge() -> Promise<Balance> {
+                return ViteNode.pledge.perform.getPow(account: account, beneficialAddress: account.address, amount: pledgeAmount)
+                    .then({ (context) -> Promise<Void> in
+                        return ViteNode.rawTx.send.context(context).map({ _ in () })
+                    }).then({
+                        return watiUntilHasQuota(address: account.address)
+                    }).then({
+                        return makeSureHasPledge(account: account)
+                    })
+            }
+
+            return ViteNode.pledge.info.getPledgeBeneficialAmount(address: account.address)
+                .then({ (balance) -> Promise<Balance> in
+                    if balance.value > 0 {
+                        return .value(balance)
+                    } else {
+                        return pledge()
+                    }
+                })
+        }
+
         static func afterLatestAccountBlockConfirmed(address: Address) -> Promise<AccountBlock> {
             func getPromise() -> Promise<AccountBlock> {
                 return ViteNode.ledger.getLatestAccountBlock(address: address)
@@ -133,6 +223,11 @@ extension Box {
     }
 }
 
+extension Promise {
+    func mapToVoid() -> Promise<Void> {
+        return self.map { _ in () }
+    }
+}
 
 extension XCTestCase {
     func async(_ block: ( @escaping () -> () ) -> ()) {
