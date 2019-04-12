@@ -16,6 +16,7 @@ public struct ViteNode {
     public struct ledger {}
     public struct pledge {}
     public struct vote {}
+    public struct mintage {}
     public struct pow {}
 
     public struct rawTx {}

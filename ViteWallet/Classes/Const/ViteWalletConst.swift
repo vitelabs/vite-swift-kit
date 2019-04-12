@@ -31,5 +31,5 @@ public struct ViteWalletConst {
         }
     }
 
-    public static let viteToken = Token(id: "tti_5649544520544f4b454e6e40", name: "vite", symbol: "VITE", decimals: 18)
+    public static let viteToken = Token(id: "tti_5649544520544f4b454e6e40", name: "Vite Token", symbol: "VITE", decimals: 18)
 }
