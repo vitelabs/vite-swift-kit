@@ -82,6 +82,16 @@ extension Box {
             return waitUntil(promise: ViteNode.pledge.info.getPledgeQuota(address: address), isReady: { $0.total == 0 })
         }
 
+        static func watiUntilHasVoteInfo(address: Address) -> Promise<Void> {
+            return waitUntil(promise: ViteNode.vote.info.getVoteInfo(gid: ViteWalletConst.ConsensusGroup.snapshot.id, address: address), isReady: { $0 != nil })
+
+        }
+
+        static func watiUntilHasNoVoteInfo(address: Address) -> Promise<Void> {
+            return waitUntil(promise: ViteNode.vote.info.getVoteInfo(gid: ViteWalletConst.ConsensusGroup.snapshot.id, address: address), isReady: { $0 == nil })
+
+        }
+
         static func makeSureHasEnoughViteAmount(account: Wallet.Account) -> Promise<Balance> {
 
             return ViteNode.ledger.getBalanceInfosWithoutOnroad(address: account.address)
