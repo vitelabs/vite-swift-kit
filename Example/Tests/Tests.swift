@@ -1,8 +1,8 @@
 import XCTest
-import ViteWallet
 import BigInt
 import PromiseKit
 import Vite_HDWalletKit
+@testable import ViteWallet
 
 class Tests: XCTestCase {
     
@@ -69,5 +69,18 @@ class Tests: XCTestCase {
                 XCTAssert(false)
             }
         }
+    }
+
+    func testAccountBlock() {
+        let jsonString = "{\"accountAddress\":\"vite_ab24ef68b84e642c0ddca06beec81c9acb1977bbd7da27a87a\",\"amount\":\"11000000000000000000\",\"blockType\":2,\"data\":\"5L2g5aW9\",\"hash\":\"65039ec9ea031bf69a6a65f51f4a923716ce4900c5cf9989056aa94a51189af1\",\"height\":\"30\",\"prevHash\":\"20a75cc0baf4d0b6a3eef4f486825f9f00dba00ed1b4af0aad91a48895165186\",\"publicKey\":\"WHZinxslscE+WaIqrUjGu2scOvorgD4Q+DQOOcDBv4M=\",\"signature\":\"rvELIvlDbWYegiK1puvxliqG5UYFdTXvP55FM/o+lYyNWnE6De1rB9sFgVl3g5+5K+HI8kkQHRIdu7frW6x+DA==\",\"timestamp\":1555405235,\"toAddress\":\"vite_ab24ef68b84e642c0ddca06beec81c9acb1977bbd7da27a87a\",\"tokenId\":\"tti_5649544520544f4b454e6e40\"}"
+
+        guard let accountBlock = AccountBlock(JSONString: jsonString) else {
+            XCTAssert(false)
+            return
+        }
+
+        let (h, s) = AccountBlock.sign(accountBlock: accountBlock, secretKeyHexString: "", publicKeyHexString: "")
+        print(h)
+        print(s)
     }
 }
