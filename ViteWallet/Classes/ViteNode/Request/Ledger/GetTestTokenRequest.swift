@@ -14,7 +14,7 @@ public struct GetTestTokenRequest: JSONRPCKit.Request {
 
     public typealias Response = Balance
 
-    let address: String
+    let address: ViteAddress
 
     public var method: String {
         return "testapi_getTestToken"
@@ -24,7 +24,7 @@ public struct GetTestTokenRequest: JSONRPCKit.Request {
         return [address]
     }
 
-    public init(address: String) {
+    public init(address: ViteAddress) {
         self.address = address
     }
 

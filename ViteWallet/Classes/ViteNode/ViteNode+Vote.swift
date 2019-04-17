@@ -21,8 +21,8 @@ public extension ViteNode.vote.info {
         return GetCandidateListRequest(gid: gid).defaultProviderPromise
     }
 
-    static func getVoteInfo(gid: String, address: Address) -> Promise<VoteInfo?> {
-        return GetVoteInfoRequest(gid: gid, address: address.description).defaultProviderPromise
+    static func getVoteInfo(gid: String, address: ViteAddress) -> Promise<VoteInfo?> {
+        return GetVoteInfoRequest(gid: gid, address: address).defaultProviderPromise
     }
 }
 

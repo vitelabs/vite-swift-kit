@@ -20,14 +20,6 @@ public struct JSONTransformer {
         return UInt64(date.timeIntervalSinceNow)
     })
 
-    public static let address = TransformOf<Address, String>(fromJSON: { (string) -> Address? in
-        guard let string = string else { return nil }
-        return Address(string: string)
-    }, toJSON: { (address) -> String? in
-        guard let address = address else { return nil }
-        return address.description
-    })
-
     public static let bigint = TransformOf<BigInt, String>(fromJSON: { (string) -> BigInt? in
         guard let string = string, let bigInt = BigInt(string) else { return nil }
         return bigInt

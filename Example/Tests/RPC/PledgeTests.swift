@@ -79,7 +79,7 @@ class PledgeTests: XCTestCase {
                 XCTAssert(pledgeDetail.totalCount == 1)
                 XCTAssert(pledgeDetail.totalPledgeAmount.value == amount.value)
                 var pledgeAmount = Balance()
-                for pledge in pledgeDetail.list where pledge.beneficialAddress.description == address.description {
+                for pledge in pledgeDetail.list where pledge.beneficialAddress == address {
                     pledgeAmount = pledge.amount
                 }
                 XCTAssert(pledgeAmount.value == amount.value)
@@ -98,7 +98,7 @@ class PledgeTests: XCTestCase {
                 XCTAssert(pledgeDetail.totalCount == 0)
                 XCTAssert(pledgeDetail.totalPledgeAmount.value == 0)
                 var success = true
-                for pledge in pledgeDetail.list where pledge.beneficialAddress.description == address.description {
+                for pledge in pledgeDetail.list where pledge.beneficialAddress == address {
                     success = false
                 }
                 XCTAssert(success)

@@ -12,7 +12,7 @@ import JSONRPCKit
 public struct GetBalanceInfosRequest: JSONRPCKit.Request {
     public typealias Response = [BalanceInfo]
 
-    let address: String
+    let address: ViteAddress
 
     public var method: String {
         return "ledger_getAccountByAccAddr"
@@ -22,7 +22,7 @@ public struct GetBalanceInfosRequest: JSONRPCKit.Request {
         return [address]
     }
 
-    public init(address: String) {
+    public init(address: ViteAddress) {
         self.address = address
     }
 

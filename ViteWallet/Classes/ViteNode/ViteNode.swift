@@ -27,7 +27,7 @@ public struct ViteNode {
 public struct SendBlockContext {
     let account: Wallet.Account
     let latest: AccountBlock?
-    let toAddress: Address
+    let toAddress: ViteAddress
     let tokenId: String
     let amount: Balance
     let data: Data?

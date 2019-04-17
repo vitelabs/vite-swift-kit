@@ -183,7 +183,7 @@ class RPCTests: XCTestCase {
 //        let note = "first note"
 //        async { (completion) in
 //            Provider.default.sendTransactionWithoutPow(account: Box.secondAccount,
-//                                                       toAddress: Address(string: "vite_847e1672c9a775ca0f3c3a2d3bf389ca466e5501cbecdb7107"),
+//                                                       toAddress: "vite_847e1672c9a775ca0f3c3a2d3bf389ca466e5501cbecdb7107",
 //                                                       tokenId: Box.viteTokenId,
 //                                                       amount: amount,
 //                                                       note: note)
@@ -204,7 +204,7 @@ class RPCTests: XCTestCase {
 //        let note = "hahaha"
 //        async { (completion) in
 //            Provider.default.getPowForSendTransaction(account: Box.secondAccount,
-//                                                    toAddress: Address(string: "vite_847e1672c9a775ca0f3c3a2d3bf389ca466e5501cbecdb7107"),
+//                                                    toAddress: "vite_847e1672c9a775ca0f3c3a2d3bf389ca466e5501cbecdb7107",
 //                                                    tokenId: Box.viteTokenId,
 //                                                    amount: amount,
 //                                                    note: note)

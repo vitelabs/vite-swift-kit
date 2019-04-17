@@ -12,7 +12,7 @@ import JSONRPCKit
 public struct GetPledgeDataRequest: JSONRPCKit.Request {
     public typealias Response = Data
 
-    let beneficialAddress: String
+    let beneficialAddress: ViteAddress
 
     public var method: String {
         return "pledge_getPledgeData"
@@ -22,7 +22,7 @@ public struct GetPledgeDataRequest: JSONRPCKit.Request {
         return [beneficialAddress]
     }
 
-    public init(beneficialAddress: String) {
+    public init(beneficialAddress: ViteAddress) {
         self.beneficialAddress = beneficialAddress
     }
 

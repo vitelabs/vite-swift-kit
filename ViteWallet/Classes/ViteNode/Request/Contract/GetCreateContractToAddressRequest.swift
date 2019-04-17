@@ -10,9 +10,9 @@ import Foundation
 import JSONRPCKit
 
 public struct GetCreateContractToAddressRequest: JSONRPCKit.Request {
-    public typealias Response = Address
+    public typealias Response = ViteAddress
 
-    let address: String
+    let address: ViteAddress
     let height: UInt64
     let prevHash: String
     let snapshotHash: String
@@ -25,7 +25,7 @@ public struct GetCreateContractToAddressRequest: JSONRPCKit.Request {
         return [address, height, prevHash, snapshotHash]
     }
 
-    public init(address: String, height: UInt64, prevHash: String, snapshotHash: String) {
+    public init(address: ViteAddress, height: UInt64, prevHash: String, snapshotHash: String) {
         self.address = address
         self.height = height
         self.prevHash = prevHash
@@ -34,13 +34,13 @@ public struct GetCreateContractToAddressRequest: JSONRPCKit.Request {
 
     public func response(from resultObject: Any) throws -> Response {
 
-        guard let response = resultObject as? String else {
+        guard let response = resultObject as? ViteAddress else {
             throw ViteError.JSONTypeError
         }
 
-        let address = Address(string: response)
+        let address = response
 
-        guard address.isValid else {
+        guard address.isViteAddress else {
             throw ViteError.JSONTypeError
         }
 

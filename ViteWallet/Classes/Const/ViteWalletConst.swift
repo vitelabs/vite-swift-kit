@@ -11,13 +11,13 @@ import BigInt
 
 public struct ViteWalletConst {
     
-    public enum ContractAddress: String {
+    public enum ContractAddress: ViteAddress {
         case pledge = "vite_000000000000000000000000000000000000000309508ba646"
         case consensus = "vite_00000000000000000000000000000000000000042d7ef71894"
         case coin = "vite_00000000000000000000000000000000000000056ad6d26692"
 
-        public var address: Address {
-            return Address(string: self.rawValue)
+        public var address: ViteAddress {
+            return self.rawValue
         }
     }
 

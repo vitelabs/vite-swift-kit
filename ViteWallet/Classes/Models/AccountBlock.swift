@@ -31,10 +31,10 @@ public struct AccountBlock: Mappable {
     public fileprivate(set) var type: BlockType?
     public fileprivate(set) var hash: String?
     public fileprivate(set) var prevHash: String?
-    public fileprivate(set) var accountAddress: Address?
+    public fileprivate(set) var accountAddress: ViteAddress?
     public fileprivate(set) var publicKey: String?
-    public fileprivate(set) var fromAddress: Address?
-    public fileprivate(set) var toAddress: Address?
+    public fileprivate(set) var fromAddress: ViteAddress?
+    public fileprivate(set) var toAddress: ViteAddress?
     public fileprivate(set) var fromHash: String?
     public fileprivate(set) var tokenId: String?
     public fileprivate(set) var snapshotHash: String?
@@ -65,10 +65,10 @@ public struct AccountBlock: Mappable {
         type <- map["blockType"]
         hash <- map["hash"]
         prevHash <- map["prevHash"]
-        accountAddress <- (map["accountAddress"], JSONTransformer.address)
+        accountAddress <- map["accountAddress"]
         publicKey <- (map["publicKey"], JSONTransformer.hexToBase64)
-        fromAddress <- (map["fromAddress"], JSONTransformer.address)
-        toAddress <- (map["toAddress"], JSONTransformer.address)
+        fromAddress <- map["fromAddress"]
+        toAddress <- map["toAddress"]
         fromHash <- map["fromBlockHash"]
         tokenId <- map["tokenId"]
         snapshotHash <- map["snapshotHash"]
@@ -91,9 +91,9 @@ extension AccountBlock {
 
     public static func makeSendAccountBlock(secretKey: String,
                                             publicKey: String,
-                                            address: Address,
+                                            address: ViteAddress,
                                             latest: AccountBlock?,
-                                            toAddress: Address,
+                                            toAddress: ViteAddress,
                                             tokenId: String,
                                             amount: Balance,
                                             data: Data?,
@@ -124,7 +124,7 @@ extension AccountBlock {
 
     public static func makeReceiveAccountBlock(secretKey: String,
                                                publicKey: String,
-                                               address: Address,
+                                               address: ViteAddress,
                                                onroadBlock: AccountBlock,
                                                latest: AccountBlock?,
                                                nonce: String?,
@@ -151,7 +151,7 @@ extension AccountBlock {
 
     fileprivate static func makeBaseAccountBlock(secretKey: String,
                                                  publicKey: String,
-                                                 address: Address,
+                                                 address: ViteAddress,
                                                  latest: AccountBlock?,
                                                  nonce: String?,
                                                  difficulty: BigInt?) -> AccountBlock {
@@ -194,14 +194,14 @@ extension AccountBlock {
         }
 
         if let accountAddress = accountBlock.accountAddress {
-            source.append(contentsOf: accountAddress.raw.hex2Bytes)
+            source.append(contentsOf: accountAddress.rawViteAddress.hex2Bytes)
         }
 
         if let type = accountBlock.type {
             switch type {
             case .send:
                 if let toAddress = accountBlock.toAddress {
-                    source.append(contentsOf: toAddress.raw.hex2Bytes)
+                    source.append(contentsOf: toAddress.rawViteAddress.hex2Bytes)
                 }
 
                 if let amount = accountBlock.amount {

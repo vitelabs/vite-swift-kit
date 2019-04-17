@@ -12,7 +12,7 @@ import JSONRPCKit
 public struct GetAccountBlocksByHashRequest: JSONRPCKit.Request {
     public typealias Response = (accountBlocks: [AccountBlock], nextHash: String?)
 
-    let address: String
+    let address: ViteAddress
     let hash: String?
     let count: Int
 
@@ -28,7 +28,7 @@ public struct GetAccountBlocksByHashRequest: JSONRPCKit.Request {
         }
     }
 
-    public init(address: String, hash: String? = nil, count: Int) {
+    public init(address: ViteAddress, hash: String? = nil, count: Int) {
         self.address = address
         self.hash = hash
         self.count = count

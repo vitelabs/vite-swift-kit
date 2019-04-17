@@ -17,13 +17,13 @@ public class Candidate: Mappable {
     }
 
     public fileprivate(set) var name: String = ""
-    public fileprivate(set) var nodeAddr: Address = Address()
+    public fileprivate(set) var nodeAddr: ViteAddress = ""
     public fileprivate(set) var voteNum: VoteNum = VoteNum()
     public fileprivate(set) var rank: Int = 0
 
     public func mapping(map: Map) {
         name <- map["name"]
-        nodeAddr <- (map["nodeAddr"], JSONTransformer.address)
+        nodeAddr <- map["nodeAddr"]
         voteNum <- (map["voteNum"], JSONTransformer.balance)
     }
 

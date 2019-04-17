@@ -17,8 +17,8 @@ public class FetchPledgeQuotaService: PollService {
         printLog("")
     }
 
-    public let address: Address
-    public init(address: Address, interval: TimeInterval, completion: ((Ret) -> ())? = nil) {
+    public let address: ViteAddress
+    public init(address: ViteAddress, interval: TimeInterval, completion: ((Ret) -> ())? = nil) {
         self.address = address
         self.interval = interval
         self.completion = completion

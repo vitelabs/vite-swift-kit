@@ -14,9 +14,9 @@ extension  Wallet {
 
         public let secretKey: String
         public let publicKey: String
-        public let address: Address
+        public let address: ViteAddress
 
-        public init(secretKey: String, publicKey: String, address: Address) {
+        public init(secretKey: String, publicKey: String, address: ViteAddress) {
             self.secretKey = secretKey
             self.publicKey = publicKey
             self.address = address

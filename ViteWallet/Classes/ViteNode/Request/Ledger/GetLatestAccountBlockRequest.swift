@@ -12,7 +12,7 @@ import JSONRPCKit
 public struct GetLatestAccountBlockRequest: JSONRPCKit.Request {
     public typealias Response = AccountBlock?
 
-    let address: String
+    let address: ViteAddress
 
     public var method: String {
         return "ledger_getLatestBlock"
@@ -22,7 +22,7 @@ public struct GetLatestAccountBlockRequest: JSONRPCKit.Request {
         return [address]
     }
 
-    public init(address: String) {
+    public init(address: ViteAddress) {
         self.address = address
     }
 

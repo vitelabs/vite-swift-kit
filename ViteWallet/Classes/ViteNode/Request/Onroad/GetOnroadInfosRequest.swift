@@ -12,7 +12,7 @@ import JSONRPCKit
 public struct GetOnroadInfosRequest: JSONRPCKit.Request {
     public typealias Response = [OnroadInfo]
 
-    let address: String
+    let address: ViteAddress
 
     public var method: String {
         return "onroad_getAccountOnroadInfo"
@@ -22,7 +22,7 @@ public struct GetOnroadInfosRequest: JSONRPCKit.Request {
         return [address]
     }
 
-    public init(address: String) {
+    public init(address: ViteAddress) {
         self.address = address
     }
 

@@ -25,10 +25,10 @@ public struct GetPowDifficultyRequest: JSONRPCKit.Request {
         return [context.toJSON()]
     }
 
-    public init(accountAddress: Address,
+    public init(accountAddress: ViteAddress,
                 prevHash: String,
                 type: AccountBlock.BlockType,
-                toAddress: Address?,
+                toAddress: ViteAddress?,
                 data: Data?,
                 usePledgeQuota: Bool) {
 
@@ -54,28 +54,28 @@ public struct GetPowDifficultyRequest: JSONRPCKit.Request {
 extension GetPowDifficultyRequest {
     public struct GetPowDifficultyContext: Mappable {
 
-        fileprivate(set) var accountAddress: Address?
+        fileprivate(set) var accountAddress: ViteAddress?
         fileprivate(set) var prevHash: String?
         fileprivate(set) var type: AccountBlock.BlockType?
-        fileprivate(set) var toAddress: Address?
+        fileprivate(set) var toAddress: ViteAddress?
         fileprivate(set) var data: Data?
         fileprivate(set) var usePledgeQuota: Bool?
 
         public init?(map: Map) { }
 
         public mutating func mapping(map: Map) {
-            accountAddress <- (map["selfAddr"], JSONTransformer.address)
+            accountAddress <- map["selfAddr"]
             prevHash <- map["prevHash"]
             type <- map["blockType"]
-            toAddress <- (map["toAddr"], JSONTransformer.address)
+            toAddress <- map["toAddr"]
             data <- (map["data"], JSONTransformer.dataToBase64)
             usePledgeQuota <- map["usePledgeQuota"]
         }
 
-        public init(accountAddress: Address,
+        public init(accountAddress: ViteAddress,
                     prevHash: String,
                     type: AccountBlock.BlockType,
-                    toAddress: Address?,
+                    toAddress: ViteAddress?,
                     data: Data?,
                     usePledgeQuota: Bool) {
 

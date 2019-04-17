@@ -12,11 +12,11 @@ import BigInt
 
 public extension ViteNode.onroad {
 
-    static func getOnroadBlocks(address: Address, index: Int, count: Int) -> Promise<[AccountBlock]> {
-        return GetOnroadBlocksRequest(address: address.description, index: index, count: count).defaultProviderPromise
+    static func getOnroadBlocks(address: ViteAddress, index: Int, count: Int) -> Promise<[AccountBlock]> {
+        return GetOnroadBlocksRequest(address: address, index: index, count: count).defaultProviderPromise
     }
 
-    static func getOnroadInfos(address: Address) -> Promise<[OnroadInfo]> {
-        return GetOnroadInfosRequest(address: address.description).defaultProviderPromise
+    static func getOnroadInfos(address: ViteAddress) -> Promise<[OnroadInfo]> {
+        return GetOnroadInfosRequest(address: address).defaultProviderPromise
     }
 }

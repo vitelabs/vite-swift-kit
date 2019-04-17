@@ -17,8 +17,8 @@ public class FetchBalanceInfoService: PollService {
         printLog("")
     }
 
-    public let address: Address
-    public init(address: Address, interval: TimeInterval, completion: ((Result<[BalanceInfo]>) -> ())? = nil) {
+    public let address: ViteAddress
+    public init(address: ViteAddress, interval: TimeInterval, completion: ((Result<[BalanceInfo]>) -> ())? = nil) {
         self.address = address
         self.interval = interval
         self.completion = completion

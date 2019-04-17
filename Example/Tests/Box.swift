@@ -73,21 +73,21 @@ extension Box {
                 })
         }
 
-        static func watiUntilHasQuota(address: Address) -> Promise<Void> {
+        static func watiUntilHasQuota(address: ViteAddress) -> Promise<Void> {
             return waitUntil(promise: ViteNode.pledge.info.getPledgeQuota(address: address), isReady: { $0.utps > 0 })
 
         }
 
-        static func watiUntilHasNoQuota(address: Address) -> Promise<Void> {
+        static func watiUntilHasNoQuota(address: ViteAddress) -> Promise<Void> {
             return waitUntil(promise: ViteNode.pledge.info.getPledgeQuota(address: address), isReady: { $0.total == 0 })
         }
 
-        static func watiUntilHasVoteInfo(address: Address) -> Promise<Void> {
+        static func watiUntilHasVoteInfo(address: ViteAddress) -> Promise<Void> {
             return waitUntil(promise: ViteNode.vote.info.getVoteInfo(gid: ViteWalletConst.ConsensusGroup.snapshot.id, address: address), isReady: { $0 != nil })
 
         }
 
-        static func watiUntilHasNoVoteInfo(address: Address) -> Promise<Void> {
+        static func watiUntilHasNoVoteInfo(address: ViteAddress) -> Promise<Void> {
             return waitUntil(promise: ViteNode.vote.info.getVoteInfo(gid: ViteWalletConst.ConsensusGroup.snapshot.id, address: address), isReady: { $0 == nil })
 
         }
@@ -159,7 +159,7 @@ extension Box {
                 })
         }
 
-        static func afterLatestAccountBlockConfirmed(address: Address) -> Promise<AccountBlock> {
+        static func afterLatestAccountBlockConfirmed(address: ViteAddress) -> Promise<AccountBlock> {
             func getPromise() -> Promise<AccountBlock> {
                 return ViteNode.ledger.getLatestAccountBlock(address: address)
                     .then { ret -> Promise<AccountBlock> in

@@ -16,10 +16,10 @@ public extension ViteNode.tx {
         return SendRawTxRequest(accountBlock: accountBlock).defaultProviderPromise.map({ _ in accountBlock })
     }
 
-    static func getPowDifficulty(accountAddress: Address,
+    static func getPowDifficulty(accountAddress: ViteAddress,
                                  prevHash: String,
                                  type: AccountBlock.BlockType,
-                                 toAddress: Address?,
+                                 toAddress: ViteAddress?,
                                  data: Data?,
                                  usePledgeQuota: Bool) -> Promise<BigInt> {
 

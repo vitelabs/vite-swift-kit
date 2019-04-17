@@ -41,14 +41,14 @@ public extension ViteNode.utils.receive {
 
 public extension ViteNode.utils {
 
-    static func getBalanceInfos(address: Address) -> Promise<[BalanceInfo]> {
-        let batch = BatchFactory().create(GetBalanceInfosRequest(address: address.description),
-                                          GetOnroadInfosRequest(address: address.description))
+    static func getBalanceInfos(address: ViteAddress) -> Promise<[BalanceInfo]> {
+        let batch = BatchFactory().create(GetBalanceInfosRequest(address: address),
+                                          GetOnroadInfosRequest(address: address))
         return RPCRequest(for: Provider.default.server, batch: batch).promise.map { BalanceInfo.mergeBalanceInfos($0, onroadInfos: $1) }
     }
 
 
-    static func recoverAddresses(_ addresses: [Address]) -> Promise<Int> {
+    static func recoverAddresses(_ addresses: [ViteAddress]) -> Promise<Int> {
         guard addresses.count == 10 else { fatalError() }
 
         func makePromise(startIndex: Int) -> Promise<Int?> {

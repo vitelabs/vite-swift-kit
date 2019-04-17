@@ -12,7 +12,7 @@ import JSONRPCKit
 public struct GetPledgeDetailRequest: JSONRPCKit.Request {
     public typealias Response = PledgeDetail
 
-    let address: String
+    let address: ViteAddress
     let index: Int
     let count: Int
 
@@ -24,7 +24,7 @@ public struct GetPledgeDetailRequest: JSONRPCKit.Request {
         return [address, index, count]
     }
 
-    public init(address: String, index: Int, count: Int) {
+    public init(address: ViteAddress, index: Int, count: Int) {
         self.address = address
         self.index = index
         self.count = count

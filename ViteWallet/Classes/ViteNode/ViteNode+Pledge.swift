@@ -17,24 +17,24 @@ public extension ViteNode.pledge {
 }
 
 public extension ViteNode.pledge.info {
-    static func getPledgeQuota(address: Address) -> Promise<Quota> {
-        return GetPledgeQuotaRequest(address: address.description).defaultProviderPromise
+    static func getPledgeQuota(address: ViteAddress) -> Promise<Quota> {
+        return GetPledgeQuotaRequest(address: address).defaultProviderPromise
     }
 
-    static func getPledgeDetail(address: Address, index: Int, count: Int) -> Promise<PledgeDetail> {
-        return GetPledgeDetailRequest(address: address.description, index: index, count: count).defaultProviderPromise
+    static func getPledgeDetail(address: ViteAddress, index: Int, count: Int) -> Promise<PledgeDetail> {
+        return GetPledgeDetailRequest(address: address, index: index, count: count).defaultProviderPromise
     }
 
-    static func getPledgeBeneficialAmount(address: Address) -> Promise<Balance> {
-        return GetPledgeBeneficialAmountRequest(address: address.description).defaultProviderPromise
+    static func getPledgeBeneficialAmount(address: ViteAddress) -> Promise<Balance> {
+        return GetPledgeBeneficialAmountRequest(address: address).defaultProviderPromise
     }
 }
 
 public extension ViteNode.pledge.perform {
     static func withoutPow(account: Wallet.Account,
-                           beneficialAddress: Address,
+                           beneficialAddress: ViteAddress,
                            amount: Balance) -> Promise<AccountBlock> {
-        return GetPledgeDataRequest(beneficialAddress: beneficialAddress.description).defaultProviderPromise
+        return GetPledgeDataRequest(beneficialAddress: beneficialAddress).defaultProviderPromise
             .then { data -> Promise<AccountBlock> in
                 return ViteNode.rawTx.send.withoutPow(account: account,
                                                       toAddress: ViteWalletConst.ContractAddress.pledge.address,
@@ -45,9 +45,9 @@ public extension ViteNode.pledge.perform {
     }
 
     static func getPow(account: Wallet.Account,
-                       beneficialAddress: Address,
+                       beneficialAddress: ViteAddress,
                        amount: Balance) -> Promise<SendBlockContext> {
-        return GetPledgeDataRequest(beneficialAddress: beneficialAddress.description).defaultProviderPromise
+        return GetPledgeDataRequest(beneficialAddress: beneficialAddress).defaultProviderPromise
             .then { data -> Promise<SendBlockContext> in
                 return ViteNode.rawTx.send.getPow(account: account,
                                                   toAddress: ViteWalletConst.ContractAddress.pledge.address,
@@ -61,9 +61,9 @@ public extension ViteNode.pledge.perform {
 public extension ViteNode.pledge.cancel {
 
     static func withoutPow(account: Wallet.Account,
-                           beneficialAddress: Address,
+                           beneficialAddress: ViteAddress,
                            amount: Balance) -> Promise<AccountBlock> {
-        return GetCancelPledgeDataRequest(beneficialAddress: beneficialAddress.description, amount: amount).defaultProviderPromise
+        return GetCancelPledgeDataRequest(beneficialAddress: beneficialAddress, amount: amount).defaultProviderPromise
             .then { data -> Promise<AccountBlock> in
                 return ViteNode.rawTx.send.withoutPow(account: account,
                                                       toAddress: ViteWalletConst.ContractAddress.pledge.address,
@@ -74,9 +74,9 @@ public extension ViteNode.pledge.cancel {
     }
 
     static func getPow(account: Wallet.Account,
-                       beneficialAddress: Address,
+                       beneficialAddress: ViteAddress,
                        amount: Balance) -> Promise<SendBlockContext> {
-        return GetCancelPledgeDataRequest(beneficialAddress: beneficialAddress.description, amount: amount).defaultProviderPromise
+        return GetCancelPledgeDataRequest(beneficialAddress: beneficialAddress, amount: amount).defaultProviderPromise
             .then { data -> Promise<SendBlockContext> in
                 return ViteNode.rawTx.send.getPow(account: account,
                                                   toAddress: ViteWalletConst.ContractAddress.pledge.address,

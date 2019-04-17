@@ -13,7 +13,7 @@ import BigInt
 public struct GetPledgeBeneficialAmountRequest: JSONRPCKit.Request {
     public typealias Response = Balance
 
-    let address: String
+    let address: ViteAddress
 
     public var method: String {
         return "pledge_getPledgeBeneficialAmount"
@@ -23,7 +23,7 @@ public struct GetPledgeBeneficialAmountRequest: JSONRPCKit.Request {
         return [address]
     }
 
-    public init(address: String) {
+    public init(address: ViteAddress) {
         self.address = address
     }
 

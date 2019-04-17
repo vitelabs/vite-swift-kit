@@ -13,7 +13,7 @@ public struct GetVoteInfoRequest: JSONRPCKit.Request {
     public typealias Response = VoteInfo?
 
     let gid: String
-    let address: String
+    let address: ViteAddress
 
     public var method: String {
         return "vote_getVoteInfo"
@@ -23,7 +23,7 @@ public struct GetVoteInfoRequest: JSONRPCKit.Request {
         return [gid, address]
     }
 
-    public init(gid: String, address: String) {
+    public init(gid: String, address: ViteAddress) {
         self.gid = gid
         self.address = address
     }

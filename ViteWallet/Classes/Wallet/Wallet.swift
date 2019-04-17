@@ -95,7 +95,7 @@ extension  Wallet {
 
         guard let seed = _seed else { fatalError() }
         guard let (secretKey, publicKey, address) = HDBip.accountsForIndex(index, seed: seed) else { fatalError() }
-        return Account(secretKey: secretKey, publicKey: publicKey, address: Address(string: address))
+        return Account(secretKey: secretKey, publicKey: publicKey, address: address)
     }
 }
 
