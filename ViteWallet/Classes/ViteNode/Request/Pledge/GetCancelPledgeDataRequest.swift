@@ -13,17 +13,17 @@ public struct GetCancelPledgeDataRequest: JSONRPCKit.Request {
     public typealias Response = Data
 
     let beneficialAddress: ViteAddress
-    let amount: Balance
+    let amount: Amount
 
     public var method: String {
         return "pledge_getCancelPledgeData"
     }
 
     public var parameters: Any? {
-        return [beneficialAddress, amount.value.description]
+        return [beneficialAddress, amount.description]
     }
 
-    public init(beneficialAddress: ViteAddress, amount: Balance) {
+    public init(beneficialAddress: ViteAddress, amount: Amount) {
         self.beneficialAddress = beneficialAddress
         self.amount = amount
     }

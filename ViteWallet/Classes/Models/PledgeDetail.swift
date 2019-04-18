@@ -13,7 +13,7 @@ import BigInt
 public struct PledgeDetail: Mappable {
 
     public fileprivate(set) var list: [Pledge] = [Pledge]()
-    public fileprivate(set) var totalPledgeAmount = Balance()
+    public fileprivate(set) var totalPledgeAmount = Amount()
     public fileprivate(set) var totalCount: UInt64 = 0
 
     public init?(map: Map) { }

@@ -92,21 +92,21 @@ extension Box {
 
         }
 
-        static func makeSureHasEnoughViteAmount(account: Wallet.Account) -> Promise<Balance> {
+        static func makeSureHasEnoughViteAmount(account: Wallet.Account) -> Promise<Amount> {
 
             return ViteNode.ledger.getBalanceInfosWithoutOnroad(address: account.address)
-                .map({ balanceInfos -> Balance in
+                .map({ balanceInfos -> Amount in
                     for balanceInfo in balanceInfos where balanceInfo.token.id == ViteWalletConst.viteToken.id {
                         return balanceInfo.balance
                     }
-                    return Balance()
-                }).then({ (balance) -> Promise<Balance> in
-                    let amount = Balance(value: BigInt("20000000000000000000000"))
-                    if balance.value > amount.value {
+                    return Amount()
+                }).then({ (balance) -> Promise<Amount> in
+                    let amount = Amount("20000000000000000000000")!
+                    if balance > amount {
                         return .value(balance)
                     } else {
                         return getTestToken(account: account, amount: amount)
-                        .then({ () -> Promise<Balance> in
+                        .then({ () -> Promise<Amount> in
                             return makeSureHasEnoughViteAmount(account: account)
                         })
                     }
@@ -115,7 +115,7 @@ extension Box {
 
         static func makeSureHasNoPledge(account: Wallet.Account) -> Promise<Void> {
 
-            func cancelPledge(amount: Balance) -> Promise<Void> {
+            func cancelPledge(amount: Amount) -> Promise<Void> {
                 return ViteNode.pledge.cancel.withoutPow(account: account, beneficialAddress: account.address, amount: amount)
                     .then({ (_) -> Promise<Void> in
                         return watiUntilHasNoQuota(address: account.address)
@@ -127,7 +127,7 @@ extension Box {
 
             return ViteNode.pledge.info.getPledgeBeneficialAmount(address: account.address)
                 .then({ (balance) -> Promise<Void> in
-                    if balance.value == 0 {
+                    if balance == 0 {
                         return .value(())
                     } else {
                         return cancelPledge(amount: balance)
@@ -135,10 +135,10 @@ extension Box {
                 })
         }
 
-        static func makeSureHasPledge(account: Wallet.Account) -> Promise<Balance> {
+        static func makeSureHasPledge(account: Wallet.Account) -> Promise<Amount> {
 
-            let pledgeAmount = Balance(value: BigInt("1000000000000000000000"))
-            func pledge() -> Promise<Balance> {
+            let pledgeAmount = Amount("1000000000000000000000")
+            func pledge() -> Promise<Amount> {
                 return ViteNode.pledge.perform.getPow(account: account, beneficialAddress: account.address, amount: pledgeAmount)
                     .then({ (context) -> Promise<Void> in
                         return ViteNode.rawTx.send.context(context).map({ _ in () })
@@ -150,8 +150,8 @@ extension Box {
             }
 
             return ViteNode.pledge.info.getPledgeBeneficialAmount(address: account.address)
-                .then({ (balance) -> Promise<Balance> in
-                    if balance.value > 0 {
+                .then({ (balance) -> Promise<Amount> in
+                    if balance > 0 {
                         return .value(balance)
                     } else {
                         return pledge()
@@ -197,7 +197,7 @@ extension Box {
                 return ViteNode.utils.receive.latestRawTxIfHasWithPow(account: account)
                     .then({ (ret) -> Promise<Void> in
                         if let ret = ret {
-                            printLog("receive: \(ret.send.amount!.value.description)")
+                            printLog("receive: \(ret.send.amount!.description)")
                             return afterLatestAccountBlockConfirmed(address: account.address)
                                 .then({ (_) -> Promise<Void> in
                                     return getPromise()
@@ -212,7 +212,7 @@ extension Box {
             return getPromise()
         }
 
-        static func sendViteToSelf(account: Wallet.Account, amount: Balance, note: String? = nil) -> Promise<AccountBlock> {
+        static func sendViteToSelf(account: Wallet.Account, amount: Amount, note: String? = nil) -> Promise<AccountBlock> {
             return ViteNode.transaction.getPow(account: account, toAddress: account.address, tokenId: ViteWalletConst.viteToken.id, amount: amount, note: note)
                 .then { context -> Promise<AccountBlock> in
                     return ViteNode.rawTx.send.context(context)
@@ -221,7 +221,7 @@ extension Box {
             }
         }
 
-        static func getTestToken(account: Wallet.Account, amount: Balance) -> Promise<Void> {
+        static func getTestToken(account: Wallet.Account, amount: Amount) -> Promise<Void> {
             let address = account.address
             return ViteNode.transaction.getPow(account: Box.genesisWallet.secondAccount, toAddress: address, tokenId: ViteWalletConst.viteToken.id, amount: amount, note: nil)
                 .then({ context -> Promise<AccountBlock> in

@@ -10,7 +10,7 @@ import Foundation
 import ObjectMapper
 
 public class Candidate: Mappable {
-    public typealias VoteNum = Balance
+    public typealias VoteNum = Amount
 
     required public init?(map: Map) {
 

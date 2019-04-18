@@ -39,7 +39,7 @@ class LedgerTests: XCTestCase {
             let account = Box.testWallet.firstAccount
             let address = account.address
             let tokenId = ViteWalletConst.viteToken.id
-            let amount = Balance(value: BigInt("1000000000000000000")!)
+            let amount = Amount("1000000000000000000")!
 
             firstly(execute: { () -> Promise<Void> in
                 return Box.f.getTestToken(account: account, amount: amount)
@@ -48,7 +48,7 @@ class LedgerTests: XCTestCase {
             }).done({ (balanceInfos) in
                 var success = false
                 for balanceInfo in balanceInfos where balanceInfo.token.id == tokenId {
-                    if balanceInfo.balance.value >= amount.value {
+                    if balanceInfo.balance >= amount {
                         success = true
                     }
                 }
@@ -70,7 +70,7 @@ class LedgerTests: XCTestCase {
             let account = Box.testWallet.firstAccount
             let address = account.address
             let tokenId = ViteWalletConst.viteToken.id
-            let amount = Balance(value: BigInt("1000000000000000000")!)
+            let amount = Amount("1000000000000000000")!
 
             firstly(execute: { () -> Promise<Void> in
                 return Box.f.getTestToken(account: account, amount: amount)
@@ -78,7 +78,7 @@ class LedgerTests: XCTestCase {
                 return ViteNode.ledger.getLatestAccountBlock(address: address)
             }).done({ (accountBlock) in
                 XCTAssert(accountBlock?.tokenId == tokenId)
-                XCTAssert(accountBlock?.amount?.value == amount.value)
+                XCTAssert(accountBlock?.amount == amount)
             }).catch({ (error) in
                 printLog(error)
                 XCTAssert(false)
@@ -95,7 +95,7 @@ class LedgerTests: XCTestCase {
 
             let account = Box.testWallet.firstAccount
             let address = account.address
-            let amount = Balance(value: BigInt("1000000000000000000")!)
+            let amount = Amount("1000000000000000000")!
 
             firstly(execute: { () -> Promise<Void> in
                 return Box.f.getTestToken(account: account, amount: amount)
@@ -121,8 +121,8 @@ class LedgerTests: XCTestCase {
 
             let account = Box.testWallet.firstAccount
             let address = account.address
-            let amount1 = Balance(value: BigInt("1000000000000000000")!)
-            let amount2 = Balance(value: BigInt("2000000000000000000")!)
+            let amount1 = Amount("1000000000000000000")!
+            let amount2 = Amount("2000000000000000000")!
 
             var latestAccountBlock: AccountBlock!
 
@@ -143,7 +143,7 @@ class LedgerTests: XCTestCase {
                         return Box.f.afterLatestAccountBlockConfirmed(address: address).map({ _ in Void() })
                     })
             }).then({ (a) -> Promise<Void> in
-                return Box.f.getTestToken(account: account, amount: Balance())
+                return Box.f.getTestToken(account: account, amount: 0)
             }).then({ (_) -> Promise<AccountBlock?> in
                 return ViteNode.ledger.getLatestAccountBlock(address: address)
             }).then({ (a) -> Promise<(accountBlocks: [AccountBlock], nextHash: String?)> in
@@ -159,10 +159,10 @@ class LedgerTests: XCTestCase {
                 XCTAssert(a2.type == .send)
                 XCTAssert(a3.type == .receive)
                 XCTAssert(a4.type == .send)
-                XCTAssert(a1.amount?.value == amount2.value)
-                XCTAssert(a2.amount?.value == amount2.value)
-                XCTAssert(a3.amount?.value == amount1.value)
-                XCTAssert(a4.amount?.value == amount1.value)
+                XCTAssert(a1.amount == amount2)
+                XCTAssert(a2.amount == amount2)
+                XCTAssert(a3.amount == amount1)
+                XCTAssert(a4.amount == amount1)
             }).catch({ (error) in
                 printLog(error)
                 XCTAssert(false)
@@ -179,8 +179,8 @@ class LedgerTests: XCTestCase {
 
             let account = Box.testWallet.firstAccount
             let address = account.address
-            let amount1 = Balance(value: BigInt("1000000000000000000")!)
-            let amount2 = Balance(value: BigInt("2000000000000000000")!)
+            let amount1 = Amount("1000000000000000000")!
+            let amount2 = Amount("2000000000000000000")!
 
             var latestAccountBlock: AccountBlock!
 
@@ -201,7 +201,7 @@ class LedgerTests: XCTestCase {
                         return Box.f.afterLatestAccountBlockConfirmed(address: address).map({ _ in Void() })
                     })
             }).then({ (a) -> Promise<Void> in
-                return Box.f.getTestToken(account: account, amount: Balance())
+                return Box.f.getTestToken(account: account, amount: 0)
             }).then({ (_) -> Promise<AccountBlock?> in
                 return ViteNode.ledger.getLatestAccountBlock(address: address)
             }).then({ (a) -> Promise<(accountBlocks: [AccountBlock], nextHash: String?)> in
@@ -217,10 +217,10 @@ class LedgerTests: XCTestCase {
                 XCTAssert(a2.type == .send)
                 XCTAssert(a3.type == .receive)
                 XCTAssert(a4.type == .send)
-                XCTAssert(a1.amount?.value == amount2.value)
-                XCTAssert(a2.amount?.value == amount2.value)
-                XCTAssert(a3.amount?.value == amount1.value)
-                XCTAssert(a4.amount?.value == amount1.value)
+                XCTAssert(a1.amount == amount2)
+                XCTAssert(a2.amount == amount2)
+                XCTAssert(a3.amount == amount1)
+                XCTAssert(a4.amount == amount1)
             }).catch({ (error) in
                 printLog(error)
                 XCTAssert(false)

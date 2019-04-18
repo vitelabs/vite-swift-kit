@@ -12,7 +12,7 @@ import BigInt
 
 public struct GetTestTokenRequest: JSONRPCKit.Request {
 
-    public typealias Response = Balance
+    public typealias Response = Amount
 
     let address: ViteAddress
 
@@ -29,8 +29,8 @@ public struct GetTestTokenRequest: JSONRPCKit.Request {
     }
 
     public func response(from resultObject: Any) throws -> Response {
-        if let response = resultObject as? String, let bigInt = BigInt(response) {
-            return Balance(value: bigInt)
+        if let response = resultObject as? String, let amount = Amount(response) {
+            return amount
         } else {
             throw ViteError.JSONTypeError
         }

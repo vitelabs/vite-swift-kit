@@ -32,17 +32,17 @@ class OnroadTests: XCTestCase {
         
         async { (c) in
             let address = Box.testWallet.firstAccount.address
-            let firstAmount = Balance(value: BigInt("1000000000000000000")!)
-            let secondAmount = Balance(value: BigInt("2000000000000000000")!)
+            let firstAmount = Amount("1000000000000000000")!
+            let secondAmount = Amount("2000000000000000000")!
             printLog("start")
             Box.f.sendViteToSelf(account: Box.testWallet.firstAccount, amount: firstAmount)
                 .then { ret -> Promise<Void> in
-                    printLog("send self \(ret.amount!.value.description)")
+                    printLog("send self \(ret.amount!.description)")
                     return Promise.value(())
                 }.then { () -> Promise<AccountBlock> in
                     return Box.f.sendViteToSelf(account: Box.testWallet.firstAccount, amount: secondAmount)
                 }.then { ret -> Promise<Void> in
-                    printLog("send self \(ret.amount!.value.description)")
+                    printLog("send self \(ret.amount!.description)")
                     return Promise.value(Void())
                 }.then { () -> Promise<[AccountBlock]> in
                     return ViteNode.onroad.getOnroadBlocks(address: address, index: 0, count: 10)
@@ -50,14 +50,14 @@ class OnroadTests: XCTestCase {
                     XCTAssert(ret.count == 2)
                     let first = ret[0]
                     let second = ret[1]
-                    XCTAssert(first.amount?.value == firstAmount.value)
-                    XCTAssert(second.amount?.value == secondAmount.value)
+                    XCTAssert(first.amount == firstAmount)
+                    XCTAssert(second.amount == secondAmount)
                     return ViteNode.onroad.getOnroadInfos(address: address)
                 }.done { ret in
 //                    XCTAssert(ret.count == 1)
 //                    let info = ret[0]
 //                    XCTAssert(info.unconfirmedCount == 2)
-//                    XCTAssert(info.unconfirmedBalance.value == (firstAmount.value + secondAmount.value))
+//                    XCTAssert(info.unconfirmedBalance.value == (firstAmount + secondAmount))
                 }.catch { (error) in
                     printLog(error)
                     XCTAssert(false)

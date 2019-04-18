@@ -38,7 +38,7 @@ class TxTests: XCTestCase {
             let account = Box.testWallet.firstAccount
             let address = account.address
             let tokenId = ViteWalletConst.viteToken.id
-            let amount = Balance(value: BigInt("1000000000000000000")!)
+            let amount = Amount("1000000000000000000")!
             let data = Data("00112233aabbcc".hex2Bytes)
 
             firstly(execute: { () -> Promise<SendBlockContext> in
@@ -56,7 +56,7 @@ class TxTests: XCTestCase {
             }).then({ (accountBlock) -> Promise<[AccountBlock]> in
                 XCTAssert(accountBlock.toAddress == address)
                 XCTAssert(accountBlock.tokenId == tokenId)
-                XCTAssert(accountBlock.amount?.value == amount.value)
+                XCTAssert(accountBlock.amount == amount)
                 XCTAssert(accountBlock.data == data)
                 printLog("=============== receive with pow ===============")
                 return ViteNode.onroad.getOnroadBlocks(address: account.address, index: 0, count: 1)
@@ -92,7 +92,7 @@ class TxTests: XCTestCase {
             let account = Box.testWallet.secondAccount
             let address = account.address
             let tokenId = ViteWalletConst.viteToken.id
-            let amount = Balance(value: BigInt("1000000000000000000")!)
+            let amount = Amount("1000000000000000000")!
             let data = Data("00112233aabbcc".hex2Bytes)
 
             firstly(execute: { () -> Promise<Quota> in
@@ -109,7 +109,7 @@ class TxTests: XCTestCase {
             }).then({ (accountBlock) -> Promise<[AccountBlock]> in
                 XCTAssert(accountBlock.toAddress == address)
                 XCTAssert(accountBlock.tokenId == tokenId)
-                XCTAssert(accountBlock.amount?.value == amount.value)
+                XCTAssert(accountBlock.amount == amount)
                 XCTAssert(accountBlock.data == data)
                 printLog("=============== receive without pow ===============")
                 return ViteNode.onroad.getOnroadBlocks(address: account.address, index: 0, count: 1)

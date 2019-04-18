@@ -36,7 +36,7 @@ class PledgeTests: XCTestCase {
         async { (c) in
             let account = Box.testWallet.secondAccount
             let address = account.address
-            let amount = Balance(value: BigInt("1000000000000000000000")!)
+            let amount = Amount("1000000000000000000000")!
 
             func pledge() -> Promise<Void> {
                 return ViteNode.pledge.perform.getPow(account: account, beneficialAddress: address, amount: amount)
@@ -54,11 +54,11 @@ class PledgeTests: XCTestCase {
                     })
             }
 
-            func getPledgeInfo() -> Promise<(Quota, PledgeDetail, Balance)> {
+            func getPledgeInfo() -> Promise<(Quota, PledgeDetail, Amount)> {
                 return ViteNode.pledge.info.getPledgeQuota(address: address)
                     .then({ (quota) -> Promise<(Quota, PledgeDetail)> in
                         return ViteNode.pledge.info.getPledgeDetail(address: address, index: 0, count: 10).map({ (quota, $0) })
-                    }).then({ (quota, pledges) -> Promise<(Quota, PledgeDetail, Balance)> in
+                    }).then({ (quota, pledges) -> Promise<(Quota, PledgeDetail, Amount)> in
                         return ViteNode.pledge.info.getPledgeBeneficialAmount(address: address).map({ (quota, pledges, $0) })
                     })
             }
@@ -70,24 +70,24 @@ class PledgeTests: XCTestCase {
                 printLog("✅makeSureHasNoPledge")
                 printLog("🚀pledge")
                 return pledge()
-            }).then({ () -> Promise<(Quota, PledgeDetail, Balance)> in
+            }).then({ () -> Promise<(Quota, PledgeDetail, Amount)> in
                 printLog("✅pledge")
                 printLog("🚀getPledgeInfo")
                 return getPledgeInfo()
             }).then({ (quota, pledgeDetail, balance) -> Promise<Void> in
                 XCTAssert(quota.total > 0)
                 XCTAssert(pledgeDetail.totalCount == 1)
-                XCTAssert(pledgeDetail.totalPledgeAmount.value == amount.value)
-                var pledgeAmount = Balance()
+                XCTAssert(pledgeDetail.totalPledgeAmount == amount)
+                var pledgeAmount = Amount()
                 for pledge in pledgeDetail.list where pledge.beneficialAddress == address {
                     pledgeAmount = pledge.amount
                 }
-                XCTAssert(pledgeAmount.value == amount.value)
-                XCTAssert(amount.value == balance.value)
+                XCTAssert(pledgeAmount == amount)
+                XCTAssert(amount == balance)
                 printLog("✅getPledgeInfo")
                 printLog("🚀cancelPledge")
                 return cancelPledge()
-            }).then({ () -> Promise<(Quota, PledgeDetail, Balance)> in
+            }).then({ () -> Promise<(Quota, PledgeDetail, Amount)> in
                 printLog("✅cancelPledge")
                 printLog("🚀getPledgeInfo")
                 return getPledgeInfo()
@@ -96,13 +96,13 @@ class PledgeTests: XCTestCase {
                 XCTAssert(quota.current == 0)
                 XCTAssert(quota.utps == 0)
                 XCTAssert(pledgeDetail.totalCount == 0)
-                XCTAssert(pledgeDetail.totalPledgeAmount.value == 0)
+                XCTAssert(pledgeDetail.totalPledgeAmount == 0)
                 var success = true
                 for pledge in pledgeDetail.list where pledge.beneficialAddress == address {
                     success = false
                 }
                 XCTAssert(success)
-                XCTAssert(balance.value == 0)
+                XCTAssert(balance == 0)
                 printLog("✅getPledgeInfo")
                 printLog("🚀pledge")
                 return pledge()

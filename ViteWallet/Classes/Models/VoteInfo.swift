@@ -18,9 +18,9 @@ public struct VoteInfo: Mappable {
 
     public fileprivate(set) var nodeName: String?
     public fileprivate(set) var nodeStatus: NodeStatus?
-    public fileprivate(set) var balance: Balance?
+    public fileprivate(set) var balance: Amount?
 
-    public init(_ nodeName: String? = "", _ nodeStatus: NodeStatus? = .valid, _ balance: Balance? = nil) {
+    public init(_ nodeName: String? = "", _ nodeStatus: NodeStatus? = .valid, _ balance: Amount? = nil) {
         self.nodeName = nodeName
         self.nodeStatus = nodeStatus
         self.balance = balance

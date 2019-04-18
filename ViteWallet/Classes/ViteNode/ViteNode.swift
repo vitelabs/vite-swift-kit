@@ -29,7 +29,7 @@ public struct SendBlockContext {
     let latest: AccountBlock?
     let toAddress: ViteAddress
     let tokenId: ViteTokenId
-    let amount: Balance
+    let amount: Amount
     let data: Data?
     let nonce: String?
     let difficulty: BigInt?

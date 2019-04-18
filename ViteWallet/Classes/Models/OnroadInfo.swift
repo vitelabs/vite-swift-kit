@@ -12,7 +12,7 @@ import ObjectMapper
 public struct OnroadInfo: Mappable {
 
     public fileprivate(set) var token = Token()
-    public fileprivate(set) var unconfirmedBalance = Balance()
+    public fileprivate(set) var unconfirmedBalance = Amount()
     public fileprivate(set) var unconfirmedCount: UInt64 = 0
     public init?(map: Map) {
 

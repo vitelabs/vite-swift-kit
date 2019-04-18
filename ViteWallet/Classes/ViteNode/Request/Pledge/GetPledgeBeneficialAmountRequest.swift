@@ -11,7 +11,7 @@ import JSONRPCKit
 import BigInt
 
 public struct GetPledgeBeneficialAmountRequest: JSONRPCKit.Request {
-    public typealias Response = Balance
+    public typealias Response = Amount
 
     let address: ViteAddress
 
@@ -29,10 +29,10 @@ public struct GetPledgeBeneficialAmountRequest: JSONRPCKit.Request {
 
     public func response(from resultObject: Any) throws -> Response {
         guard let response = resultObject as? String,
-            let bignit = BigInt(response) else {
+            let amount = Amount(response) else {
                 throw ViteError.JSONTypeError
         }
 
-        return Balance(value: bignit)
+        return amount
     }
 }

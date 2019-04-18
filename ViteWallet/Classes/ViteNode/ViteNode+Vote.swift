@@ -33,7 +33,7 @@ public extension ViteNode.vote.perform {
                 return ViteNode.rawTx.send.withoutPow(account: account,
                                                       toAddress: ViteWalletConst.ContractAddress.consensus.address,
                                                       tokenId: ViteWalletConst.viteToken.id,
-                                                      amount: Balance(value: BigInt(0)),
+                                                      amount: Amount(0),
                                                       data: data)
         }
     }
@@ -44,7 +44,7 @@ public extension ViteNode.vote.perform {
                 return ViteNode.rawTx.send.getPow(account: account,
                                                   toAddress: ViteWalletConst.ContractAddress.consensus.address,
                                                   tokenId: ViteWalletConst.viteToken.id,
-                                                  amount: Balance(value: BigInt(0)),
+                                                  amount: Amount(0),
                                                   data: data)
         }
     }
@@ -57,7 +57,7 @@ public extension ViteNode.vote.cancel {
                 return ViteNode.rawTx.send.withoutPow(account: account,
                                                       toAddress: ViteWalletConst.ContractAddress.consensus.address,
                                                       tokenId: ViteWalletConst.viteToken.id,
-                                                      amount: Balance(value: BigInt(0)),
+                                                      amount: Amount(0),
                                                       data: data)
         }
     }
@@ -68,7 +68,7 @@ public extension ViteNode.vote.cancel {
                 return ViteNode.rawTx.send.getPow(account: account,
                                                   toAddress: ViteWalletConst.ContractAddress.consensus.address,
                                                   tokenId: ViteWalletConst.viteToken.id,
-                                                  amount: Balance(value: BigInt(0)),
+                                                  amount: Amount(0),
                                                   data: data)
         }
     }

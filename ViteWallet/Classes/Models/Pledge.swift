@@ -13,9 +13,9 @@ import BigInt
 public struct Pledge: Mappable {
 
     public fileprivate(set) var beneficialAddress = ""
-    public fileprivate(set) var amount = Balance()
+    public fileprivate(set) var amount = Amount(0)
     public fileprivate(set) var timestamp = Date(timeIntervalSince1970: 0)
-    public fileprivate(set) var withdrawHeight = BigInt(0)
+    public fileprivate(set) var withdrawHeight = Amount(0)
 
     public init?(map: Map) { }
 

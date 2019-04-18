@@ -9,11 +9,13 @@
 import Foundation
 import BigInt
 
-public struct Balance {
+public typealias Amount = BigInt
 
-    public var value: BigInt
-
-    public init(value: BigInt = BigInt(0)) {
-        self.value = value
-    }
-}
+//public struct Amount {
+//
+//    public var value: BigInt
+//
+//    public init(value: BigInt = BigInt(0)) {
+//        self.value = value
+//    }
+//}

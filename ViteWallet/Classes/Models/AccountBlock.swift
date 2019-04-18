@@ -46,8 +46,8 @@ public struct AccountBlock: Mappable {
     public fileprivate(set) var signature: String?
     public fileprivate(set) var height: UInt64?
     public fileprivate(set) var quota: UInt64?
-    public fileprivate(set) var amount: Balance?
-    public fileprivate(set) var fee: Balance?
+    public fileprivate(set) var amount: Amount?
+    public fileprivate(set) var fee: Amount?
     public fileprivate(set) var confirmedTimes: UInt64?
     public fileprivate(set) var token: Token?
 
@@ -95,7 +95,7 @@ extension AccountBlock {
                                             latest: AccountBlock?,
                                             toAddress: ViteAddress,
                                             tokenId: ViteTokenId,
-                                            amount: Balance,
+                                            amount: Amount,
                                             data: Data?,
                                             nonce: String?,
                                             difficulty: BigInt?) -> AccountBlock {
@@ -166,7 +166,7 @@ extension AccountBlock {
 
         block.accountAddress = address
 
-        block.fee = Balance(value: BigInt(0))
+        block.fee = Amount(0)
         block.logHash = nil
         block.nonce = nonce
         block.difficulty = difficulty
@@ -205,7 +205,7 @@ extension AccountBlock {
                 }
 
                 if let amount = accountBlock.amount {
-                    let raw = [UInt8](BigUInt(amount.value).serialize())
+                    let raw = [UInt8](BigUInt(amount).serialize())
                     source.append(contentsOf: raw.padding(toCount: 32))
                 }
 
@@ -229,7 +229,7 @@ extension AccountBlock {
 
         var feeBytes: Bytes = Bytes()
         if let fee = accountBlock.fee {
-            feeBytes = [UInt8](BigUInt(fee.value).serialize())
+            feeBytes = [UInt8](BigUInt(fee).serialize())
 
         }
         feeBytes = feeBytes.padding(toCount: 32)

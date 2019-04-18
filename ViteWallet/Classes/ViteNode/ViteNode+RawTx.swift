@@ -19,7 +19,7 @@ public extension ViteNode.rawTx.send {
     static func withoutPow(account: Wallet.Account,
                            toAddress: ViteAddress,
                            tokenId: ViteTokenId,
-                           amount: Balance,
+                           amount: Amount,
                            data: Data?) -> Promise<AccountBlock> {
         return ViteNode.ledger.getLatestAccountBlock(address: account.address)
             .then { latestAccountBlock -> Promise<AccountBlock> in
@@ -40,7 +40,7 @@ public extension ViteNode.rawTx.send {
     static func getPow(account: Wallet.Account,
                        toAddress: ViteAddress,
                        tokenId: ViteTokenId,
-                       amount: Balance,
+                       amount: Amount,
                        data: Data?) -> Promise<SendBlockContext> {
         return ViteNode.ledger.getLatestAccountBlock(address: account.address)
             .then { latestAccountBlock -> Promise<(latestAccountBlock: AccountBlock?, difficulty: BigInt)> in

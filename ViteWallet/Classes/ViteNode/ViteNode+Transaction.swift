@@ -14,7 +14,7 @@ public extension ViteNode.transaction {
     static func withoutPow(account: Wallet.Account,
                            toAddress: ViteAddress,
                            tokenId: ViteTokenId,
-                           amount: Balance,
+                           amount: Amount,
                            note: String?) -> Promise<AccountBlock> {
 
         var data: Data?
@@ -31,7 +31,7 @@ public extension ViteNode.transaction {
     static func getPow(account: Wallet.Account,
                        toAddress: ViteAddress,
                        tokenId: ViteTokenId,
-                       amount: Balance,
+                       amount: Amount,
                        note: String?) -> Promise<SendBlockContext> {
         var data: Data?
         if let note = note, !note.isEmpty {

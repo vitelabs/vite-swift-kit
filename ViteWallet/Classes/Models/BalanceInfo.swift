@@ -13,15 +13,15 @@ import BigInt
 public struct BalanceInfo: Mappable {
 
     public fileprivate(set) var token = Token()
-    public fileprivate(set) var balance = Balance()
-    public fileprivate(set) var unconfirmedBalance = Balance()
+    public fileprivate(set) var balance = Amount()
+    public fileprivate(set) var unconfirmedBalance = Amount()
     public fileprivate(set) var unconfirmedCount: UInt64 = 0
 
     public init?(map: Map) {
 
     }
 
-    public init(token: Token, balance: Balance, unconfirmedBalance: Balance, unconfirmedCount: UInt64) {
+    public init(token: Token, balance: Amount, unconfirmedBalance: Amount, unconfirmedCount: UInt64) {
         self.token = token
         self.balance = balance
         self.unconfirmedBalance = unconfirmedBalance
@@ -33,7 +33,7 @@ public struct BalanceInfo: Mappable {
         balance <- (map["totalAmount"], JSONTransformer.balance)
     }
 
-    mutating func fill(unconfirmedBalance: Balance, unconfirmedCount: UInt64) {
+    mutating func fill(unconfirmedBalance: Amount, unconfirmedCount: UInt64) {
         self.unconfirmedBalance = unconfirmedBalance
         self.unconfirmedCount = unconfirmedCount
     }
@@ -58,7 +58,7 @@ extension BalanceInfo {
                 ret.add(info)
                 infos.removeObject(at: index)
             } else {
-                let info = BalanceInfo(token: onroadInfo.token, balance: Balance(value: BigInt(0)), unconfirmedBalance: onroadInfo.unconfirmedBalance, unconfirmedCount: onroadInfo.unconfirmedCount)
+                let info = BalanceInfo(token: onroadInfo.token, balance: Amount(0), unconfirmedBalance: onroadInfo.unconfirmedBalance, unconfirmedCount: onroadInfo.unconfirmedCount)
                 ret.add(info)
             }
         }

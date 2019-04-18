@@ -60,11 +60,11 @@ public struct JSONTransformer {
         return String(num)
     })
 
-    public static let balance = TransformOf<Balance, String>(fromJSON: { (string) -> Balance? in
-        guard let string = string, let bigInt = BigInt(string) else { return nil }
-        return Balance(value: bigInt)
-    }, toJSON: { (balance) -> String? in
-        guard let balance = balance else { return nil }
-        return String(balance.value)
+    public static let balance = TransformOf<Amount, String>(fromJSON: { (string) -> Amount? in
+        guard let string = string, let amount = Amount(string) else { return nil }
+        return amount
+    }, toJSON: { (amount) -> String? in
+        guard let amount = amount else { return nil }
+        return amount.description
     })
 }
