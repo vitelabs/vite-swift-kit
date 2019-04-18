@@ -12,7 +12,7 @@ import BigInt
 
 public extension ViteNode.mintage {
 
-    static func getToken(tokenId: String) -> Promise<Token> {
+    static func getToken(tokenId: ViteTokenId) -> Promise<Token> {
         return GetTokenInfoRequest(tokenId: tokenId).defaultProviderPromise
     }
 }

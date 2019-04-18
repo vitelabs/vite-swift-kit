@@ -35,21 +35,3 @@ public struct Token: Mappable {
         decimals <- map["decimals"]
     }
 }
-
-extension Token {
-    public static func idStriped(_ id: String) -> String {
-        guard id.count == 28 else { return "" }
-        let string = (id as NSString).substring(with: NSRange(location: 4, length: 20)) as String
-        return string
-    }
-
-    public static func isValid(string: String) -> Bool {
-        guard string.count == 28 else { return false }
-        let prefix = (string as NSString).substring(to: 4) as String
-        let hash = (string as NSString).substring(with: NSRange(location: 4, length: 20)) as String
-        let checksum = (string as NSString).substring(from: 24) as String
-        guard prefix == "tti_" else { return false }
-        guard checksum == Blake2b.hash(outLength: 2, in: hash.hex2Bytes)?.toHexString() else { return false }
-        return true
-    }
-}

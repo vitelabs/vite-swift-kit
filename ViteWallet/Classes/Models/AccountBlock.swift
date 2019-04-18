@@ -36,7 +36,7 @@ public struct AccountBlock: Mappable {
     public fileprivate(set) var fromAddress: ViteAddress?
     public fileprivate(set) var toAddress: ViteAddress?
     public fileprivate(set) var fromHash: String?
-    public fileprivate(set) var tokenId: String?
+    public fileprivate(set) var tokenId: ViteTokenId?
     public fileprivate(set) var snapshotHash: String?
     public fileprivate(set) var data: Data?
     public fileprivate(set) var timestamp: Int64?
@@ -94,7 +94,7 @@ extension AccountBlock {
                                             address: ViteAddress,
                                             latest: AccountBlock?,
                                             toAddress: ViteAddress,
-                                            tokenId: String,
+                                            tokenId: ViteTokenId,
                                             amount: Balance,
                                             data: Data?,
                                             nonce: String?,
@@ -193,15 +193,15 @@ extension AccountBlock {
             source.append(contentsOf: height.toBytes)
         }
 
-        if let accountAddress = accountBlock.accountAddress {
-            source.append(contentsOf: accountAddress.rawViteAddress.hex2Bytes)
+        if let raw = accountBlock.accountAddress?.rawViteAddress {
+            source.append(contentsOf: raw)
         }
 
         if let type = accountBlock.type {
             switch type {
             case .send:
-                if let toAddress = accountBlock.toAddress {
-                    source.append(contentsOf: toAddress.rawViteAddress.hex2Bytes)
+                if let raw = accountBlock.toAddress?.rawViteAddress {
+                    source.append(contentsOf: raw)
                 }
 
                 if let amount = accountBlock.amount {
@@ -209,8 +209,8 @@ extension AccountBlock {
                     source.append(contentsOf: raw.padding(toCount: 32))
                 }
 
-                if let tokenId = accountBlock.tokenId {
-                    source.append(contentsOf: Token.idStriped(tokenId).hex2Bytes)
+                if let raw = accountBlock.tokenId?.rawViteTokenId {
+                    source.append(contentsOf: raw)
                 }
             case .receive:
                 if let fromHash = accountBlock.fromHash {

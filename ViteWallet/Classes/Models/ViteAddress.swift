@@ -22,9 +22,9 @@ public extension ViteAddress {
         return true
     }
 
-    public var rawViteAddress: ViteAddress {
-        guard self.count == 55 else { return "" }
+    public var rawViteAddress: Bytes? {
+        guard isViteAddress else { return nil}
         let string = (self as NSString).substring(with: NSRange(location: 5, length: 40)) as String
-        return string
+        return string.hex2Bytes
     }
 }

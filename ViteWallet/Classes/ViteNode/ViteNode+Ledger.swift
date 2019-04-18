@@ -29,7 +29,7 @@ public extension ViteNode.ledger {
         return GetAccountBlocksByHashRequest(address: address, hash: hash, count: count).defaultProviderPromise
     }
 
-    static func getAccountBlocks(address: ViteAddress, tokenId: String, hash: String?, count: Int) -> Promise<(accountBlocks: [AccountBlock], nextHash: String?)> {
+    static func getAccountBlocks(address: ViteAddress, tokenId: ViteTokenId, hash: String?, count: Int) -> Promise<(accountBlocks: [AccountBlock], nextHash: String?)> {
         return GetAccountBlocksByHashInTokenRequest(address: address, tokenId: tokenId, hash: hash, count: count).defaultProviderPromise
     }
 

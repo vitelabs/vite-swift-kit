@@ -13,7 +13,7 @@ import BigInt
 public extension ViteNode.transaction {
     static func withoutPow(account: Wallet.Account,
                            toAddress: ViteAddress,
-                           tokenId: String,
+                           tokenId: ViteTokenId,
                            amount: Balance,
                            note: String?) -> Promise<AccountBlock> {
 
@@ -30,7 +30,7 @@ public extension ViteNode.transaction {
 
     static func getPow(account: Wallet.Account,
                        toAddress: ViteAddress,
-                       tokenId: String,
+                       tokenId: ViteTokenId,
                        amount: Balance,
                        note: String?) -> Promise<SendBlockContext> {
         var data: Data?

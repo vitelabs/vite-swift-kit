@@ -12,7 +12,7 @@ import JSONRPCKit
 public struct GetTokenInfoRequest: JSONRPCKit.Request {
     public typealias Response = Token
 
-    let tokenId: String
+    let tokenId: ViteTokenId
 
     public var method: String {
         return "mintage_getTokenInfoById"
@@ -22,7 +22,7 @@ public struct GetTokenInfoRequest: JSONRPCKit.Request {
         return [tokenId]
     }
 
-    public init(tokenId: String) {
+    public init(tokenId: ViteTokenId) {
         self.tokenId = tokenId
     }
 

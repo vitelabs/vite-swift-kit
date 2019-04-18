@@ -14,7 +14,7 @@ public struct GetAccountBlocksByHashInTokenRequest: JSONRPCKit.Request {
 
     let address: ViteAddress
     let hash: String?
-    let tokenId: String
+    let tokenId: ViteTokenId
     let count: Int
 
     public var method: String {
@@ -29,7 +29,7 @@ public struct GetAccountBlocksByHashInTokenRequest: JSONRPCKit.Request {
         }
     }
 
-    public init(address: ViteAddress, tokenId: String, hash: String? = nil, count: Int) {
+    public init(address: ViteAddress, tokenId: ViteTokenId, hash: String? = nil, count: Int) {
         self.address = address
         self.tokenId = tokenId
         self.hash = hash
