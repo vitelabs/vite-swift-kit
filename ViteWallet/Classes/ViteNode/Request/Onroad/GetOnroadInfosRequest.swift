@@ -15,7 +15,7 @@ public struct GetOnroadInfosRequest: JSONRPCKit.Request {
     let address: ViteAddress
 
     public var method: String {
-        return "onroad_getAccountOnroadInfo"
+        return "onroad_getOnroadInfoByAddress"
     }
 
     public var parameters: Any? {
