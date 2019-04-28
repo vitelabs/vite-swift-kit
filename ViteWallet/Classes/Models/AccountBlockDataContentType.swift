@@ -16,17 +16,25 @@ public enum AccountBlockDataContentType: UInt16 {
     }
 }
 
-public extension Array where Element == UInt8 {
-    var contentType: AccountBlockDataContentType? {
+public extension Data {
 
+    var contentTypeInUInt16: UInt16? {
         guard count >= 2 else { return nil }
-
         let high = UInt16(self[0])
         let low = UInt16(self[1])
         let num = (high << 8) + low
+        return num
+    }
 
-        guard let type = AccountBlockDataContentType(rawValue: num) else { return nil }
+    var contentType: AccountBlockDataContentType? {
+        guard let num = contentTypeInUInt16,
+            let type = AccountBlockDataContentType(rawValue: num) else { return nil }
         return type
+    }
+
+    var rawContent: Data? {
+        guard count >= 2 else { return nil }
+        return Data(self.dropFirst(2))
     }
 }
 

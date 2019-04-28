@@ -1,5 +1,5 @@
 //
-//  Balance.swift
+//  Amount.swift
 //  Vite
 //
 //  Created by Stone on 2018/9/6.

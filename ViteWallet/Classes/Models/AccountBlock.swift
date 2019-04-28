@@ -299,11 +299,11 @@ extension AccountBlock {
         case .receiveError, .genesisReceive:
             return .receive
         case .send:
-            guard let base64 = data, let string = Data(base64Encoded: base64)?.toHexString() else { return .send }
-            guard string.count >= 8 else { return .send }
-            let prefix = (string as NSString).substring(to: 8) as String
+            guard let hexString = data?.toHexString() else { return .send }
+            guard hexString.count >= 8 else { return .send }
+            let prefix = (hexString as NSString).substring(to: 8) as String
             if let type = AccountBlock.transactionTypeDataPrefixMap[prefix] {
-                if AccountBlock.transactionTypeToAddressMap[type] == toAddress?.description {
+                if AccountBlock.transactionTypeToAddressMap[type] == toAddress {
                     return type
                 } else {
                     return .send
