@@ -16,19 +16,20 @@ class LedgerTests: XCTestCase {
     override func setUp() {
         super.setUp()
         Box.setUp()
-//        async { (c) in
-//            Box.f.receiveAll(account: Box.testWallet.firstAccount, {
-//                Box.f.receiveAll(account: Box.testWallet.secondAccount, c)
-//            })
-//        }
+        async { (c) in
+            firstly(execute: { () -> Promise<Amount> in
+                return Box.f.makeSureHasEnoughViteAmount(account: Box.testWallet.firstAccount)
+            }).done({ (_) in
+                c()
+            }).catch({ (error) in
+                printLog(error)
+                XCTAssert(false)
+            })
+        }
     }
 
     override func tearDown() {
-//        async { (c) in
-//            Box.f.receiveAll(account: Box.testWallet.firstAccount, {
-//                Box.f.receiveAll(account: Box.testWallet.secondAccount, c)
-//            })
-//        }
+
         super.tearDown()
     }
 

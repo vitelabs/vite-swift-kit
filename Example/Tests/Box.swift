@@ -79,7 +79,7 @@ extension Box {
         }
 
         static func watiUntilHasNoQuota(address: ViteAddress) -> Promise<Void> {
-            return waitUntil(promise: ViteNode.pledge.info.getPledgeQuota(address: address), isReady: { $0.total == 0 })
+            return waitUntil(promise: ViteNode.pledge.info.getPledgeQuota(address: address), isReady: { $0.quotaPerSnapshotBlock == 0 })
         }
 
         static func watiUntilHasVoteInfo(address: ViteAddress) -> Promise<Void> {
@@ -93,8 +93,10 @@ extension Box {
         }
 
         static func makeSureHasEnoughViteAmount(account: Wallet.Account) -> Promise<Amount> {
-
-            return ViteNode.ledger.getBalanceInfosWithoutOnroad(address: account.address)
+            return receiveAll(account: account)
+                .then({ () -> Promise<[BalanceInfo]> in
+                    return ViteNode.ledger.getBalanceInfosWithoutOnroad(address: account.address)
+                })
                 .map({ balanceInfos -> Amount in
                     for balanceInfo in balanceInfos where balanceInfo.token.id == ViteWalletConst.viteToken.id {
                         return balanceInfo.balance
@@ -106,9 +108,9 @@ extension Box {
                         return .value(balance)
                     } else {
                         return getTestToken(account: account, amount: amount)
-                        .then({ () -> Promise<Amount> in
-                            return makeSureHasEnoughViteAmount(account: account)
-                        })
+                            .then({ () -> Promise<Amount> in
+                                return makeSureHasEnoughViteAmount(account: account)
+                            })
                     }
                 })
         }
@@ -182,16 +184,6 @@ extension Box {
             return getPromise()
         }
 
-        static func receiveAll(account: Wallet.Account, _ block: @escaping () -> ()) {
-            receiveAll(account: account)
-                .done({ _ in
-                    block()
-                }).catch({ (error) in
-                    printLog(error)
-                    XCTAssert(false)
-                })
-        }
-
         static func receiveAll(account: Wallet.Account) -> Promise<Void> {
             func getPromise() -> Promise<Void> {
                 return ViteNode.utils.receive.latestRawTxIfHasWithPow(account: account)
@@ -230,12 +222,6 @@ extension Box {
                     return receiveAll(account: account)
                 })
         }
-    }
-}
-
-extension Promise {
-    func mapToVoid() -> Promise<Void> {
-        return self.map { _ in () }
     }
 }
 

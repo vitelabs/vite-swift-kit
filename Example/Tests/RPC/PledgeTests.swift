@@ -17,13 +17,14 @@ class PledgeTests: XCTestCase {
         super.setUp()
         Box.setUp()
         async { (c) in
-            Box.f.makeSureHasEnoughViteAmount(account: Box.testWallet.secondAccount)
-                .done({ (_) in
-                    c()
-                }).catch({ (error) in
-                    printLog(error)
-                    XCTAssert(false)
-                })
+            firstly(execute: { () -> Promise<Amount> in
+                return Box.f.makeSureHasEnoughViteAmount(account: Box.testWallet.secondAccount)
+            }).done({ (_) in
+                c()
+            }).catch({ (error) in
+                printLog(error)
+                XCTAssert(false)
+            })
         }
     }
 
@@ -41,14 +42,14 @@ class PledgeTests: XCTestCase {
             func pledge() -> Promise<Void> {
                 return ViteNode.pledge.perform.getPow(account: account, beneficialAddress: address, amount: amount)
                     .then({ (context) -> Promise<Void> in
-                        return ViteNode.rawTx.send.context(context).mapToVoid()
+                        return ViteNode.rawTx.send.context(context).asVoid()
                     }).then({ () -> Promise<Void> in
                         return Box.f.watiUntilHasQuota(address: address)
                     })
             }
 
             func cancelPledge() -> Promise<Void> {
-                return ViteNode.pledge.cancel.withoutPow(account: account, beneficialAddress: address, amount: amount).mapToVoid()
+                return ViteNode.pledge.cancel.withoutPow(account: account, beneficialAddress: address, amount: amount).asVoid()
                     .then({ () -> Promise<Void> in
                         return Box.f.watiUntilHasNoQuota(address: address)
                     })
@@ -75,7 +76,7 @@ class PledgeTests: XCTestCase {
                 printLog("🚀getPledgeInfo")
                 return getPledgeInfo()
             }).then({ (quota, pledgeDetail, balance) -> Promise<Void> in
-                XCTAssert(quota.total > 0)
+                XCTAssert(quota.quotaPerSnapshotBlock > 0)
                 XCTAssert(pledgeDetail.totalCount == 1)
                 XCTAssert(pledgeDetail.totalPledgeAmount == amount)
                 var pledgeAmount = Amount()
@@ -92,7 +93,7 @@ class PledgeTests: XCTestCase {
                 printLog("🚀getPledgeInfo")
                 return getPledgeInfo()
             }).then({ (quota, pledgeDetail, balance) -> Promise<Void> in
-                XCTAssert(quota.total == 0)
+                XCTAssert(quota.quotaPerSnapshotBlock == 0)
                 XCTAssert(quota.current == 0)
                 XCTAssert(quota.utps == 0)
                 XCTAssert(pledgeDetail.totalCount == 0)

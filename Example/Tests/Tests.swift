@@ -16,25 +16,6 @@ class Tests: XCTestCase {
         super.tearDown()
     }
 
-    func testGetTestToken() {
-        let address = Box.testWallet.secondAccount.address
-        let amount = "10000"
-        let balance = Amount("1000000000000000000")! * Amount(amount)!
-        async { (c) in
-            ViteNode.transaction.getPow(account: Box.genesisWallet.secondAccount, toAddress: address, tokenId: ViteWalletConst.viteToken.id, amount: balance, note: nil)
-                .then { context -> Promise<AccountBlock> in
-                    return ViteNode.rawTx.send.context(context)
-                }.done { (ret) in
-                    printLog("get \(ret.amount!.description)")
-                }.catch { (error) in
-                    printLog(error)
-                    XCTAssert(false)
-                }.finally {
-                    c()
-            }
-        }
-    }
-
     func testWallet() {
         let uuid = "1"
         let name = "name"

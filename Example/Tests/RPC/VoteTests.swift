@@ -17,13 +17,14 @@ class VoteTests: XCTestCase {
         super.setUp()
         Box.setUp()
         async { (c) in
-            Box.f.makeSureHasEnoughViteAmount(account: Box.testWallet.firstAccount)
-                .done({ (_) in
-                    c()
-                }).catch({ (error) in
-                    printLog(error)
-                    XCTAssert(false)
-                })
+            firstly(execute: { () -> Promise<Amount> in
+                return Box.f.makeSureHasEnoughViteAmount(account: Box.testWallet.firstAccount)
+            }).done({ (_) in
+                c()
+            }).catch({ (error) in
+                printLog(error)
+                XCTAssert(false)
+            })
         }
     }
 
@@ -45,7 +46,7 @@ class VoteTests: XCTestCase {
                         nodeName = candidates[0].name
                         return ViteNode.vote.perform.getPow(account: account, gid: ViteWalletConst.ConsensusGroup.snapshot.id, name: nodeName)
                     }).then({ (context) -> Promise<Void> in
-                        return ViteNode.rawTx.send.context(context).mapToVoid()
+                        return ViteNode.rawTx.send.context(context).asVoid()
                     }).then({ () -> Promise<Void> in
                         return Box.f.watiUntilHasVoteInfo(address: address)
                     })
@@ -54,7 +55,7 @@ class VoteTests: XCTestCase {
             func cancelVote() -> Promise<Void> {
                 return ViteNode.vote.cancel.getPow(account: account, gid: ViteWalletConst.ConsensusGroup.snapshot.id)
                     .then({ (context) -> Promise<Void> in
-                        return ViteNode.rawTx.send.context(context).mapToVoid()
+                        return ViteNode.rawTx.send.context(context).asVoid()
                     }).then({ () -> Promise<Void> in
                         return Box.f.watiUntilHasNoVoteInfo(address: address)
                     })

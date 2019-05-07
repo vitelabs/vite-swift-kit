@@ -17,18 +17,20 @@ class TxTests: XCTestCase {
         super.setUp()
         Box.setUp()
         async { (c) in
-            Box.f.receiveAll(account: Box.testWallet.firstAccount, {
-                Box.f.receiveAll(account: Box.testWallet.secondAccount, c)
+            firstly(execute: { () -> Promise<Amount> in
+                return Box.f.makeSureHasEnoughViteAmount(account: Box.testWallet.firstAccount)
+            }).then({ (_) -> Promise<Amount> in
+                return Box.f.makeSureHasEnoughViteAmount(account: Box.testWallet.secondAccount)
+            }).done({ (_) in
+                c()
+            }).catch({ (error) in
+                printLog(error)
+                XCTAssert(false)
             })
         }
     }
 
     override func tearDown() {
-        async { (c) in
-            Box.f.receiveAll(account: Box.testWallet.firstAccount, {
-                Box.f.receiveAll(account: Box.testWallet.secondAccount, c)
-            })
-        }
         super.tearDown()
     }
 
@@ -41,10 +43,12 @@ class TxTests: XCTestCase {
             let amount = Amount("1000000000000000000")!
             let data = Data("00112233aabbcc".hex2Bytes)
 
-            firstly(execute: { () -> Promise<SendBlockContext> in
+            firstly(execute: { () -> Promise<Void> in
                 printLog("start")
                 printLog("=============== send with pow ===============")
                 printLog("🚀 tx_calcPoWDifficulty")
+                return Box.f.makeSureHasNoPledge(account: account)
+            }).then({ (_) -> Promise<SendBlockContext> in
                 return ViteNode.rawTx.send.getPow(account: account, toAddress: address, tokenId: tokenId, amount: amount, data: data)
             }).then({ (context) -> Promise<AccountBlock> in
                 printLog("✅tx_calcPoWDifficulty")
@@ -95,8 +99,11 @@ class TxTests: XCTestCase {
             let amount = Amount("1000000000000000000")!
             let data = Data("00112233aabbcc".hex2Bytes)
 
-            firstly(execute: { () -> Promise<Quota> in
+
+            firstly(execute: { () -> Promise<Amount> in
                 printLog("start")
+                return Box.f.makeSureHasPledge(account: account)
+            }).then({ (_) -> Promise<Quota> in
                 return ViteNode.pledge.info.getPledgeQuota(address: address)
             }).then({ (quota) -> Promise<AccountBlock> in
                 XCTAssert(quota.utps > 0, "❌ need pledge")

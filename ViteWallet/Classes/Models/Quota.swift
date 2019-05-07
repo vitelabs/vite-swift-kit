@@ -10,7 +10,7 @@ import ObjectMapper
 
 public struct Quota: Mappable {
 
-    public fileprivate(set) var total: UInt64 = 0
+    public fileprivate(set) var quotaPerSnapshotBlock: UInt64 = 0
     public fileprivate(set) var current: UInt64 = 0
     public fileprivate(set) var utps: UInt64 = 0
 
@@ -21,7 +21,7 @@ public struct Quota: Mappable {
     public init() {}
 
     public mutating func mapping(map: Map) {
-        total <- (map["total"], JSONTransformer.uint64)
+        quotaPerSnapshotBlock <- (map["quotaPerSnapshotBlock"], JSONTransformer.uint64)
         current <- (map["current"], JSONTransformer.uint64)
         utps <- (map["utps"], JSONTransformer.uint64)
     }
