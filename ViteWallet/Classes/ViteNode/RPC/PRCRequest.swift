@@ -30,26 +30,21 @@ public struct RPCRequest<Batch: JSONRPCKit.Batch>: APIKit.Request {
 
     public var baseURL: URL {
         #if DEBUG
-
-        var characterSet = CharacterSet.decimalDigits
-        characterSet.insert(charactersIn: ".")
-        guard let host = server.rpcURL.host, host.trimmingCharacters(in: characterSet).isEmpty else {
-            return server.rpcURL
-        }
-
-        var url = server.rpcURL
+        var urlComponents = URLComponents(url: server.rpcURL, resolvingAgainstBaseURL: false)!
         if let array = batch.requestObject as? [[String: Any]] {
-            array.forEach {
-                if let method = $0["method"] as? String {
-                    url.appendPathComponent(method)
+            var items = [URLQueryItem]()
+            for (index, r) in array.enumerated() {
+                if let method = r["method"] as? String {
+                    items.append(URLQueryItem(name: "\(index + 1)", value: method))
                 }
             }
+            urlComponents.queryItems = items
         } else if let map = batch.requestObject as? [String: Any] {
             if let method = map["method"] as? String {
-                url.appendPathComponent(method)
+                urlComponents.queryItems = [URLQueryItem(name: "0", value: method)]
             }
         }
-        return url
+        return urlComponents.url!
         #else
         return server.rpcURL
         #endif
