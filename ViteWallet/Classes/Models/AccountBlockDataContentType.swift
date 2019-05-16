@@ -48,7 +48,7 @@ public struct AccountBlockDataFactory {
         return AccountBlockDataContentType.utf8string.header + data
     }
 
-    public static func generateCustomData(header: Data, data: Data) -> Data {
-        return header + data
+    public static func generateCustomData(header: UInt16, data: Data) -> Data {
+        return Data(header.toBytes) + data
     }
 }
