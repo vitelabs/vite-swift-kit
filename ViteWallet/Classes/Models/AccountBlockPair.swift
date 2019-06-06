@@ -13,6 +13,6 @@ public struct AccountBlockPair {
 
     init(send: AccountBlock, receive: AccountBlock) {
         self.send = send
-        self.receive = receive
+        self.receive = AccountBlock.merge(send: send, to: receive)
     }
 }

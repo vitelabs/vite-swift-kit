@@ -37,7 +37,6 @@ public struct AccountBlock: Mappable {
     public fileprivate(set) var toAddress: ViteAddress?
     public fileprivate(set) var fromHash: String?
     public fileprivate(set) var tokenId: ViteTokenId?
-    public fileprivate(set) var snapshotHash: String?
     public fileprivate(set) var data: Data?
     public fileprivate(set) var timestamp: Int64?
     public fileprivate(set) var logHash: String?
@@ -71,7 +70,6 @@ public struct AccountBlock: Mappable {
         toAddress <- map["toAddress"]
         fromHash <- map["fromBlockHash"]
         tokenId <- map["tokenId"]
-        snapshotHash <- map["snapshotHash"]
         data <- (map["data"], JSONTransformer.dataToBase64)
         timestamp <- map["timestamp"]
         logHash <- map["logHash"]
@@ -147,6 +145,16 @@ extension AccountBlock {
         block.signature = signature
 
         return block
+    }
+
+    public static func merge(send: AccountBlock, to receive: AccountBlock) -> AccountBlock {
+        var ret = receive
+        ret.fromAddress = send.fromAddress
+        ret.toAddress = send.toAddress
+        ret.tokenId = send.tokenId
+        ret.amount = send.amount
+        ret.token = send.token
+        return ret
     }
 
     fileprivate static func makeBaseAccountBlock(secretKey: String,
