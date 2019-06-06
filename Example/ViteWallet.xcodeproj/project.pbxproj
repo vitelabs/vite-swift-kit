@@ -20,6 +20,8 @@
 		8E4E7B9F2260972700AA0F99 /* VoteTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8E4E7B9E2260972700AA0F99 /* VoteTests.swift */; };
 		8E4E7BA122609DE400AA0F99 /* MintageTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8E4E7BA022609DE400AA0F99 /* MintageTests.swift */; };
 		8E5A5723225F20B400B21CB1 /* LedgerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8E5A5722225F20B400B21CB1 /* LedgerTests.swift */; };
+		8EC77F3F22A683230022876B /* ABITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8EC77F3E22A683230022876B /* ABITests.swift */; };
+		8EC77F4522A7B4F80022876B /* ABIParsingTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8EC77F4422A7B4F80022876B /* ABIParsingTests.swift */; };
 		8EF4BB2921BFBD75005C1EFB /* Box.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8EF4BB2821BFBD75005C1EFB /* Box.swift */; };
 		ACFAA7ABC8A25D19611CF629 /* Pods_ViteWallet_Example.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E3833BDF37ACBF5FAE0C8BBE /* Pods_ViteWallet_Example.framework */; };
 /* End PBXBuildFile section */
@@ -56,6 +58,8 @@
 		8E4E7B9E2260972700AA0F99 /* VoteTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = VoteTests.swift; sourceTree = "<group>"; };
 		8E4E7BA022609DE400AA0F99 /* MintageTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MintageTests.swift; sourceTree = "<group>"; };
 		8E5A5722225F20B400B21CB1 /* LedgerTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LedgerTests.swift; sourceTree = "<group>"; };
+		8EC77F3E22A683230022876B /* ABITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ABITests.swift; sourceTree = "<group>"; };
+		8EC77F4422A7B4F80022876B /* ABIParsingTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ABIParsingTests.swift; sourceTree = "<group>"; };
 		8EF4BB2821BFBD75005C1EFB /* Box.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Box.swift; sourceTree = "<group>"; };
 		93A9C7CDA501EAF9ADF89E16 /* Pods-ViteWallet_Tests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ViteWallet_Tests.release.xcconfig"; path = "Pods/Target Support Files/Pods-ViteWallet_Tests/Pods-ViteWallet_Tests.release.xcconfig"; sourceTree = "<group>"; };
 		AEE3288F890EFF64DE4DB761 /* README.md */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = net.daringfireball.markdown; name = README.md; path = ../README.md; sourceTree = "<group>"; };
@@ -131,6 +135,8 @@
 			children = (
 				8EF4BB2821BFBD75005C1EFB /* Box.swift */,
 				607FACEB1AFB9204008FA782 /* Tests.swift */,
+				8EC77F4422A7B4F80022876B /* ABIParsingTests.swift */,
+				8EC77F3E22A683230022876B /* ABITests.swift */,
 				8EBF1689225B3842005EE24F /* RPC */,
 				607FACE91AFB9204008FA782 /* Supporting Files */,
 			);
@@ -345,7 +351,7 @@
 			inputFileListPaths = (
 			);
 			inputPaths = (
-				"${SRCROOT}/Pods/Target Support Files/Pods-ViteWallet_Example/Pods-ViteWallet_Example-frameworks.sh",
+				"${PODS_ROOT}/Target Support Files/Pods-ViteWallet_Example/Pods-ViteWallet_Example-frameworks.sh",
 				"${BUILT_PRODUCTS_DIR}/APIKit/APIKit.framework",
 				"${BUILT_PRODUCTS_DIR}/BigInt/BigInt.framework",
 				"${BUILT_PRODUCTS_DIR}/CryptoSwift/CryptoSwift.framework",
@@ -376,7 +382,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-ViteWallet_Example/Pods-ViteWallet_Example-frameworks.sh\"\n";
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-ViteWallet_Example/Pods-ViteWallet_Example-frameworks.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
 /* End PBXShellScriptBuildPhase section */
@@ -395,8 +401,10 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				8EC77F3F22A683230022876B /* ABITests.swift in Sources */,
 				8E4E7B9F2260972700AA0F99 /* VoteTests.swift in Sources */,
 				8E4E7B9D225F67F500AA0F99 /* PledgeTests.swift in Sources */,
+				8EC77F4522A7B4F80022876B /* ABIParsingTests.swift in Sources */,
 				607FACEC1AFB9204008FA782 /* Tests.swift in Sources */,
 				8E31D168225DD07E0061264A /* TxTests.swift in Sources */,
 				8E5A5723225F20B400B21CB1 /* LedgerTests.swift in Sources */,
