@@ -8,20 +8,43 @@
 import CryptoSwift
 import BigInt
 
-public class ABIStringValue: ABIParameterValue {
+public struct ABIStringValue {
 
     private let string: String
+    private init(string: String) {
+        self.string = string
+    }
+}
 
-    public init?(_ value: Any) {
+extension ABIStringValue: ABIParameterValueDecodable {
+    public init?(from data: Data, type: ABI.ParameterType) {
+        guard case .string = type else { return nil }
+        guard data.count > 32, data.count % 32 == 0 else { return nil }
+        let head = Data(data[0..<32])
+        let length = BigUInt(head)
+        guard length <= data.count - 32 else { return nil }
+        guard let raw = Data(data[32...]).stripPadding(rawLength: UInt64(length), isLeftPadding: false) else { return nil }
+        guard let string = String(data: raw, encoding: .utf8) else { return nil }
+        self.init(string: string)
+    }
+
+    public func toString() -> String {
+        return string
+    }
+}
+
+extension ABIStringValue: ABIParameterValueEncodable {
+    public init?(from value: Any, type: ABI.ParameterType) {
+        guard case .string = type else { return nil }
         switch value {
         case let v as String:
-            string = v
+            self.init(string: v)
         default:
             return nil
         }
     }
 
-    public override func abiEncode() -> Data? {
+    public func abiEncode() -> Data? {
         guard let data = string.data(using: .utf8) else { return nil }
         return data.alignTo32Bytes()
     }

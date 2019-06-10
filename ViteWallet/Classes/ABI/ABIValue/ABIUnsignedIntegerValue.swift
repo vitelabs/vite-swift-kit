@@ -8,11 +8,33 @@
 import Vite_HDWalletKit
 import BigInt
 
-public class ABIUnsignedIntegerValue: ABIParameterValue {
+public struct ABIUnsignedIntegerValue {
 
     private let bigUInt: BigUInt
+    private init(bigUInt: BigUInt) {
+        self.bigUInt = bigUInt
+    }
+}
 
-    public init?(_ value: Any) {
+extension ABIUnsignedIntegerValue: ABIParameterValueDecodable {
+    public init?(from data: Data, type: ABI.ParameterType) {
+        guard case .uint(let bits) = type else { return nil }
+        guard data.count == 32 else { return nil }
+        let mod = BigUInt(1) << (bits ?? 256)
+        let bigUInt = BigUInt(data) % mod
+        self.init(bigUInt: bigUInt)
+    }
+
+    public func toString() -> String {
+        return bigUInt.description
+    }
+}
+
+extension ABIUnsignedIntegerValue: ABIParameterValueEncodable {
+    public init?(from value: Any, type: ABI.ParameterType) {
+        guard case .uint = type else { return nil }
+
+        let bigUInt: BigUInt
         switch value {
         case let v as String:
             guard let num = BigUInt(v, radix: 10) else { return nil }
@@ -45,9 +67,11 @@ public class ABIUnsignedIntegerValue: ABIParameterValue {
         default:
             return nil
         }
+
+        self.init(bigUInt: bigUInt)
     }
 
-    public override func abiEncode() -> Data? {
+    public func abiEncode() -> Data? {
         return bigUInt.abiEncode(bits: 256)
     }
 }

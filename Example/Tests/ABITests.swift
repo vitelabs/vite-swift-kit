@@ -9,6 +9,7 @@
 import XCTest
 @testable import ViteWallet
 import Result
+import BigInt
 
 class ABITests: XCTestCase {
 
@@ -21,14 +22,50 @@ class ABITests: XCTestCase {
     }
 
     func doTest(c: ABIEncodeParameterCase) -> String? {
+        var errorMessage = ""
+
+        if let msg = doEncodingTest(c: c) {
+            errorMessage.append("Encoding: ")
+            errorMessage.append(msg)
+        }
+
+        if let msg = doDecodingTest(c: c) {
+            if !errorMessage.isEmpty {
+                errorMessage.append("\n")
+            }
+            errorMessage.append("Decoding: ")
+            errorMessage.append(msg)
+        }
+
+        if errorMessage.isEmpty {
+            return nil
+        } else {
+            return errorMessage
+        }
+    }
+
+    func doEncodingTest(c: ABIEncodeParameterCase) -> String? {
         do {
             let type = try ABI.Parsing.parseToType(from: c.type)
             let r = try ABI.Encoding.encodeParameter(c.value, type: type)
-            XCTAssert(c.result == r)
             if c.result == r {
                 return nil
             } else {
                 return "\(c.result.toHexString()) != \(r.toHexString())"
+            }
+        } catch {
+            return error.localizedDescription
+        }
+    }
+
+    func doDecodingTest(c: ABIEncodeParameterCase) -> String? {
+        do {
+            let type = try ABI.Parsing.parseToType(from: c.type)
+            let value = try ABI.Decoding.decodeParameter(c.result, type: type)
+            if c.value == value.toString() {
+                return nil
+            } else {
+                return "\(c.value) != \(value.toString())"
             }
         } catch {
             return error.localizedDescription
@@ -42,7 +79,7 @@ class ABITests: XCTestCase {
 
         init(t: String, v: String, r: String) {
             self.type = t
-            self.value = v
+            self.value = v.replacingOccurrences(of: " ", with: "")
             self.result = Data(hex: r.replacingOccurrences(of: "\n", with: ""))
         }
     }
@@ -58,19 +95,27 @@ class ABITests: XCTestCase {
     }
 
     func testIntEncode() {
-        let c = ABIEncodeParameterCase(
-            t: "int256",
-            v: "2",
-            r: "0000000000000000000000000000000000000000000000000000000000000002")
+        let cs = [
+            ABIEncodeParameterCase(
+                t: "int256",
+                v: "2",
+                r: "0000000000000000000000000000000000000000000000000000000000000002"),
+            ABIEncodeParameterCase(
+                t: "int256",
+                v: "-2",
+                r: "fffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffe")
+        ]
 
-        let errorMessage = doTest(c: c)
-        XCTAssert(errorMessage == nil, errorMessage!)
+        for c in cs {
+            let errorMessage = doTest(c: c)
+            XCTAssert(errorMessage == nil, errorMessage!)
+        }
     }
 
     func testBytesEncode() {
         let c = ABIEncodeParameterCase(
-            t: "bytes32",
-            v: "0x0100000000000000000000000000000000000000000000000000000000000000",
+            t: "bytes31",
+            v: "01000000000000000000000000000000000000000000000000000000000000",
             r: "0100000000000000000000000000000000000000000000000000000000000000")
 
         let errorMessage = doTest(c: c)
@@ -78,13 +123,21 @@ class ABITests: XCTestCase {
     }
 
     func testBoolEncode() {
-        let c = ABIEncodeParameterCase(
-            t: "int256",
-            v: "2",
-            r: "0000000000000000000000000000000000000000000000000000000000000002")
+        let cs = [
+            ABIEncodeParameterCase(
+                t: "bool",
+                v: "true",
+                r: "0000000000000000000000000000000000000000000000000000000000000001"),
+            ABIEncodeParameterCase(
+                t: "bool",
+                v: "false",
+                r: "0000000000000000000000000000000000000000000000000000000000000000")
+        ]
 
-        let errorMessage = doTest(c: c)
-        XCTAssert(errorMessage == nil, errorMessage!)
+        for c in cs {
+            let errorMessage = doTest(c: c)
+            XCTAssert(errorMessage == nil, errorMessage!)
+        }
     }
 
     func testTokenIdEncode() {
@@ -98,13 +151,21 @@ class ABITests: XCTestCase {
     }
 
     func testAddressEncode() {
-        let c = ABIEncodeParameterCase(
-            t: "address",
-            v: "vite_010000000000000000000000000000000000000063bef3da00",
-            r: "0000000000000000000000010000000000000000000000000000000000000000")
+        let cs = [
+            ABIEncodeParameterCase(
+                t: "address",
+                v: "vite_010000000000000000000000000000000000000063bef3da00",
+                r: "0000000000000000000000010000000000000000000000000000000000000000"),
+            ABIEncodeParameterCase(
+                t: "address",
+                v: "vite_0000000000000000000000000000000000000003f6af7459b9",
+                r: "0000000000000000000000000000000000000000000000000000000000000301")
+        ]
 
-        let errorMessage = doTest(c: c)
-        XCTAssert(errorMessage == nil, errorMessage!)
+        for c in cs {
+            let errorMessage = doTest(c: c)
+            XCTAssert(errorMessage == nil, errorMessage!)
+        }
     }
 
     func testGidEncode() {
@@ -133,7 +194,7 @@ class ABITests: XCTestCase {
     func testDynamicBytesEncode() {
         let c = ABIEncodeParameterCase(
             t: "bytes",
-            v: "0xdf3234",
+            v: "df3234",
             r: """
 0000000000000000000000000000000000000000000000000000000000000003
 df32340000000000000000000000000000000000000000000000000000000000
@@ -146,7 +207,7 @@ df32340000000000000000000000000000000000000000000000000000000000
     func testArrayEncode() {
         let c = ABIEncodeParameterCase(
             t: "uint8[2]",
-            v: "[ \"1\", 2 ]",
+            v: "[ \"1\", \"2\" ]",
             r: """
 0000000000000000000000000000000000000000000000000000000000000001
 0000000000000000000000000000000000000000000000000000000000000002

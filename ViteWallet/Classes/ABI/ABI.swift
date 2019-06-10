@@ -69,31 +69,35 @@ public struct ABI {
             }
         }
 
-        public func convertToABIParameterValue(from value: Any) -> ABIParameterValue? {
+        public var valueType: ABIParameterValue.Type {
             switch self {
             case .uint:
-                return ABIUnsignedIntegerValue(value)
+                return ABIUnsignedIntegerValue.self
             case .int:
-                return ABISignedIntegerValue(value)
-            case .bytes(let length):
-                return ABIBytesValue(value, length: length)
+                return ABISignedIntegerValue.self
+            case .bytes:
+                return ABIBytesValue.self
             case .bool:
-                return ABIBoolValue(value)
+                return ABIBoolValue.self
             case .tokenId:
-                return ABITokenIdValue(value)
+                return ABITokenIdValue.self
             case .address:
-                return ABIAddressValue(value)
+                return ABIAddressValue.self
             case .gid:
-                return ABIGIdValue(value)
+                return ABIGIdValue.self
             case .string:
-                return ABIStringValue(value)
+                return ABIStringValue.self
             case .dynamicBytes:
-                return ABIBytesValue(value, length: nil)
-            case .array(let subType, let length):
-                return ABIArrayValue(value, subType: subType, length: length)
-            case .dynamicArray(let subType):
-                return ABIArrayValue(value, subType: subType, length: nil)
+                return ABIBytesValue.self
+            case .array:
+                return ABIArrayValue.self
+            case .dynamicArray:
+                return ABIArrayValue.self
             }
+        }
+
+        public func convertToABIParameterValue(from value: Any) -> ABIParameterValue? {
+            return valueType.init(from: value, type: self)
         }
 
         public var canBeUsedAsSubType: Bool {

@@ -8,12 +8,16 @@
 import Vite_HDWalletKit
 import BigInt
 
-public class ABIParameterValue {
+public typealias ABIParameterValue = ABIParameterValueDecodable & ABIParameterValueEncodable
 
-    public func abiEncode() -> Data? {
-        fatalError()
-    }
+public protocol ABIParameterValueDecodable {
+    init?(from data: Data, type: ABI.ParameterType)
+    func toString() -> String
+}
 
+public protocol ABIParameterValueEncodable {
+    init?(from value: Any, type: ABI.ParameterType)
+    func abiEncode() -> Data?
 }
 
 /*

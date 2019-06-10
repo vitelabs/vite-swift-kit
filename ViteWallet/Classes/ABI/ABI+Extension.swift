@@ -8,6 +8,30 @@
 import BigInt
 
 extension Data {
+
+    func stripPadding(rawLength: UInt64, isLeftPadding: Bool, isNegative: Bool = false) -> Data? {
+        guard self.count >= rawLength else { return nil }
+        let paddingLength = UInt64(self.count) - rawLength
+        let padding: Data
+        let raw: Data
+
+        if isLeftPadding {
+            padding = Data(self[..<paddingLength])
+            raw = Data(self[paddingLength...])
+        } else {
+            padding = Data(self[rawLength...])
+            raw = Data(self[..<rawLength])
+        }
+
+        if isNegative {
+            guard padding == Data(repeating: UInt8(255), count: Int(paddingLength)) else { return nil }
+        } else {
+            guard padding == Data(repeating: UInt8(0), count: Int(paddingLength)) else { return nil }
+        }
+        return raw
+    }
+
+
     func setLengthLeft(_ toBytes: UInt64, isNegative:Bool = false) -> Data? {
         let existingLength = UInt64(self.count)
         if (existingLength == toBytes) {
@@ -60,6 +84,19 @@ extension BigInt {
             let MAX = BigUInt(1) << (serializedLength*8)
             let twoComplement = MAX - self.magnitude
             return twoComplement.serialize()
+        }
+    }
+
+    static func fromTwosComplement(data: Data) -> BigInt {
+        let isPositive = ((data[0] & 128) >> 7) == 0
+        if (isPositive) {
+            let magnitude = BigUInt(data)
+            return BigInt(magnitude)
+        } else {
+            let MAX = (BigUInt(1) << (data.count*8))
+            let magnitude = MAX - BigUInt(data)
+            let bigint = BigInt(0) - BigInt(magnitude)
+            return bigint
         }
     }
 }
