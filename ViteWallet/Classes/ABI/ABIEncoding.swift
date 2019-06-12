@@ -11,22 +11,49 @@ import BigInt
 extension ABI.Encoding {
 
     public enum EncodingError: Error {
+        case invalidABIString
         case conversionFailed
         case invalidParameter
         case invalidValue(value: Any, type: ABI.ParameterType)
     }
 
-    public static func encodeLogSignature(_ name: String) throws -> Data {
-        return try ABI.Encoding.encodeFunction(name)
+    public static func encodeLogSignature(_ signature: String) throws -> Data {
+        return try encodeFunction(signature: signature)
     }
 
-    public static func encodeFunctionSignature(_ name: String) throws -> Data {
-        let data = try ABI.Encoding.encodeFunction(name)
-        return data[..<4]
+    public static func encodeFunctionSignature(_ signature: String) throws -> Data {
+        let data = try encodeFunction(signature: signature)
+        return Data(data[..<4])
     }
 
-    public static func encodeFunctionCall(_ name: String, values: [AnyObject], types: [ABI.ParameterType]) throws -> Data {
-        return try encodeFunctionSignature(name) + ABI.Encoding.encodeParameters(values, types: types)
+    public static func encodeFunctionCall(_ name: String, values: [Any], types: [ABI.ParameterType]) throws -> Data {
+        var signature = name
+        signature.append("(")
+        for type in types {
+            signature.append(type.toString())
+            signature.append(",")
+        }
+        if signature.hasSuffix(",") {
+            signature.removeLast()
+        }
+        signature.append(")")
+
+        return try encodeFunctionSignature(signature) + encodeParameters(values, types: types)
+    }
+
+    public static func encodeFunctionCall(abiString: String, valuesString: String) throws -> Data {
+        guard let abiRecord = ABI.Record.tryToConvertToFunctionRecord(abiString: abiString) else {
+            throw EncodingError.invalidABIString
+        }
+
+        guard let valuesData = valuesString.data(using: .utf8),
+            let j = try? JSONSerialization.jsonObject(with: valuesData, options: .mutableContainers),
+            let values = j as? [Any] else {
+                throw EncodingError.invalidABIString
+        }
+
+        let types = try (abiRecord.inputs ?? []).map { try ABI.Parsing.parseToType(from: $0.type) }
+        return try encodeFunctionCall(abiRecord.name!, values: values, types: types)
     }
 }
 
@@ -40,8 +67,8 @@ extension ABI.Encoding {
         return BigUInt(length).abiEncode(bits: 256)
     }
 
-    static func encodeFunction(_ name: String) throws -> Data {
-        guard let data = name.data(using: .utf8),
+    static func encodeFunction(signature: String) throws -> Data {
+        guard let data = signature.data(using: .utf8),
             let hash = Blake2b.hash(outLength: 32, in: Bytes(data)) else {
                 throw EncodingError.conversionFailed
         }

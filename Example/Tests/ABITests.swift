@@ -230,4 +230,22 @@ df32340000000000000000000000000000000000000000000000000000000000
         let errorMessage = doTest(c: c)
         XCTAssert(errorMessage == nil, errorMessage!)
     }
+
+    func testABI() {
+        let abiString = "{\"type\":\"function\",\"name\":\"myMethod\",\"inputs\":[{\"name\":\"myNumber\",\"type\":\"uint256\"},{\"name\":\"myString\",\"type\":\"string\"}]}"
+        let valuesString = "[\"2345675643\",\"Hello!%\"]"
+        let ret = "96173f6c000000000000000000000000000000000000000000000000000000008bd02b7b0000000000000000000000000000000000000000000000000000000000000040000000000000000000000000000000000000000000000000000000000000000748656c6c6f212500000000000000000000000000000000000000000000000000"
+
+        do {
+            let data = try ABI.Encoding.encodeFunctionCall(abiString: abiString, valuesString: valuesString)
+            XCTAssert(data.toHexString() == ret, "\(data.toHexString()) != \(ret)")
+
+            let values = try ABI.Decoding.decodeParameters(data, abiString: abiString)
+            let string = values.toString()
+            XCTAssert(valuesString == string, "\(valuesString) != \(string)")
+
+        } catch {
+            XCTAssert(false, error.localizedDescription)
+        }
+    }
 }

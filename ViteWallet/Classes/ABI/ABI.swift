@@ -23,17 +23,6 @@ public struct ABI {
         indirect case array(subType: ParameterType, length: UInt64)  // 0 < length
         indirect case dynamicArray(subType: ParameterType)
 
-        public var staticSize: UInt64 {
-            switch self {
-            case .uint, .int, .bytes, .bool, .tokenId, .address, .gid:
-                return UInt64(32)                   // raw data
-            case .array(let subType, let length):
-                return UInt64(32) * length          // raw data
-            case .string, .dynamicBytes, .dynamicArray:
-                return UInt64(32)                   // index
-            }
-        }
-
         public func toString() -> String {
             switch self {
             case .uint(let bits):
@@ -126,6 +115,43 @@ public struct ABI {
                 return true
             }
         }
+
+        public var staticSize: UInt64 {
+            switch self {
+            case .uint, .int, .bytes, .bool, .tokenId, .address, .gid:
+                return UInt64(32)                   // raw data
+            case .array(let subType, let length):
+                return UInt64(32) * length          // raw data
+            case .string, .dynamicBytes, .dynamicArray:
+                return UInt64(32)                   // index
+            }
+        }
+    }
+
+    enum Element {
+        case function(Function)
+    }
+
+    public struct InOut {
+        public let name: String
+        public let type: ParameterType
+
+        public init(name: String, type: ParameterType) {
+            self.name = name
+            self.type = type
+        }
+    }
+
+    public struct Function {
+        public let name: String
+        public let inputs: [InOut]
+        public let outputs: [InOut]
+
+        public init(name: String, inputs: [InOut], outputs: [InOut]) {
+            self.name = name
+            self.inputs = inputs
+            self.outputs = outputs
+        }
     }
 }
 
@@ -133,4 +159,44 @@ extension ABI {
     public struct Parsing {}
     public struct Encoding {}
     public struct Decoding {}
+}
+
+extension ABI {
+    struct Input: Decodable {
+        public var name: String?
+        public var type: String
+        public var indexed: Bool?
+        public var components: [Input]?
+    }
+
+    struct Output: Decodable {
+        public var name: String?
+        public var type: String
+        public var components: [Output]?
+    }
+
+    struct Record: Decodable {
+
+        enum RecordType: String, Decodable {
+            case function
+        }
+
+        public var name: String?
+        public var type: RecordType?
+        public var inputs: [ABI.Input]?
+        public var outputs: [ABI.Output]?
+
+        init?(abiString: String) {
+            guard let jsonData = abiString.data(using: .utf8) else { return nil }
+            guard let record = try? JSONDecoder().decode(ABI.Record.self, from: jsonData) else { return nil }
+            self = record
+        }
+
+        static func tryToConvertToFunctionRecord(abiString: String) -> Record? {
+            guard let record = Record(abiString: abiString) else { return nil }
+            guard let type = record.type, case .function = type else {  return nil }
+            guard record.name != nil else { return nil }
+            return record
+        }
+    }
 }

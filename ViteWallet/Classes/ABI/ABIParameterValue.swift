@@ -20,6 +20,14 @@ public protocol ABIParameterValueEncodable {
     func abiEncode() -> Data?
 }
 
+extension Array where Element == ABIParameterValue {
+
+    func toString() -> String {
+        let values = self.map { $0.toString() }
+        return String(data: try! JSONEncoder().encode(values), encoding: .utf8)!
+    }
+}
+
 /*
 // ABIIntegerValue: ABIParameterValue
 extension ABIIntegerValue {
