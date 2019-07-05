@@ -36,6 +36,16 @@ public extension Data {
         guard count >= 2 else { return nil }
         return Data(self.dropFirst(2))
     }
+
+    var toAccountBlockNote: String? {
+        if contentType == .utf8string,
+            let contentData = rawContent,
+            let note = String(bytes: contentData, encoding: .utf8) {
+            return note
+        } else {
+            return nil
+        }
+    }
 }
 
 public struct AccountBlockDataFactory {

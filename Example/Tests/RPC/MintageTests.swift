@@ -33,6 +33,14 @@ class MintageTests: XCTestCase {
                 XCTAssert(ViteWalletConst.viteToken.name == token.name)
                 XCTAssert(ViteWalletConst.viteToken.symbol == token.symbol)
                 XCTAssert(ViteWalletConst.viteToken.decimals == token.decimals)
+                XCTAssert(ViteWalletConst.viteToken.decimals == token.decimals)
+
+                XCTAssert(ViteWalletConst.viteToken.index == token.index)
+                XCTAssert(ViteWalletConst.viteToken.totalSupply == token.totalSupply)
+                XCTAssert(ViteWalletConst.viteToken.maxSupply == token.maxSupply)
+                XCTAssert(ViteWalletConst.viteToken.owner == token.owner)
+                XCTAssert(ViteWalletConst.viteToken.ownerBurnOnly == token.ownerBurnOnly)
+                XCTAssert(ViteWalletConst.viteToken.isReIssuable == token.isReIssuable)
             }).catch({ (error) in
                 printLog(error)
                 XCTAssert(false)

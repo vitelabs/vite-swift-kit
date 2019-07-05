@@ -14,6 +14,10 @@ public struct ABIUnsignedIntegerValue {
     private init(bigUInt: BigUInt) {
         self.bigUInt = bigUInt
     }
+
+    public func toBigUInt() -> BigUInt {
+        return bigUInt
+    }
 }
 
 extension ABIUnsignedIntegerValue: ABIParameterValueDecodable {

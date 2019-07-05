@@ -31,5 +31,13 @@ public struct ViteWalletConst {
         }
     }
 
-    public static let viteToken = Token(id: "tti_5649544520544f4b454e6e40", name: "Vite Token", symbol: "VITE", decimals: 18)
+    public static let viteToken =
+        Token(id: "tti_5649544520544f4b454e6e40",
+              name: "VITE",
+              symbol: "VITE",
+              decimals: 18,
+              index: 0,
+              totalSupply: BigInt("1002856181980780374120030018")!,
+              maxSupply: BigInt("115792089237316195423570985008687907853269984665640564039457584007913129639935")!,
+              owner: "vite_0000000000000000000000000000000000000004d28108e76b", ownerBurnOnly: false, isReIssuable: true)
 }
