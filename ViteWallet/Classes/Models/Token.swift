@@ -25,6 +25,16 @@ public struct Token: Mappable {
     public fileprivate(set) var ownerBurnOnly: Bool = false
     public fileprivate(set) var isReIssuable: Bool = false
 
+    public var uniqueSymbol: String {
+        if symbol == "VITE" ||
+            symbol == "VCP" ||
+            symbol == "VX" {
+            return symbol
+        } else {
+            return String(format:"%@-%03d", symbol, index)
+        }
+    }
+
     public init(id: String = "",
                 name: String = "",
                 symbol: String = "",

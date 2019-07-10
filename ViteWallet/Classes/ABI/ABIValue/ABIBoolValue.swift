@@ -35,6 +35,10 @@ extension ABIBoolValue: ABIParameterValueDecodable {
     public func toString() -> String {
         return bool ? "true" : "false"
     }
+
+    public func toBool() -> Bool {
+        return bool
+    }
 }
 
 extension ABIBoolValue: ABIParameterValueEncodable {
