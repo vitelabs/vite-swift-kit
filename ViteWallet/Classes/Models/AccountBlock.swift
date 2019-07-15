@@ -333,7 +333,7 @@ extension AccountBlock {
         "a629c531": .cancelVote,
         "8de7dcfd": .pledge,
         "9ff9c7b6": .cancelPledge,
-        "27ad872e": .coin,
+        "cbf0e4fa": .coin,
         "7d925ef1": .cancelCoin,
     ]
 

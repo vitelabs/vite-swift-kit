@@ -22,8 +22,9 @@ extension ABIStringValue: ABIParameterValueDecodable {
         guard data.count > 32, data.count % 32 == 0 else { return nil }
         let head = Data(data[0..<32])
         let length = BigUInt(head)
+        let size = Int(((length + 31)/32)*32)
         guard length <= data.count - 32 else { return nil }
-        guard let raw = Data(data[32...]).stripPadding(rawLength: UInt64(length), isLeftPadding: false) else { return nil }
+        guard let raw = Data(data[32..<32+size]).stripPadding(rawLength: UInt64(length), isLeftPadding: false) else { return nil }
         guard let string = String(data: raw, encoding: .utf8) else { return nil }
         self.init(string: string)
     }

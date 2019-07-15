@@ -45,8 +45,9 @@ extension ABIBytesValue: ABIParameterValueDecodable {
             guard data.count > 32, data.count % 32 == 0 else { return nil }
             let head = Data(data[0..<32])
             let length = BigUInt(head)
+            let size = Int(((length + 31)/32)*32)
             guard length <= data.count - 32 else { return nil }
-            guard let r = Data(data[32...]).stripPadding(rawLength: UInt64(length), isLeftPadding: false) else { return nil }
+            guard let r = Data(data[32..<32+size]).stripPadding(rawLength: UInt64(length), isLeftPadding: false) else { return nil }
             raw = r
         }
 
