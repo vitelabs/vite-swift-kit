@@ -34,6 +34,7 @@ public extension ViteNode.vote.perform {
                                                       toAddress: ViteWalletConst.ContractAddress.consensus.address,
                                                       tokenId: ViteWalletConst.viteToken.id,
                                                       amount: Amount(0),
+                                                      fee: Amount(0),
                                                       data: data)
         }
     }
@@ -45,6 +46,7 @@ public extension ViteNode.vote.perform {
                                                   toAddress: ViteWalletConst.ContractAddress.consensus.address,
                                                   tokenId: ViteWalletConst.viteToken.id,
                                                   amount: Amount(0),
+                                                  fee: Amount(0),
                                                   data: data)
         }
     }
@@ -58,6 +60,7 @@ public extension ViteNode.vote.cancel {
                                                       toAddress: ViteWalletConst.ContractAddress.consensus.address,
                                                       tokenId: ViteWalletConst.viteToken.id,
                                                       amount: Amount(0),
+                                                      fee: Amount(0),
                                                       data: data)
         }
     }
@@ -69,6 +72,7 @@ public extension ViteNode.vote.cancel {
                                                   toAddress: ViteWalletConst.ContractAddress.consensus.address,
                                                   tokenId: ViteWalletConst.viteToken.id,
                                                   amount: Amount(0),
+                                                  fee: Amount(0),
                                                   data: data)
         }
     }

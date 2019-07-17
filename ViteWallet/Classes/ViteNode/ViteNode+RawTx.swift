@@ -20,6 +20,7 @@ public extension ViteNode.rawTx.send {
                            toAddress: ViteAddress,
                            tokenId: ViteTokenId,
                            amount: Amount,
+                           fee: Amount?,
                            data: Data?) -> Promise<AccountBlock> {
         return ViteNode.ledger.getLatestAccountBlock(address: account.address)
             .then { latestAccountBlock -> Promise<AccountBlock> in
@@ -30,6 +31,7 @@ public extension ViteNode.rawTx.send {
                                                              toAddress: toAddress,
                                                              tokenId: tokenId,
                                                              amount: amount,
+                                                             fee: fee,
                                                              data: data,
                                                              nonce: nil,
                                                              difficulty: nil)
@@ -41,6 +43,7 @@ public extension ViteNode.rawTx.send {
                        toAddress: ViteAddress,
                        tokenId: ViteTokenId,
                        amount: Amount,
+                       fee: Amount?,
                        data: Data?) -> Promise<SendBlockContext> {
         return ViteNode.ledger.getLatestAccountBlock(address: account.address)
             .then { latestAccountBlock -> Promise<(latestAccountBlock: AccountBlock?, difficulty: BigInt)> in
@@ -62,6 +65,7 @@ public extension ViteNode.rawTx.send {
                                  toAddress: toAddress,
                                  tokenId: tokenId,
                                  amount: amount,
+                                 fee: fee,
                                  data: data,
                                  nonce: nonce,
                                  difficulty: difficulty)
@@ -77,6 +81,7 @@ public extension ViteNode.rawTx.send {
                                                      toAddress: context.toAddress,
                                                      tokenId: context.tokenId,
                                                      amount: context.amount,
+                                                     fee: context.fee,
                                                      data: context.data,
                                                      nonce: context.nonce,
                                                      difficulty: context.difficulty)

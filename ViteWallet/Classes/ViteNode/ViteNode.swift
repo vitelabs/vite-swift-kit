@@ -30,6 +30,7 @@ public struct SendBlockContext {
     let toAddress: ViteAddress
     let tokenId: ViteTokenId
     let amount: Amount
+    let fee: Amount?
     let data: Data?
     let nonce: String?
     let difficulty: BigInt?

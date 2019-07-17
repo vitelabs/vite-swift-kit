@@ -248,4 +248,16 @@ df32340000000000000000000000000000000000000000000000000000000000
             XCTAssert(false, error.localizedDescription)
         }
     }
+
+    func testddd() {
+        let abiString = "{\"type\":\"function\",\"name\":\"Mint\",\"inputs\":[{\"name\":\"isReIssuable\",\"type\":\"bool\"},{\"name\":\"tokenName\",\"type\":\"string\"},{\"name\":\"tokenSymbol\",\"type\":\"string\"},{\"name\":\"totalSupply\",\"type\":\"uint256\"},{\"name\":\"decimals\",\"type\":\"uint8\"},{\"name\":\"maxSupply\",\"type\":\"uint256\"},{\"name\":\"ownerBurnOnly\",\"type\":\"bool\"}]}"
+        let valuesString = "[\"1\",\"ABC DEF\",\"AD\",\"123456000000000000000\",\"10\",\"123456000000000000000\",\"1\"]"
+        do {
+            let data = try ABI.Encoding.encodeFunctionCall(abiString: abiString, valuesString: valuesString)
+            print(data.toHexString())
+            print("")
+        } catch {
+            XCTAssert(false, error.localizedDescription)
+        }
+    }
 }

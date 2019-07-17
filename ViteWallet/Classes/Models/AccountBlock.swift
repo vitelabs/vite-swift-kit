@@ -94,6 +94,7 @@ extension AccountBlock {
                                             toAddress: ViteAddress,
                                             tokenId: ViteTokenId,
                                             amount: Amount,
+                                            fee: Amount?,
                                             data: Data?,
                                             nonce: String?,
                                             difficulty: BigInt?) -> AccountBlock {
@@ -110,6 +111,7 @@ extension AccountBlock {
         block.amount = amount
         block.tokenId = tokenId
         block.data = data
+        block.fee = fee ?? Amount(0)
 
         let (hash, signature) = sign(accountBlock: block,
                                      secretKeyHexString: secretKey,

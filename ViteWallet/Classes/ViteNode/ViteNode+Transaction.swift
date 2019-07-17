@@ -25,6 +25,7 @@ public extension ViteNode.transaction {
                                               toAddress: toAddress,
                                               tokenId: tokenId,
                                               amount: amount,
+                                              fee: Amount(0),
                                               data:data)
     }
 
@@ -37,6 +38,6 @@ public extension ViteNode.transaction {
         if let note = note, !note.isEmpty {
             data = AccountBlockDataFactory.generateUTF8StringData(string: note)
         }
-        return ViteNode.rawTx.send.getPow(account: account, toAddress: toAddress, tokenId: tokenId, amount: amount, data: data)
+        return ViteNode.rawTx.send.getPow(account: account, toAddress: toAddress, tokenId: tokenId, amount: amount, fee: Amount(0), data: data)
     }
 }
