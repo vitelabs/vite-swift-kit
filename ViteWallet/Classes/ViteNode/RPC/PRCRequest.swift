@@ -29,7 +29,7 @@ public struct RPCRequest<Batch: JSONRPCKit.Batch>: APIKit.Request {
     }
 
     public var baseURL: URL {
-        #if DEBUG
+        #if DEBUG || TEST
         var urlComponents = URLComponents(url: server.rpcURL, resolvingAgainstBaseURL: false)!
         if let array = batch.requestObject as? [[String: Any]] {
             var items = [URLQueryItem]()
