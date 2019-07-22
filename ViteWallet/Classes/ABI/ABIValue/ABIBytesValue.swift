@@ -54,8 +54,12 @@ extension ABIBytesValue: ABIParameterValueDecodable {
         self.init(data: raw, isStatic: l != nil)
     }
 
-    public func toString() -> String {
+    public func toHexString() -> String {
         return data.toHexString()
+    }
+
+    public func toString() -> String {
+        return toHexString()
     }
 }
 
