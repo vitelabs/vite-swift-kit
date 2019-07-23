@@ -62,3 +62,13 @@ public struct AccountBlockDataFactory {
         return Data(header.toBytes) + data
     }
 }
+
+extension String {
+    public func utf8StringToAccountBlockData() -> Data? {
+        if isEmpty {
+            return nil
+        } else {
+            return AccountBlockDataFactory.generateUTF8StringData(string: self)
+        }
+    }
+}

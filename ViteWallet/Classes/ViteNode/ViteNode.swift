@@ -32,14 +32,46 @@ public struct SendBlockContext {
     let amount: Amount
     let fee: Amount?
     let data: Data?
-    let nonce: String?
     let difficulty: BigInt?
+    let nonce: String?
+
+    public var isNeedToCalcPoW: Bool {
+        return difficulty != nil
+    }
+
+    func toAccountBlock() -> AccountBlock {
+        return AccountBlock.makeSendAccountBlock(secretKey: account.secretKey,
+                                                 publicKey: account.publicKey,
+                                                 address: account.address,
+                                                 latest: latest,
+                                                 toAddress: toAddress,
+                                                 tokenId: tokenId,
+                                                 amount: amount,
+                                                 fee: fee,
+                                                 data: data,
+                                                 nonce: nonce,
+                                                 difficulty: difficulty)
+    }
 }
 
 public struct ReceiveBlockContext {
     let account: Wallet.Account
     let onroadBlock: AccountBlock
     let latest: AccountBlock?
-    let nonce: String?
     let difficulty: BigInt?
+    let nonce: String?
+
+    var isNeedToCalcPoW: Bool {
+        return difficulty != nil
+    }
+
+    func toAccountBlock() -> AccountBlock {
+        return AccountBlock.makeReceiveAccountBlock(secretKey: account.secretKey,
+                                                    publicKey: account.publicKey,
+                                                    address: account.address,
+                                                    onroadBlock: onroadBlock,
+                                                    latest: latest,
+                                                    nonce: nonce,
+                                                    difficulty: difficulty)
+    }
 }

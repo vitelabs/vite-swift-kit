@@ -13,7 +13,7 @@ import Vite_HDWalletKit
 import ObjectMapper
 
 public struct GetPowDifficultyRequest: JSONRPCKit.Request {
-    public typealias Response = BigInt
+    public typealias Response = AccountBlockQuota
 
     public let context: GetPowDifficultyContext
 
@@ -42,9 +42,22 @@ public struct GetPowDifficultyRequest: JSONRPCKit.Request {
 
     public func response(from resultObject: Any) throws -> Response {
         if let response = resultObject as? [String: Any],
-            let string = response["difficulty"] as? String,
-            let difficulty = BigInt(string) {
-            return difficulty
+            let difficultyString = response["difficulty"] as? String,
+            let quota = response["quota"] as? UInt64
+//            , let ut = response["ut"] as? String
+        {
+
+            let difficulty: BigInt?
+            if !difficultyString.isEmpty {
+                guard let bi = BigInt(difficultyString) else {
+                    throw ViteError.JSONTypeError
+                }
+                difficulty = bi
+            } else {
+                difficulty = nil
+            }
+            let ut = "xxx"
+            return AccountBlockQuota(quota: quota, ut: ut, difficulty: difficulty)
         } else {
             throw ViteError.JSONTypeError
         }

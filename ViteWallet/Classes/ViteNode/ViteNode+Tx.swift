@@ -21,7 +21,7 @@ public extension ViteNode.tx {
                                  type: AccountBlock.BlockType,
                                  toAddress: ViteAddress?,
                                  data: Data?,
-                                 usePledgeQuota: Bool) -> Promise<BigInt> {
+                                 usePledgeQuota: Bool) -> Promise<AccountBlockQuota> {
 
         return GetPowDifficultyRequest(accountAddress: accountAddress,
                                        prevHash: prevHash,
