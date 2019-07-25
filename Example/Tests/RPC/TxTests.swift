@@ -49,7 +49,7 @@ class TxTests: XCTestCase {
                 printLog("🚀 tx_calcPoWDifficulty")
                 return Box.f.makeSureHasNoPledge(account: account)
             }).then({ (_) -> Promise<SendBlockContext> in
-                return ViteNode.rawTx.send.getPow(account: account, toAddress: address, tokenId: tokenId, amount: amount, data: data)
+                return ViteNode.rawTx.send.getPow(account: account, toAddress: address, tokenId: tokenId, amount: amount, fee: Amount(), data: data)
             }).then({ (context) -> Promise<AccountBlock> in
                 printLog("✅tx_calcPoWDifficulty")
                 printLog("🚀tx_sendRawTx")
@@ -109,7 +109,7 @@ class TxTests: XCTestCase {
                 XCTAssert(quota.utps > 0, "❌ need pledge")
                 printLog("=============== send without pow ===============")
                 printLog("🚀tx_sendRawTx")
-                return ViteNode.rawTx.send.withoutPow(account: account, toAddress: address, tokenId: tokenId, amount: amount, data: data)
+                return ViteNode.rawTx.send.withoutPow(account: account, toAddress: address, tokenId: tokenId, amount: amount, fee: Amount(), data: data)
             }).then({ (_) -> Promise<AccountBlock> in
                 printLog("✅tx_sendRawTx")
                 return Box.f.afterLatestAccountBlockConfirmed(address: address)

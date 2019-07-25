@@ -14,6 +14,10 @@ public struct ABISignedIntegerValue {
     private init(bigInt: BigInt) {
         self.bigInt = bigInt
     }
+
+    public func toBigInt() -> BigInt {
+        return bigInt
+    }
 }
 
 extension ABISignedIntegerValue: ABIParameterValueDecodable {

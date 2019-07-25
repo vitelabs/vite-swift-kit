@@ -17,17 +17,43 @@ extension ABI.Encoding {
         case invalidValue(value: Any, type: ABI.ParameterType)
     }
 
-    public static func encodeLogSignature(_ signature: String) throws -> Data {
+    public static func encodeLogSignature(signature: String) throws -> Data {
         return try encodeFunction(signature: signature)
     }
 
-    public static func encodeFunctionSignature(_ signature: String) throws -> Data {
+    public static func encodeFunctionSignature(abiString: String) throws -> Data {
+        let (signature, _) = try abi2SignatureAndTypes(abiString: abiString)
+        return try encodeFunctionSignature(signature: signature)
+    }
+
+    public static func encodeFunctionSignature(signature: String) throws -> Data {
         let data = try encodeFunction(signature: signature)
         return Data(data[..<4])
     }
 
-    public static func encodeFunctionCall(_ name: String, values: [Any], types: [ABI.ParameterType]) throws -> Data {
-        var signature = name
+    private static func encodeFunctionCall(signature: String, values: [Any], types: [ABI.ParameterType]) throws -> Data {
+        return try encodeFunctionSignature(signature: signature) + encodeParameters(values, types: types)
+    }
+
+    public static func encodeFunctionCall(abiString: String, valuesString: String) throws -> Data {
+        guard let valuesData = valuesString.data(using: .utf8),
+            let j = try? JSONSerialization.jsonObject(with: valuesData, options: .mutableContainers),
+            let values = j as? [Any] else {
+                throw EncodingError.invalidABIString
+        }
+
+        let (signature, types) = try abi2SignatureAndTypes(abiString: abiString)
+        return try encodeFunctionCall(signature: signature, values: values, types: types)
+    }
+
+    public static func abi2SignatureAndTypes(abiString: String) throws -> (String, [ABI.ParameterType]) {
+        guard let abiRecord = ABI.Record.tryToConvertToFunctionRecord(abiString: abiString) else {
+            throw EncodingError.invalidABIString
+        }
+
+        let types = try (abiRecord.inputs ?? []).map { try ABI.Parsing.parseToType(from: $0.type) }
+
+        var signature = abiRecord.name ?? ""
         signature.append("(")
         for type in types {
             signature.append(type.toString())
@@ -37,23 +63,7 @@ extension ABI.Encoding {
             signature.removeLast()
         }
         signature.append(")")
-
-        return try encodeFunctionSignature(signature) + encodeParameters(values, types: types)
-    }
-
-    public static func encodeFunctionCall(abiString: String, valuesString: String) throws -> Data {
-        guard let abiRecord = ABI.Record.tryToConvertToFunctionRecord(abiString: abiString) else {
-            throw EncodingError.invalidABIString
-        }
-
-        guard let valuesData = valuesString.data(using: .utf8),
-            let j = try? JSONSerialization.jsonObject(with: valuesData, options: .mutableContainers),
-            let values = j as? [Any] else {
-                throw EncodingError.invalidABIString
-        }
-
-        let types = try (abiRecord.inputs ?? []).map { try ABI.Parsing.parseToType(from: $0.type) }
-        return try encodeFunctionCall(abiRecord.name!, values: values, types: types)
+        return (signature, types)
     }
 }
 

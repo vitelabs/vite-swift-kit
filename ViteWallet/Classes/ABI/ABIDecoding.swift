@@ -59,25 +59,9 @@ extension ABI.Decoding {
     }
 
     public static func decodeParameters(_ data: Data, abiString: String) throws -> [ABIParameterValue] {
-        guard let abiRecord = ABI.Record.tryToConvertToFunctionRecord(abiString: abiString) else {
-            throw DecodingError.invalidABIString
-        }
 
-        let name = abiRecord.name!
-        let types = try (abiRecord.inputs ?? []).map { try ABI.Parsing.parseToType(from: $0.type) }
-
-        var signature = name
-        signature.append("(")
-        for type in types {
-            signature.append(type.toString())
-            signature.append(",")
-        }
-        if signature.hasSuffix(",") {
-            signature.removeLast()
-        }
-        signature.append(")")
-
-        let signatureData = try ABI.Encoding.encodeFunctionSignature(signature)
+        let (signature, types) = try ABI.Encoding.abi2SignatureAndTypes(abiString: abiString)
+        let signatureData = try ABI.Encoding.encodeFunctionSignature(signature: signature)
         guard signatureData == data[0 ..< 4] else {
             throw DecodingError.signatureNotMatch
         }
