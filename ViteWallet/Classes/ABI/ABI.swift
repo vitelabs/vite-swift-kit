@@ -162,22 +162,22 @@ extension ABI {
 }
 
 extension ABI {
-    struct Input: Decodable {
+    public struct Input: Decodable {
         public var name: String?
         public var type: String
         public var indexed: Bool?
         public var components: [Input]?
     }
 
-    struct Output: Decodable {
+    public struct Output: Decodable {
         public var name: String?
         public var type: String
         public var components: [Output]?
     }
 
-    struct Record: Decodable {
+    public struct Record: Decodable {
 
-        enum RecordType: String, Decodable {
+        public enum RecordType: String, Decodable {
             case function
         }
 
@@ -192,7 +192,7 @@ extension ABI {
             self = record
         }
 
-        static func tryToConvertToFunctionRecord(abiString: String) -> Record? {
+       public  static func tryToConvertToFunctionRecord(abiString: String) -> Record? {
             guard let record = Record(abiString: abiString) else { return nil }
             guard let type = record.type, case .function = type else {  return nil }
             guard record.name != nil else { return nil }
