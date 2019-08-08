@@ -1,5 +1,5 @@
 //
-//  GetPowDifficultyRequest.swift
+//  GetPowAccountBlockQuotaRequest.swift
 //  Vite
 //
 //  Created by Stone on 2018/10/15.
@@ -12,13 +12,13 @@ import JSONRPCKit
 import Vite_HDWalletKit
 import ObjectMapper
 
-public struct GetPowDifficultyRequest: JSONRPCKit.Request {
+public struct GetPowAccountBlockQuotaRequest: JSONRPCKit.Request {
     public typealias Response = AccountBlockQuota
 
-    public let context: GetPowDifficultyContext
+    let context: Context
 
     public var method: String {
-        return "tx_calcPoWDifficulty"
+        return "tx_calcQuotaRequired"
     }
 
     public var parameters: Any? {
@@ -26,18 +26,10 @@ public struct GetPowDifficultyRequest: JSONRPCKit.Request {
     }
 
     public init(accountAddress: ViteAddress,
-                prevHash: String,
                 type: AccountBlock.BlockType,
                 toAddress: ViteAddress?,
-                data: Data?,
-                usePledgeQuota: Bool) {
-
-        self.context = GetPowDifficultyContext(accountAddress: accountAddress,
-                                               prevHash: prevHash,
-                                               type: type,
-                                               toAddress: toAddress,
-                                               data: data,
-                                               usePledgeQuota: usePledgeQuota)
+                data: Data?) {
+        self.context = Context(accountAddress: accountAddress, type: type, toAddress: toAddress, data: data)
     }
 
     public func response(from resultObject: Any) throws -> Response {
@@ -53,40 +45,32 @@ public struct GetPowDifficultyRequest: JSONRPCKit.Request {
     }
 }
 
-extension GetPowDifficultyRequest {
-    public struct GetPowDifficultyContext: Mappable {
+extension GetPowAccountBlockQuotaRequest {
+    public struct Context: Mappable {
 
         fileprivate(set) var accountAddress: ViteAddress?
-        fileprivate(set) var prevHash: String?
         fileprivate(set) var type: AccountBlock.BlockType?
         fileprivate(set) var toAddress: ViteAddress?
         fileprivate(set) var data: Data?
-        fileprivate(set) var usePledgeQuota: Bool?
 
         public init?(map: Map) { }
 
         public mutating func mapping(map: Map) {
             accountAddress <- map["selfAddr"]
-            prevHash <- map["prevHash"]
             type <- map["blockType"]
             toAddress <- map["toAddr"]
             data <- (map["data"], JSONTransformer.dataToBase64)
-            usePledgeQuota <- map["usePledgeQuota"]
         }
 
         public init(accountAddress: ViteAddress,
-                    prevHash: String,
                     type: AccountBlock.BlockType,
                     toAddress: ViteAddress?,
-                    data: Data?,
-                    usePledgeQuota: Bool) {
+                    data: Data?) {
 
             self.accountAddress = accountAddress
-            self.prevHash = prevHash
             self.type = type
             self.toAddress = toAddress
             self.data = data
-            self.usePledgeQuota = usePledgeQuota
         }
     }
 }

@@ -51,6 +51,8 @@ public struct ViteErrorCode {
     public static let rpcContractDataIllegal = ViteErrorCode(type: .rpc, id: -35004)
     public static let rpcRefrenceSameSnapshootBlock = ViteErrorCode(type: .rpc, id: -35005)
     public static let rpcContractMethodNotExist = ViteErrorCode(type: .rpc, id: -35006)
+    public static let rpcPoWNotSupported = ViteErrorCode(type: .rpc, id: -35011)
+    public static let rpcQuotaLimitReached = ViteErrorCode(type: .rpc, id: -35012)
     public static let rpcNoTransactionBefore = ViteErrorCode(type: .rpc, id: -36001)
     public static let rpcHashVerifyFailure = ViteErrorCode(type: .rpc, id: -36002)
     public static let rpcSignatureVerifyFailure = ViteErrorCode(type: .rpc, id: -36003)

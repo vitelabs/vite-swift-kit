@@ -40,13 +40,13 @@ public extension ViteNode.rawTx.send {
                                  amount: amount,
                                  fee: fee,
                                  data: data,
-                                 difficulty: quota.difficulty,
+                                 quota: quota,
                                  nonce: nil)
         }
     }
 
     static func getPow(context: SendBlockContext) -> Promise<SendBlockContext> {
-        guard let difficulty = context.difficulty else { return Promise(error: ViteError.JSONTypeError) }
+        guard let difficulty = context.quota.difficulty else { return Promise(error: ViteError.JSONTypeError) }
         return ViteNode.pow.getNonce(address: context.account.address,
                                      preHash: context.latest?.hash,
                                      difficulty: difficulty)
@@ -58,7 +58,7 @@ public extension ViteNode.rawTx.send {
                                  amount: context.amount,
                                  fee: context.fee,
                                  data: context.data,
-                                 difficulty: context.difficulty,
+                                 quota: context.quota,
                                  nonce: nonce)
         }
     }
@@ -101,13 +101,13 @@ public extension ViteNode.rawTx.send {
                                              data: data,
                                              usePledgeQuota: false).map { (latestAccountBlock, $0) }
             }
-            .then { (latestAccountBlock, quota) -> Promise<(latestAccountBlock: AccountBlock?, difficulty: BigInt, nonce: String)> in
+            .then { (latestAccountBlock, quota) -> Promise<(latestAccountBlock: AccountBlock?, quota: AccountBlockQuota, nonce: String)> in
                 guard let difficulty = quota.difficulty else { throw ViteError.JSONTypeError }
                 return ViteNode.pow.getNonce(address: account.address,
                                       preHash: latestAccountBlock?.hash,
-                                      difficulty: difficulty).map { (latestAccountBlock, difficulty, $0) }
+                                      difficulty: difficulty).map { (latestAccountBlock, quota, $0) }
             }
-            .map { (latestAccountBlock, difficulty, nonce) -> SendBlockContext in
+            .map { (latestAccountBlock, quota, nonce) -> SendBlockContext in
                 SendBlockContext(account: account,
                                  latest: latestAccountBlock,
                                  toAddress: toAddress,
@@ -115,7 +115,7 @@ public extension ViteNode.rawTx.send {
                                  amount: amount,
                                  fee: fee,
                                  data: data,
-                                 difficulty: difficulty,
+                                 quota: quota,
                                  nonce: nonce)
         }
     }
@@ -127,22 +127,8 @@ public extension ViteNode.rawTx.send {
 }
 
 public extension ViteNode.rawTx.receive {
-    static func withoutPow(account: Wallet.Account, onroadBlock: AccountBlock) -> Promise<AccountBlock> {
 
-        return ViteNode.ledger.getLatestAccountBlock(address: account.address)
-            .then { latestAccountBlock -> Promise<AccountBlock> in
-                let receive = AccountBlock.makeReceiveAccountBlock(secretKey: account.secretKey,
-                                                                   publicKey: account.publicKey,
-                                                                   address: account.address,
-                                                                   onroadBlock: onroadBlock,
-                                                                   latest: latestAccountBlock,
-                                                                   nonce: nil,
-                                                                   difficulty: nil)
-                return ViteNode.tx.sendRawTx(accountBlock: receive)
-        }
-    }
-
-    static func getPow(account: Wallet.Account, onroadBlock: AccountBlock) -> Promise<ReceiveBlockContext> {
+    static func prepare(account: Wallet.Account, onroadBlock: AccountBlock) -> Promise<ReceiveBlockContext> {
         return ViteNode.ledger.getLatestAccountBlock(address: account.address)
             .then { latestAccountBlock -> Promise<(latestAccountBlock: AccountBlock?, quota: AccountBlockQuota)> in
                 ViteNode.tx.getPowDifficulty(accountAddress: account.address,
@@ -150,19 +136,27 @@ public extension ViteNode.rawTx.receive {
                                              type: .receive,
                                              toAddress: nil,
                                              data: nil,
-                                             usePledgeQuota: false).map { (latestAccountBlock, $0) }
+                                             usePledgeQuota: true).map { (latestAccountBlock, $0) }
             }
-            .then { (latestAccountBlock, quota) -> Promise<(latestAccountBlock: AccountBlock?, difficulty: BigInt, nonce: String)> in
-                guard let difficulty = quota.difficulty else { throw ViteError.JSONTypeError }
-                return ViteNode.pow.getNonce(address: account.address,
-                                             preHash: latestAccountBlock?.hash,
-                                             difficulty: difficulty).map { (latestAccountBlock, difficulty, $0) }
-            }
-            .map { (latestAccountBlock, difficulty, nonce) -> ReceiveBlockContext in
+            .map { (latestAccountBlock, quota) -> ReceiveBlockContext in
                 ReceiveBlockContext(account: account,
                                     onroadBlock: onroadBlock,
                                     latest: latestAccountBlock,
-                                    difficulty: difficulty,
+                                    quota: quota,
+                                    nonce: nil)
+        }
+    }
+
+    static func getPow(context: ReceiveBlockContext) -> Promise<ReceiveBlockContext> {
+        guard let difficulty = context.quota.difficulty else { return Promise(error: ViteError.JSONTypeError) }
+        return ViteNode.pow.getNonce(address: context.account.address,
+                                     preHash: context.latest?.hash,
+                                     difficulty: difficulty)
+            .map { nonce in
+                ReceiveBlockContext(account: context.account,
+                                    onroadBlock: context.onroadBlock,
+                                    latest: context.latest,
+                                    quota: context.quota,
                                     nonce: nonce)
         }
     }

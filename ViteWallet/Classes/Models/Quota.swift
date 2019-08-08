@@ -11,8 +11,11 @@ import ObjectMapper
 public struct Quota: Mappable {
 
     public fileprivate(set) var quotaPerSnapshotBlock: UInt64 = 0
-    public fileprivate(set) var current: UInt64 = 0
-    public fileprivate(set) var utps: UInt64 = 0
+    public fileprivate(set) var currentQuota: UInt64 = 0
+
+    public fileprivate(set) var utpe: Double = 0
+    public fileprivate(set) var currentUt: Double = 0
+    public fileprivate(set) var pledgeAmount = Amount(0)
 
     public init?(map: Map) {
 
@@ -22,7 +25,25 @@ public struct Quota: Mappable {
 
     public mutating func mapping(map: Map) {
         quotaPerSnapshotBlock <- (map["quotaPerSnapshotBlock"], JSONTransformer.uint64)
-        current <- (map["current"], JSONTransformer.uint64)
-        utps <- (map["utps"], JSONTransformer.uint64)
+        currentQuota <- (map["current"], JSONTransformer.uint64)
+        utpe <- (map["utpe"], JSONTransformer.stringToDouble)
+        currentUt <- (map["currentUt"], JSONTransformer.stringToDouble)
+        pledgeAmount <- (map["pledgeAmount"], JSONTransformer.bigint)
+    }
+}
+
+extension Double {
+    public func utToString() -> String {
+        var text = String(format:"%.4f", self)
+        if text.contains(".") {
+            text = text.trimmingCharacters(in: CharacterSet(charactersIn: "0"))
+            if text.hasSuffix(".") {
+                text = String(text.dropLast())
+            }
+        }
+        if text.isEmpty {
+            text = "0"
+        }
+        return text
     }
 }

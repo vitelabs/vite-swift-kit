@@ -32,11 +32,13 @@ public struct SendBlockContext {
     let amount: Amount
     let fee: Amount?
     let data: Data?
-    let difficulty: BigInt?
+
+    public let quota: AccountBlockQuota
+
     let nonce: String?
 
     public var isNeedToCalcPoW: Bool {
-        return difficulty != nil
+        return quota.difficulty != nil
     }
 
     func toAccountBlock() -> AccountBlock {
@@ -50,7 +52,7 @@ public struct SendBlockContext {
                                                  fee: fee,
                                                  data: data,
                                                  nonce: nonce,
-                                                 difficulty: difficulty)
+                                                 difficulty: quota.difficulty)
     }
 }
 
@@ -58,11 +60,13 @@ public struct ReceiveBlockContext {
     let account: Wallet.Account
     let onroadBlock: AccountBlock
     let latest: AccountBlock?
-    let difficulty: BigInt?
+
+    public let quota: AccountBlockQuota
+
     let nonce: String?
 
-    var isNeedToCalcPoW: Bool {
-        return difficulty != nil
+    public var isNeedToCalcPoW: Bool {
+        return quota.difficulty != nil
     }
 
     func toAccountBlock() -> AccountBlock {
@@ -72,6 +76,6 @@ public struct ReceiveBlockContext {
                                                     onroadBlock: onroadBlock,
                                                     latest: latest,
                                                     nonce: nonce,
-                                                    difficulty: difficulty)
+                                                    difficulty: quota.difficulty)
     }
 }

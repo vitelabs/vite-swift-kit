@@ -60,6 +60,16 @@ public struct JSONTransformer {
         return String(num)
     })
 
+    public static let stringToDouble = TransformOf<Double, String>(fromJSON: { (string) -> Double? in
+        guard let string = string, let num = Double(string) else { return nil }
+        return num
+    }, toJSON: { (num) -> String? in
+        guard let num = num else { return nil }
+        return String(num)
+    })
+
+
+
     public static let balance = TransformOf<Amount, String>(fromJSON: { (string) -> Amount? in
         guard let string = string, let amount = Amount(string) else { return nil }
         return amount

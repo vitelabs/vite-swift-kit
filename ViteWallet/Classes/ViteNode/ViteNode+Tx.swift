@@ -30,4 +30,15 @@ public extension ViteNode.tx {
                                        data: data,
                                        usePledgeQuota: usePledgeQuota).defaultProviderPromise
     }
+
+    static func getPowAccountBlockQuota(accountAddress: ViteAddress,
+                                        type: AccountBlock.BlockType,
+                                        toAddress: ViteAddress?,
+                                        data: Data?) -> Promise<AccountBlockQuota> {
+        
+        return GetPowAccountBlockQuotaRequest(accountAddress: accountAddress,
+                                              type: type,
+                                              toAddress: toAddress,
+                                              data: data).defaultProviderPromise
+    }
 }

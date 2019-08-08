@@ -43,6 +43,59 @@ public extension ABI {
             return try! ABI.Encoding.encodeFunctionSignature(abiString: self.rawValue)
         }
 
+        public var ut: Double {
+            switch self {
+            case .register:
+                return 8
+            case .registerUpdate:
+                return 8
+            case .cancelRegister:
+                return 6
+            case .extractReward:
+                return 7
+
+            case .vote:
+                return 4
+            case .cancelVote:
+                return 2.5
+            case .pledge:
+                return 5
+            case .cancelPledge:
+                return 5
+
+            case .coinMint:
+                return 9
+            case .coinIssue:
+                return 6
+            case .coinBurn:
+                return 5.5
+            case .coinTransferOwner:
+                return 6.5
+            case .coinChangeTokenType:
+                return 5.5
+            case .dexDeposit:
+                return 1.0130
+            case .dexWithdraw:
+                return 1.2202
+            case .dexPost:
+                return 1.8419
+            case .dexCancel:
+                return 1.3238
+
+            case .dexNewInviter:
+                return 1.0130
+            case .dexBindInviter:
+                return 1.1166
+
+            case .dexTransferTokenOwner:
+                return 1.2202
+            case .dexNewMarket:
+                return 1.2202
+            case .dexMarketConfig:
+                return 1.7383
+            }
+        }
+
         public var toAddress: ViteAddress {
             switch self {
             case .register, .registerUpdate, .cancelRegister, .extractReward, .vote, .cancelVote:

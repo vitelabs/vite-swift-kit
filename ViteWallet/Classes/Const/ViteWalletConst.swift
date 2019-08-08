@@ -23,6 +23,11 @@ public struct ViteWalletConst {
         }
     }
 
+    public struct ut {
+        public static let sendWithoutData: Double = 1
+        public static let receive: Double = 1
+    }
+
     public enum ConsensusGroup: String {
         case `private` = "00000000000000000000"
         case snapshot = "00000000000000000001"

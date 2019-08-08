@@ -18,23 +18,24 @@ public extension ViteNode.utils {
 
 public extension ViteNode.utils.receive {
 
-    static func latestRawTxIfHasWithoutPow(account: Wallet.Account) -> Promise<AccountBlockPair?> {
+    static func latestRawTxIfHas(account: Wallet.Account) -> Promise<AccountBlockPair?> {
         return ViteNode.onroad.getOnroadBlocks(address: account.address, index: 0, count: 1)
             .then { onroadBlocks -> Promise<AccountBlockPair?> in
                 guard let onroadBlock = onroadBlocks.first else { return Promise.value(nil) }
-                return ViteNode.rawTx.receive.withoutPow(account: account, onroadBlock: onroadBlock).map { block -> AccountBlockPair? in AccountBlockPair(send: onroadBlock, receive: block) }
-        }
-    }
-
-    static func latestRawTxIfHasWithPow(account: Wallet.Account) -> Promise<AccountBlockPair?> {
-        return ViteNode.onroad.getOnroadBlocks(address: account.address, index: 0, count: 1)
-            .then { onroadBlocks -> Promise<ReceiveBlockContext?> in
-                guard let onroadBlock = onroadBlocks.first else { return Promise.value(nil) }
-                return ViteNode.rawTx.receive.getPow(account: account, onroadBlock: onroadBlock).map { context -> ReceiveBlockContext? in context }
-            }
-            .then { context -> Promise<AccountBlockPair?> in
-                guard let context = context else { return Promise.value(nil) }
-                return ViteNode.rawTx.receive.context(context).map { block -> AccountBlockPair? in AccountBlockPair(send: context.onroadBlock, receive: block) }
+                return ViteNode.rawTx.receive.prepare(account: account, onroadBlock: onroadBlock)
+                    .then({ (context) -> Promise<(AccountBlock, ReceiveBlockContext)> in
+                        if context.isNeedToCalcPoW {
+                            return ViteNode.rawTx.receive.getPow(context: context).map { (onroadBlock, $0) }
+                        } else {
+                            return Promise.value(context).map { (onroadBlock, $0) }
+                        }
+                    })
+                    .then({ (onroadBlock, context) -> Promise<(AccountBlock, AccountBlock)> in
+                        return ViteNode.rawTx.receive.context(context).map { (onroadBlock, $0) }
+                    })
+                    .map({ (onroadBlock, block) -> AccountBlockPair? in
+                        return AccountBlockPair(send: onroadBlock, receive: block)
+                    })
         }
     }
 }

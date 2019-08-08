@@ -17,10 +17,7 @@ public extension ViteNode.transaction {
                            amount: Amount,
                            note: String?) -> Promise<AccountBlock> {
 
-        var data: Data?
-        if let note = note, !note.isEmpty {
-            data = AccountBlockDataFactory.generateUTF8StringData(string: note)
-        }
+        let data = note?.utf8StringToAccountBlockData()
         return ViteNode.rawTx.send.withoutPow(account: account,
                                               toAddress: toAddress,
                                               tokenId: tokenId,
@@ -34,10 +31,7 @@ public extension ViteNode.transaction {
                        tokenId: ViteTokenId,
                        amount: Amount,
                        note: String?) -> Promise<SendBlockContext> {
-        var data: Data?
-        if let note = note, !note.isEmpty {
-            data = AccountBlockDataFactory.generateUTF8StringData(string: note)
-        }
+        let data = note?.utf8StringToAccountBlockData()
         return ViteNode.rawTx.send.getPow(account: account, toAddress: toAddress, tokenId: tokenId, amount: amount, fee: Amount(0), data: data)
     }
 }
