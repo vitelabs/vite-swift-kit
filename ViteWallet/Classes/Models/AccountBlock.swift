@@ -293,7 +293,6 @@ extension AccountBlock {
         case pledge
         case cancelPledge
         case coin
-        case cancelCoin
         case send
         case receive
     }
@@ -327,28 +326,26 @@ extension AccountBlock {
     }
 
     fileprivate static let transactionTypeDataPrefixMap: [String: TransactionType] = [
-        "f29c6ce2": .register,
-        "3b7bdf74": .registerUpdate,
-        "60862fe2": .cancelRegister,
-        "ce1f27a7": .extractReward,
-        "fdc17f25": .vote,
-        "a629c531": .cancelVote,
-        "8de7dcfd": .pledge,
-        "9ff9c7b6": .cancelPledge,
-        "cbf0e4fa": .coin,
-        "7d925ef1": .cancelCoin,
+        ABI.BuildIn.register.encodedFunctionSignature.toHexString(): .register,
+        ABI.BuildIn.registerUpdate.encodedFunctionSignature.toHexString(): .registerUpdate,
+        ABI.BuildIn.cancelRegister.encodedFunctionSignature.toHexString(): .cancelRegister,
+        ABI.BuildIn.extractReward.encodedFunctionSignature.toHexString(): .extractReward,
+        ABI.BuildIn.vote.encodedFunctionSignature.toHexString(): .vote,
+        ABI.BuildIn.cancelVote.encodedFunctionSignature.toHexString(): .cancelVote,
+        ABI.BuildIn.pledge.encodedFunctionSignature.toHexString(): .pledge,
+        ABI.BuildIn.cancelPledge.encodedFunctionSignature.toHexString(): .cancelPledge,
+        ABI.BuildIn.coinMint.encodedFunctionSignature.toHexString(): .coin,
     ]
 
     fileprivate static let transactionTypeToAddressMap: [TransactionType: String] = [
-        .register: ViteWalletConst.ContractAddress.consensus.rawValue,
-        .registerUpdate: ViteWalletConst.ContractAddress.consensus.rawValue,
-        .cancelRegister: ViteWalletConst.ContractAddress.consensus.rawValue,
-        .extractReward: ViteWalletConst.ContractAddress.consensus.rawValue,
-        .vote: ViteWalletConst.ContractAddress.consensus.rawValue,
-        .cancelVote: ViteWalletConst.ContractAddress.consensus.rawValue,
-        .pledge: ViteWalletConst.ContractAddress.pledge.rawValue,
-        .cancelPledge: ViteWalletConst.ContractAddress.pledge.rawValue,
-        .coin: ViteWalletConst.ContractAddress.coin.rawValue,
-        .cancelCoin: ViteWalletConst.ContractAddress.coin.rawValue,
+        .register: ABI.BuildIn.register.toAddress,
+        .registerUpdate: ABI.BuildIn.registerUpdate.toAddress,
+        .cancelRegister: ABI.BuildIn.cancelRegister.toAddress,
+        .extractReward: ABI.BuildIn.extractReward.toAddress,
+        .vote: ABI.BuildIn.vote.toAddress,
+        .cancelVote: ABI.BuildIn.cancelVote.toAddress,
+        .pledge: ABI.BuildIn.pledge.toAddress,
+        .cancelPledge: ABI.BuildIn.cancelPledge.toAddress,
+        .coin: ABI.BuildIn.coinMint.toAddress,
     ]
 }
