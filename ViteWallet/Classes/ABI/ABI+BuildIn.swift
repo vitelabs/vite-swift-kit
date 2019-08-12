@@ -39,6 +39,9 @@ public extension ABI {
         case dexNewMarket = "{\"type\":\"function\",\"name\":\"DexFundNewMarket\",\"inputs\":[{\"name\":\"tradeToken\",\"type\":\"tokenId\"},{\"name\":\"quoteToken\",\"type\":\"tokenId\"}]}"
         case dexMarketConfig = "{\"type\":\"function\",\"name\":\"DexFundMarketOwnerConfig\",\"inputs\":[{\"name\":\"operationCode\",\"type\":\"uint8\"},{\"name\":\"tradeToken\",\"type\":\"tokenId\"},{\"name\":\"quoteToken\",\"type\":\"tokenId\"},{\"name\":\"owner\",\"type\":\"address\"},{\"name\":\"takerFeeRate\",\"type\":\"int32\"},{\"name\":\"makerFeeRate\",\"type\":\"int32\"},{\"name\":\"stopMarket\",\"type\":\"bool\"}]}"
 
+        case dexStakingAsMining = "{\"type\":\"function\",\"name\":\"DexFundPledgeForVx\",\"inputs\":[{\"name\":\"actionType\",\"type\":\"uint8\"},{\"name\":\"amount\",\"type\":\"uint256\"}]}"
+        case dexVip = "{\"type\":\"function\",\"name\":\"DexFundPledgeForVip\",\"inputs\":[{\"name\":\"actionType\",\"type\":\"uint8\"}]}"
+
         public var encodedFunctionSignature: Data {
             return try! ABI.Encoding.encodeFunctionSignature(abiString: self.rawValue)
         }
@@ -93,6 +96,10 @@ public extension ABI {
                 return 1.2202
             case .dexMarketConfig:
                 return 1.7383
+            case .dexStakingAsMining:
+                return 1.2202
+            case .dexVip:
+                return 1.1166
             }
         }
 
@@ -106,7 +113,8 @@ public extension ABI {
                 return ViteWalletConst.ContractAddress.coin.address
                 case .dexDeposit, .dexWithdraw, .dexPost,
                      .dexNewInviter, .dexBindInviter,
-                     .dexTransferTokenOwner, .dexNewMarket, .dexMarketConfig:
+                     .dexTransferTokenOwner, .dexNewMarket, .dexMarketConfig,
+                     .dexStakingAsMining, .dexVip:
                 return ViteWalletConst.ContractAddress.dexFund.address
             case .dexCancel:
                 return ViteWalletConst.ContractAddress.dexTrade.address

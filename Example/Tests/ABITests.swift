@@ -250,8 +250,8 @@ df32340000000000000000000000000000000000000000000000000000000000
     }
 
     func testddd() {
-        let abiString = ABI.BuildIn.dexNewMarket.rawValue
-        let valuesString = "[\"tti_5649544520544f4b454e6e40\",\"tti_06822f8d096ecdf9356b666c\"]"
+        let abiString = ABI.BuildIn.dexStakingAsMining.rawValue
+        let valuesString = "[\"1\",\"100000000\"]"
 //        "[\"tti_5649544520544f4b454e6e40\",\"1000000000000000000\",\"vite_3f6ca91fa4dd04ca4e57dc6acf56161bc84815c1eeb38828f6\"]"
         do {
             let data = try ABI.Encoding.encodeFunctionCall(abiString: abiString, valuesString: valuesString)
