@@ -41,7 +41,9 @@ extension Double {
                 text = String(text.dropLast())
             }
         }
-        if text.isEmpty {
+        if text.hasPrefix(".") {
+            text = "0" + text
+        } else if text.isEmpty {
             text = "0"
         }
         return text
