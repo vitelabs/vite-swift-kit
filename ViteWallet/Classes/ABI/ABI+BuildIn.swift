@@ -46,6 +46,10 @@ public extension ABI {
             return try! ABI.Encoding.encodeFunctionSignature(abiString: self.rawValue)
         }
 
+        public var abiRecord: ABI.Record {
+            return ABI.Record.tryToConvertToFunctionRecord(abiString: self.rawValue)!
+        }
+
         public var ut: Double {
             switch self {
             case .register:
