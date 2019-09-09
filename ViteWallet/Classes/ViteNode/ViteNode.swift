@@ -22,6 +22,7 @@ public struct ViteNode {
     public struct rawTx {}
     public struct transaction {}
     public struct utils {}
+    public struct dex {}
 }
 
 public struct SendBlockContext {

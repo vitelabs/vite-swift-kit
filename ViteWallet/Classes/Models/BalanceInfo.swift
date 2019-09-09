@@ -21,7 +21,7 @@ public struct BalanceInfo: Mappable {
 
     }
 
-    public init(token: Token, balance: Amount, unconfirmedBalance: Amount, unconfirmedCount: UInt64) {
+    public init(token: Token, balance: Amount = 0, unconfirmedBalance: Amount = 0, unconfirmedCount: UInt64 = 0) {
         self.token = token
         self.balance = balance
         self.unconfirmedBalance = unconfirmedBalance

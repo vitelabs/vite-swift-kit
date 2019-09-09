@@ -132,14 +132,14 @@ class LedgerTests: XCTestCase {
             }).then({ (_) -> Promise<Void> in
                 return Box.f.sendViteToSelf(account: account, amount: amount1)
                     .then({ (accountBlock) -> Promise<Void> in
-                        return ViteNode.utils.receive.latestRawTxIfHasWithPow(account: account).map({ _ in Void() })
+                        return ViteNode.utils.receive.latestRawTxIfHas(account: account).map({ _ in Void() })
                     }).then({ () -> Promise<Void> in
                         return Box.f.afterLatestAccountBlockConfirmed(address: address).map({ _ in Void() })
                     })
             }).then({ (_) -> Promise<Void> in
                 return Box.f.sendViteToSelf(account: account, amount: amount2)
                     .then({ (accountBlock) -> Promise<Void> in
-                        return ViteNode.utils.receive.latestRawTxIfHasWithPow(account: account).map({ _ in Void() })
+                        return ViteNode.utils.receive.latestRawTxIfHas(account: account).map({ _ in Void() })
                     }).then({ () -> Promise<Void> in
                         return Box.f.afterLatestAccountBlockConfirmed(address: address).map({ _ in Void() })
                     })
@@ -190,14 +190,14 @@ class LedgerTests: XCTestCase {
             }).then({ (_) -> Promise<Void> in
                 return Box.f.sendViteToSelf(account: account, amount: amount1)
                     .then({ (accountBlock) -> Promise<Void> in
-                        return ViteNode.utils.receive.latestRawTxIfHasWithPow(account: account).map({ _ in Void() })
+                        return ViteNode.utils.receive.latestRawTxIfHas(account: account).map({ _ in Void() })
                     }).then({ () -> Promise<Void> in
                         return Box.f.afterLatestAccountBlockConfirmed(address: address).map({ _ in Void() })
                     })
             }).then({ (_) -> Promise<Void> in
                 return Box.f.sendViteToSelf(account: account, amount: amount2)
                     .then({ (accountBlock) -> Promise<Void> in
-                        return ViteNode.utils.receive.latestRawTxIfHasWithPow(account: account).map({ _ in Void() })
+                        return ViteNode.utils.receive.latestRawTxIfHas(account: account).map({ _ in Void() })
                     }).then({ () -> Promise<Void> in
                         return Box.f.afterLatestAccountBlockConfirmed(address: address).map({ _ in Void() })
                     })

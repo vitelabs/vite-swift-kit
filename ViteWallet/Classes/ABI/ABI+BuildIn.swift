@@ -163,6 +163,14 @@ public extension ABI {
             return getData(type: .cancelPledge, values: [beneficialAddress, amount.description])
         }
 
+        public static func getDexDeposit() -> Data {
+            return getData(type: .dexDeposit, values: [])
+        }
+
+        public static func getDexWithdraw(tokenId: ViteTokenId, amount: Amount) -> Data {
+            return getData(type: .dexWithdraw, values: [tokenId, amount.description])
+        }
+
         private static func getData(type: BuildIn, values: [String]) -> Data {
             do {
                 let json = try JSONEncoder().encode(values)

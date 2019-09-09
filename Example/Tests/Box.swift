@@ -10,10 +10,12 @@ import XCTest
 import ViteWallet
 import PromiseKit
 import BigInt
+import Bagel
 
 struct Box {
 
     static func setUp() {
+        Bagel.start()
         Provider.default.update(server: RPCServer(url: URL(string: "http://148.70.30.139:48132")!))
         LogConfig.instance.isEnable = true
     }
@@ -74,8 +76,7 @@ extension Box {
         }
 
         static func watiUntilHasQuota(address: ViteAddress) -> Promise<Void> {
-            return waitUntil(promise: ViteNode.pledge.info.getPledgeQuota(address: address), isReady: { $0.utps > 0 })
-
+            return waitUntil(promise: ViteNode.pledge.info.getPledgeQuota(address: address), isReady: { $0.utpe > 0 && $0.utpe == $0.currentUt })
         }
 
         static func watiUntilHasNoQuota(address: ViteAddress) -> Promise<Void> {
@@ -186,7 +187,7 @@ extension Box {
 
         static func receiveAll(account: Wallet.Account) -> Promise<Void> {
             func getPromise() -> Promise<Void> {
-                return ViteNode.utils.receive.latestRawTxIfHasWithPow(account: account)
+                return ViteNode.utils.receive.latestRawTxIfHas(account: account)
                     .then({ (ret) -> Promise<Void> in
                         if let ret = ret {
                             printLog("receive: \(ret.send.amount!.description)")

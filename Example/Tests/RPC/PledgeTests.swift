@@ -94,8 +94,10 @@ class PledgeTests: XCTestCase {
                 return getPledgeInfo()
             }).then({ (quota, pledgeDetail, balance) -> Promise<Void> in
                 XCTAssert(quota.quotaPerSnapshotBlock == 0)
-                XCTAssert(quota.current == 0)
-                XCTAssert(quota.utps == 0)
+                XCTAssert(quota.currentQuota == 0)
+                XCTAssert(quota.utpe == 0)
+                XCTAssert(quota.currentUt == 0)
+                XCTAssert(quota.pledgeAmount == 0)
                 XCTAssert(pledgeDetail.totalCount == 0)
                 XCTAssert(pledgeDetail.totalPledgeAmount == 0)
                 var success = true

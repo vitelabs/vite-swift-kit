@@ -47,6 +47,8 @@ class VoteTests: XCTestCase {
                         return ViteNode.vote.perform.getPow(account: account, gid: ViteWalletConst.ConsensusGroup.snapshot.id, name: nodeName)
                     }).then({ (context) -> Promise<Void> in
                         return ViteNode.rawTx.send.context(context).asVoid()
+                    }).then({ (_) -> Promise<Void> in
+                        return Box.f.afterLatestAccountBlockConfirmed(address: account.address).asVoid()
                     }).then({ () -> Promise<Void> in
                         return Box.f.watiUntilHasVoteInfo(address: address)
                     })
@@ -56,6 +58,8 @@ class VoteTests: XCTestCase {
                 return ViteNode.vote.cancel.getPow(account: account, gid: ViteWalletConst.ConsensusGroup.snapshot.id)
                     .then({ (context) -> Promise<Void> in
                         return ViteNode.rawTx.send.context(context).asVoid()
+                    }).then({ (_) -> Promise<Void> in
+                        return Box.f.afterLatestAccountBlockConfirmed(address: account.address).asVoid()
                     }).then({ () -> Promise<Void> in
                         return Box.f.watiUntilHasNoVoteInfo(address: address)
                     })

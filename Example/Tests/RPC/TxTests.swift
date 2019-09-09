@@ -68,10 +68,12 @@ class TxTests: XCTestCase {
                 XCTAssert(accountBlocks.count == 1)
                 let accountBlock = accountBlocks[0]
                 printLog("🚀 tx_calcPoWDifficulty")
-                return ViteNode.rawTx.receive.getPow(account: account, onroadBlock: accountBlock)
-            }).then({ (context) -> Promise<AccountBlock> in
+                return ViteNode.rawTx.receive.prepare(account: account, onroadBlock: accountBlock)
+            }).then({ (context) -> Promise<ReceiveBlockContext> in
                 printLog("✅tx_calcPoWDifficulty")
                 printLog("🚀tx_sendRawTx")
+                return ViteNode.rawTx.receive.getPow(context: context)
+            }).then({ (context) -> Promise<AccountBlock> in
                 return ViteNode.rawTx.receive.context(context)
             }).then({ (_) -> Promise<AccountBlock> in
                 printLog("✅tx_sendRawTx")
@@ -105,11 +107,13 @@ class TxTests: XCTestCase {
                 return Box.f.makeSureHasPledge(account: account)
             }).then({ (_) -> Promise<Quota> in
                 return ViteNode.pledge.info.getPledgeQuota(address: address)
-            }).then({ (quota) -> Promise<AccountBlock> in
-                XCTAssert(quota.utps > 0, "❌ need pledge")
+            }).then({ (quota) -> Promise<SendBlockContext> in
+                XCTAssert(quota.utpe > 0, "❌ need pledge")
                 printLog("=============== send without pow ===============")
                 printLog("🚀tx_sendRawTx")
-                return ViteNode.rawTx.send.withoutPow(account: account, toAddress: address, tokenId: tokenId, amount: amount, fee: Amount(), data: data)
+                return ViteNode.rawTx.send.prepare(account: account, toAddress: address, tokenId: tokenId, amount: amount, fee: Amount(), data: data)
+            }).then({ (context) -> Promise<AccountBlock> in
+                return ViteNode.rawTx.send.context(context)
             }).then({ (_) -> Promise<AccountBlock> in
                 printLog("✅tx_sendRawTx")
                 return Box.f.afterLatestAccountBlockConfirmed(address: address)
@@ -120,11 +124,13 @@ class TxTests: XCTestCase {
                 XCTAssert(accountBlock.data == data)
                 printLog("=============== receive without pow ===============")
                 return ViteNode.onroad.getOnroadBlocks(address: account.address, index: 0, count: 1)
-            }).then({ (accountBlocks) -> Promise<AccountBlock> in
+            }).then({ (accountBlocks) -> Promise<ReceiveBlockContext> in
                 XCTAssert(accountBlocks.count == 1)
                 let accountBlock = accountBlocks[0]
                 printLog("🚀 tx_sendRawTx")
-                return ViteNode.rawTx.receive.withoutPow(account: account, onroadBlock: accountBlock)
+                return ViteNode.rawTx.receive.prepare(account: account, onroadBlock: accountBlock)
+            }).then({ (context) -> Promise<AccountBlock> in
+                return  ViteNode.rawTx.receive.context(context)
             }).then({ (_) -> Promise<AccountBlock> in
                 printLog("✅tx_sendRawTx")
                 return Box.f.afterLatestAccountBlockConfirmed(address: address)

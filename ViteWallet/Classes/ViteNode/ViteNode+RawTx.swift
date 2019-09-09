@@ -45,6 +45,29 @@ public extension ViteNode.rawTx.send {
         }
     }
 
+    static func block(account: Wallet.Account,
+                      toAddress: ViteAddress,
+                      tokenId: ViteTokenId,
+                      amount: Amount,
+                      fee: Amount?,
+                      data: Data?) -> Promise<AccountBlock> {
+        return ViteNode.rawTx.send.prepare(account: account,
+                                           toAddress: toAddress,
+                                           tokenId: tokenId,
+                                           amount: amount,
+                                           fee: fee,
+                                           data: data)
+            .then { (context) -> Promise<SendBlockContext> in
+                if context.isNeedToCalcPoW {
+                    return ViteNode.rawTx.send.getPow(context: context)
+                } else {
+                    return Promise.value(context)
+                }
+            }.then { context -> Promise<AccountBlock> in
+                return ViteNode.rawTx.send.context(context)
+            }
+    }
+
     static func getPow(context: SendBlockContext) -> Promise<SendBlockContext> {
         guard let difficulty = context.quota.difficulty else { return Promise(error: ViteError.JSONTypeError) }
         return ViteNode.pow.getNonce(address: context.account.address,
