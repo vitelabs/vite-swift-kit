@@ -44,17 +44,17 @@ extension ABIArrayValue: ABIParameterValueDecodable {
 
         var items = [ABIParameterValue]()
         if let length = l {
-            guard length == (data.count / 32) else { return nil }
+            guard data.count >= length * 32 else { return nil }
             for index in 0..<length {
                 let slice = Data(data[(index * 32) ..< ((index + 1) * 32)])
                 guard let item = try? ABI.Decoding.decodeParameter(slice, type: subType) else { return nil }
                 items.append(item)
             }
         } else {
-            guard data.count > 32, data.count % 32 == 0 else { return nil }
+            guard data.count > 32 else { return nil }
             let head = Data(data[0..<32])
             let length = BigUInt(head)
-            guard data.count == 32 + length * 32 else { return nil }
+            guard data.count >= 32 + length * 32 else { return nil }
             for index in 0..<UInt64(length) {
                 let slice = Data(data[((index + 1) * 32) ..< ((index + 2) * 32)])
                 guard let item = try? ABI.Decoding.decodeParameter(slice, type: subType) else { return nil }
