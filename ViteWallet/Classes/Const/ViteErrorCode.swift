@@ -45,6 +45,7 @@ public struct ViteErrorCode {
     }
 
     // rpc error
+    public static let rpcRetryMaybeRecover = ViteErrorCode(type: .rpc, id:  -32002)
     public static let rpcNotEnoughBalance = ViteErrorCode(type: .rpc, id: -35001)
     public static let rpcNotEnoughQuota = ViteErrorCode(type: .rpc, id: -35002)
     public static let rpcIdConflict = ViteErrorCode(type: .rpc, id: -35003)

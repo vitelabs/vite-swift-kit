@@ -9,7 +9,7 @@ import BigInt
 
 public extension ABI {
 
-    public enum BuildIn: String {
+    public enum BuildIn: String, CaseIterable {
 
         case register = "{\"type\":\"function\",\"name\":\"Register\", \"inputs\":[{\"name\":\"gid\",\"type\":\"gid\"},{\"name\":\"name\",\"type\":\"string\"},{\"name\":\"nodeAddr\",\"type\":\"address\"}]}"
         case registerUpdate = "{\"type\":\"function\",\"name\":\"UpdateRegistration\",\"inputs\":[{\"name\":\"gid\",\"type\":\"gid\"},{\"Name\":\"name\",\"type\":\"string\"},{\"name\":\"nodeAddr\",\"type\":\"address\"}]}"
@@ -122,6 +122,28 @@ public extension ABI {
                 return ViteWalletConst.ContractAddress.dexFund.address
             case .dexCancel:
                 return ViteWalletConst.ContractAddress.dexTrade.address
+            }
+        }
+
+        fileprivate static let toAddressAndDataPrefixMap: [String: BuildIn] =
+            BuildIn.allCases.reduce([String: BuildIn]()) { (r, t) -> [String: BuildIn] in
+                var ret = r
+                let key = "\(t.toAddress)_\(t.encodedFunctionSignature.toHexString())"
+                ret[key] = t
+                return ret
+        }
+
+        public static func type(data: Data?, toAddress: ViteAddress) -> (BuildIn, [ABIParameterValue])? {
+            if let data = data, data.count >= 4,
+                let type = toAddressAndDataPrefixMap["\(toAddress)_\(data[0..<4].toHexString())"] {
+                do {
+                    let values = try ABI.Decoding.decodeParameters(data, abiString: type.rawValue)
+                    return (type, values)
+                } catch {
+                    return nil
+                }
+            } else {
+                return nil
             }
         }
 
