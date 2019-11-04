@@ -50,7 +50,7 @@ public struct RPCRequest<Batch: JSONRPCKit.Batch>: APIKit.Request {
         #endif
     }
 
-    public var method: HTTPMethod {
+    public var method: APIKit.HTTPMethod {
         return .post
     }
 
