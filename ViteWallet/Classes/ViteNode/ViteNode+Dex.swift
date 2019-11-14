@@ -19,4 +19,8 @@ public extension ViteNode.dex.info {
     static func getDexBalanceInfos(address: ViteAddress, tokenId: ViteTokenId?) -> Promise<[DexBalanceInfo]> {
         return GetDexBalanceInfosRequest(address: address, tokenId: tokenId).defaultProviderPromise
     }
+
+    static func getDexInviteCodeBinding(address: ViteAddress) -> Promise<Int64?> {
+        return GetDexInviteCodeBindingRequest(address: address).defaultProviderPromise
+    }
 }

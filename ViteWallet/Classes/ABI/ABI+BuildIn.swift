@@ -163,13 +163,18 @@ public extension ABI {
             return getData(type: .cancelPledge, values: [beneficialAddress, amount.description])
         }
 
-        public static func getDexDeposit() -> Data {
+        public static func getDexDepositData() -> Data {
             return getData(type: .dexDeposit, values: [])
         }
 
-        public static func getDexWithdraw(tokenId: ViteTokenId, amount: Amount) -> Data {
+        public static func getDexWithdrawData(tokenId: ViteTokenId, amount: Amount) -> Data {
             return getData(type: .dexWithdraw, values: [tokenId, amount.description])
         }
+
+        public static func getDexBindInviterData(code: String) -> Data {
+            return getData(type: .dexBindInviter, values: [code])
+        }
+
 
         private static func getData(type: BuildIn, values: [String]) -> Data {
             do {
