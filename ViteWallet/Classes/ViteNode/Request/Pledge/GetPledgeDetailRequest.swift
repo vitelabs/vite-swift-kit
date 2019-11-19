@@ -17,7 +17,7 @@ public struct GetPledgeDetailRequest: JSONRPCKit.Request {
     let count: Int
 
     public var method: String {
-        return "pledge_getPledgeList"
+        return "contract_getStakeList"
     }
 
     public var parameters: Any? {

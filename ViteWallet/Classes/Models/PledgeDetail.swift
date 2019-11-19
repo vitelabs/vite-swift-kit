@@ -19,8 +19,8 @@ public struct PledgeDetail: Mappable {
     public init?(map: Map) { }
 
     public mutating func mapping(map: Map) {
-        list <- map["pledgeInfoList"]
-        totalPledgeAmount <- (map["totalPledgeAmount"], JSONTransformer.balance)
-        totalCount <- map["totalCount"]
+        list <- map["stakeList"]
+        totalPledgeAmount <- (map["totalStakeAmount"], JSONTransformer.balance)
+        totalCount <- map["totalStakeCount"]
     }
 }

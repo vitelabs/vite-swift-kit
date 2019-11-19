@@ -295,6 +295,12 @@ extension AccountBlock {
         case coin
         case send
         case receive
+
+        case registerSBP
+        case voteForSBP
+        case CancelSBPVoting
+        case StakeForQuota
+        case CancelQuotaStaking
     }
 
     public var transactionType: TransactionType {
@@ -326,26 +332,36 @@ extension AccountBlock {
     }
 
     fileprivate static let transactionTypeDataPrefixMap: [String: TransactionType] = [
-        ABI.BuildIn.register.encodedFunctionSignature.toHexString(): .register,
+        //ABI.BuildIn.register.encodedFunctionSignature.toHexString(): .register,
+        ABI.BuildIn.registerSBP.encodedFunctionSignature.toHexString(): .registerSBP,
         ABI.BuildIn.registerUpdate.encodedFunctionSignature.toHexString(): .registerUpdate,
         ABI.BuildIn.cancelRegister.encodedFunctionSignature.toHexString(): .cancelRegister,
         ABI.BuildIn.extractReward.encodedFunctionSignature.toHexString(): .extractReward,
         ABI.BuildIn.vote.encodedFunctionSignature.toHexString(): .vote,
+        ABI.BuildIn.voteForSBP.encodedFunctionSignature.toHexString(): .voteForSBP,
         ABI.BuildIn.cancelVote.encodedFunctionSignature.toHexString(): .cancelVote,
+        ABI.BuildIn.CancelSBPVoting.encodedFunctionSignature.toHexString(): .CancelSBPVoting,
         ABI.BuildIn.pledge.encodedFunctionSignature.toHexString(): .pledge,
+        ABI.BuildIn.StakeForQuota.encodedFunctionSignature.toHexString(): .StakeForQuota,
         ABI.BuildIn.cancelPledge.encodedFunctionSignature.toHexString(): .cancelPledge,
+        ABI.BuildIn.CancelQuotaStaking.encodedFunctionSignature.toHexString(): .CancelQuotaStaking,
         ABI.BuildIn.coinMint.encodedFunctionSignature.toHexString(): .coin,
     ]
 
     fileprivate static let transactionTypeToAddressMap: [TransactionType: String] = [
-        .register: ABI.BuildIn.register.toAddress,
+        //.register: ABI.BuildIn.register.toAddress,
+        .registerSBP: ABI.BuildIn.registerSBP.toAddress,
         .registerUpdate: ABI.BuildIn.registerUpdate.toAddress,
         .cancelRegister: ABI.BuildIn.cancelRegister.toAddress,
         .extractReward: ABI.BuildIn.extractReward.toAddress,
         .vote: ABI.BuildIn.vote.toAddress,
+        .voteForSBP: ABI.BuildIn.voteForSBP.toAddress,
         .cancelVote: ABI.BuildIn.cancelVote.toAddress,
+        .CancelSBPVoting: ABI.BuildIn.CancelSBPVoting.toAddress,
         .pledge: ABI.BuildIn.pledge.toAddress,
+        .StakeForQuota: ABI.BuildIn.StakeForQuota.toAddress,
         .cancelPledge: ABI.BuildIn.cancelPledge.toAddress,
+        .CancelQuotaStaking: ABI.BuildIn.CancelQuotaStaking.toAddress,
         .coin: ABI.BuildIn.coinMint.toAddress,
     ]
 }

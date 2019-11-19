@@ -42,6 +42,12 @@ public extension ABI {
         case dexStakingAsMining = "{\"type\":\"function\",\"name\":\"DexFundPledgeForVx\",\"inputs\":[{\"name\":\"actionType\",\"type\":\"uint8\"},{\"name\":\"amount\",\"type\":\"uint256\"}]}"
         case dexVip = "{\"type\":\"function\",\"name\":\"DexFundPledgeForVip\",\"inputs\":[{\"name\":\"actionType\",\"type\":\"uint8\"}]}"
 
+        case registerSBP = "{\"type\":\"function\",\"name\":\"RegisterSBP\", \"inputs\":[{\"name\":\"sbpName\",\"type\":\"string\"},{\"name\":\"blockProducingAddress\",\"type\":\"address\"},{\"name\":\"rewardWithdrawAddress\",\"type\":\"address\"}]}"
+        case voteForSBP = "{\"type\":\"function\",\"name\":\"VoteForSBP\", \"inputs\":[{\"name\":\"sbpName\",\"type\":\"string\"}]}"
+        case CancelSBPVoting = " {\"type\":\"function\",\"name\":\"CancelSBPVoting\",\"inputs\":[]}"
+        case StakeForQuota = "{\"type\":\"function\",\"name\":\"StakeForQuota\", \"inputs\":[{\"name\":\"beneficiary\",\"type\":\"address\"}]}"
+        case CancelQuotaStaking = "{\"type\":\"function\",\"name\":\"CancelQuotaStaking\",\"inputs\":[{\"name\":\"id\",\"type\":\"bytes32\"}]}"
+
         public var encodedFunctionSignature: Data {
             return try! ABI.Encoding.encodeFunctionSignature(abiString: self.rawValue)
         }
@@ -53,6 +59,8 @@ public extension ABI {
         public var ut: Double {
             switch self {
             case .register:
+                 return 8
+            case .registerSBP:
                 return 8
             case .registerUpdate:
                 return 8
@@ -61,13 +69,13 @@ public extension ABI {
             case .extractReward:
                 return 7
 
-            case .vote:
+            case .vote, .voteForSBP:
                 return 4
-            case .cancelVote:
+            case .cancelVote, .CancelSBPVoting:
                 return 2.5
-            case .pledge:
+            case .pledge, .StakeForQuota:
                 return 5
-            case .cancelPledge:
+            case .cancelPledge, .CancelQuotaStaking:
                 return 5
 
             case .coinMint:
@@ -109,9 +117,9 @@ public extension ABI {
 
         public var toAddress: ViteAddress {
             switch self {
-            case .register, .registerUpdate, .cancelRegister, .extractReward, .vote, .cancelVote:
+            case .register,.registerSBP, .registerUpdate, .cancelRegister, .extractReward, .vote, .cancelVote, .voteForSBP, .CancelSBPVoting:
                 return ViteWalletConst.ContractAddress.consensus.address
-            case .pledge, .cancelPledge:
+            case .pledge, .cancelPledge, .StakeForQuota, .CancelQuotaStaking:
                 return ViteWalletConst.ContractAddress.pledge.address
             case .coinMint, .coinIssue, .coinBurn, .coinTransferOwner, .coinChangeTokenType:
                 return ViteWalletConst.ContractAddress.coin.address
@@ -147,20 +155,36 @@ public extension ABI {
             }
         }
 
-        public static func getVoteData(gid: ViteGId, name: String) -> Data {
-            return getData(type: .vote, values: [gid, name])
+//        public static func getVoteData(gid: ViteGId, name: String) -> Data {
+//            return getData(type: .vote, values: [gid, name])
+//        }
+
+        public static func getVoteForSBPData(name: String) -> Data {
+            return getData(type: .voteForSBP, values: [name])
         }
 
-        public static func getCancelVoteData(gid: ViteGId) -> Data {
-            return getData(type: .cancelVote, values: [gid])
+//        public static func getCancelVoteData(gid: ViteGId) -> Data {
+//            return getData(type: .cancelVote, values: [gid])
+//        }
+
+        public static func getCancelSBPVotingData() -> Data {
+            return getData(type: .CancelSBPVoting, values: [])
         }
 
-        public static func getPledgeData(beneficialAddress: ViteAddress) -> Data {
-            return getData(type: .pledge, values: [beneficialAddress])
+//        public static func getPledgeData(beneficialAddress: ViteAddress) -> Data {
+//            return getData(type: .pledge, values: [beneficialAddress])
+//        }
+
+        public static func getStakeForQuota(beneficialAddress: ViteAddress) -> Data {
+            return getData(type: .StakeForQuota, values: [beneficialAddress])
         }
 
         public static func getCancelPledgeData(beneficialAddress: ViteAddress, amount: Amount) -> Data {
             return getData(type: .cancelPledge, values: [beneficialAddress, amount.description])
+        }
+
+        public static func getCancelQuotaStakingData(id: String) -> Data {
+            return getData(type: .CancelQuotaStaking, values: [id])
         }
 
         public static func getDexDepositData() -> Data {
