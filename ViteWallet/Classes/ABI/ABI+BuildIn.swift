@@ -9,7 +9,7 @@ import BigInt
 
 public extension ABI {
 
-    public enum BuildIn: String, CaseIterable {
+    enum BuildIn: String, CaseIterable {
 
         case register = "{\"type\":\"function\",\"name\":\"Register\", \"inputs\":[{\"name\":\"gid\",\"type\":\"gid\"},{\"name\":\"name\",\"type\":\"string\"},{\"name\":\"nodeAddr\",\"type\":\"address\"}]}"
         case registerUpdate = "{\"type\":\"function\",\"name\":\"UpdateRegistration\",\"inputs\":[{\"name\":\"gid\",\"type\":\"gid\"},{\"Name\":\"name\",\"type\":\"string\"},{\"name\":\"nodeAddr\",\"type\":\"address\"}]}"
@@ -47,6 +47,17 @@ public extension ABI {
         case CancelSBPVoting = " {\"type\":\"function\",\"name\":\"CancelSBPVoting\",\"inputs\":[]}"
         case StakeForQuota = "{\"type\":\"function\",\"name\":\"StakeForQuota\", \"inputs\":[{\"name\":\"beneficiary\",\"type\":\"address\"}]}"
         case CancelQuotaStaking = "{\"type\":\"function\",\"name\":\"CancelQuotaStaking\",\"inputs\":[{\"name\":\"id\",\"type\":\"bytes32\"}]}"
+
+        case defiDeposit = "{\"type\":\"function\",\"name\":\"Deposit\",\"inputs\":[]}"
+        case defiWithdraw = "{\"type\":\"function\",\"name\":\"Withdraw\",\"inputs\":[{\"name\":\"token\",\"type\":\"tokenId\"},{\"name\":\"amount\",\"type\":\"uint256\"}]}"
+        case defiNewLoan = "{\"type\":\"function\",\"name\":\"NewLoan\",\"inputs\":[{\"name\":\"token\",\"type\":\"tokenId\"},{\"name\":\"dayRate\",\"type\":\"int32\"},{\"name\":\"shareAmount\",\"type\":\"uint256\"},{\"name\":\"shares\",\"type\":\"int32\"},{\"name\":\"subscribeDays\",\"type\":\"int32\"},{\"name\":\"expireDays\",\"type\":\"int32\"}]}"
+        case defiCancelLoan = "{\"type\":\"function\",\"name\":\"CancelLoan\",\"inputs\":[{\"name\":\"loanId\",\"type\":\"uint64\"}]}"
+        case defiSubscribe = "{\"type\":\"function\",\"name\":\"Subscribe\",\"inputs\":[{\"name\":\"loanId\",\"type\":\"uint64\"},{\"name\":\"shares\",\"type\":\"int32\"}]}"
+        case defiRegisterSBP = "{\"type\":\"function\",\"name\":\"RegisterSBP\",\"inputs\":[{\"name\":\"loadId\",\"type\":\"uint64\"},{\"name\":\"amount\",\"type\":\"uint256\"},{\"name\":\"sbpName\",\"type\":\"string\"},{\"name\":\"blockProducingAddress\",\"type\":\"address\"},{\"name\":\"rewardWithdrawAddress\",\"type\":\"address\"}]}"
+        case defiUpdateSBPRegistration = "{\"type\":\"function\",\"name\":\"UpdateSBPRegistration\",\"inputs\":[{\"name\":\"investId\",\"type\":\"uint64\"},{\"name\":\"operationCode\",\"type\":\"uint8\"},{\"name\":\"sbpName\",\"type\":\"string\"},{\"name\":\"blockProducingAddress\",\"type\":\"address\"},{\"name\":\"rewardWithdrawAddress\",\"type\":\"address\"}]}"
+        case defiInvest = "{\"type\":\"function\",\"name\":\"Invest\",\"inputs\":[{\"name\":\"loadId\",\"type\":\"uint64\"},{\"name\":\"bizType\",\"type\":\"uint8\"},{\"name\":\"amount\",\"type\":\"uint256\"},{\"name\":\"beneficiary\",\"type\":\"address\"}]}"
+        case defiCancelInvest = "{\"type\":\"function\",\"name\":\"CancelInvest\",\"inputs\":[{\"name\":\"investId\",\"type\":\"uint64\"}]}"
+
 
         public var encodedFunctionSignature: Data {
             return try! ABI.Encoding.encodeFunctionSignature(abiString: self.rawValue)
@@ -112,6 +123,24 @@ public extension ABI {
                 return 1.2202
             case .dexVip:
                 return 1.1166
+            case .defiDeposit:
+                return 1.111111111111111
+            case .defiWithdraw:
+                return 1.111111111111111
+            case .defiNewLoan:
+                return 1.111111111111111
+            case .defiCancelLoan:
+                return 1.111111111111111
+            case .defiSubscribe:
+                return 1.111111111111111
+            case .defiRegisterSBP:
+                return 1.111111111111111
+            case .defiUpdateSBPRegistration:
+                return 1.111111111111111
+            case .defiInvest:
+                return 1.111111111111111
+            case .defiCancelInvest:
+                return 1.111111111111111
             }
         }
 
@@ -130,6 +159,9 @@ public extension ABI {
                 return ViteWalletConst.ContractAddress.dexFund.address
             case .dexCancel:
                 return ViteWalletConst.ContractAddress.dexTrade.address
+            case .defiDeposit, .defiWithdraw, .defiNewLoan, .defiCancelLoan, .defiSubscribe,
+                 .defiRegisterSBP, .defiUpdateSBPRegistration, .defiInvest, .defiCancelInvest:
+                return ViteWalletConst.ContractAddress.defi.address
             }
         }
 
@@ -209,6 +241,78 @@ public extension ABI {
                 return Data()
             }
         }
+    }
+}
+
+extension ABI.BuildIn {
+    //MARK: DeFi
+
+    public static func getDeFiDepositData() -> Data {
+        return getData(type: .defiDeposit, values: [])
+    }
+
+    public static func getDeFiWithdrawData(tokenId: ViteTokenId, amount: Amount) -> Data {
+        return getData(type: .defiWithdraw, values: [tokenId, amount.description])
+    }
+
+    public static func getDeFiNewLoanData(tokenId: ViteTokenId,
+                                          dayRate: Double,
+                                          shareAmount: Amount,
+                                          shares: Int,
+                                          subscribeDays: Int,
+                                          expireDays: Int) -> Data {
+        return getData(type: .defiNewLoan, values: [tokenId,
+                                                    String(UInt64(dayRate * 100000000)),
+                                                    shareAmount.description,
+                                                    String(shares),
+                                                    String(subscribeDays),
+                                                    String(expireDays)])
+    }
+
+    public static func getDeFiCancelLoanData(loanId: UInt64) -> Data {
+        return getData(type: .defiCancelLoan, values: [String(loanId)])
+    }
+
+    public static func getDeFiSubscribeData(loanId: UInt64, shares: UInt64) -> Data {
+        return getData(type: .defiSubscribe, values: [String(loanId), String(shares)])
+    }
+
+    public static func getDeFiRegisterSBPData(loanId: UInt64,
+                                              amount: Amount,
+                                              sbpName: String,
+                                              blockProducingAddress: ViteAddress,
+                                              rewardWithdrawAddress: ViteAddress) -> Data {
+        return getData(type: .defiRegisterSBP, values: [String(loanId),
+                                                        amount.description,
+                                                        sbpName,
+                                                        blockProducingAddress,
+                                                        rewardWithdrawAddress])
+    }
+
+    public static func getDeFiUpdateSBPRegistrationData(investId: UInt64,
+                                                        operationCode: UInt8,
+                                                        sbpName: String,
+                                                        blockProducingAddress: ViteAddress,
+                                                        rewardWithdrawAddress: ViteAddress) -> Data {
+        return getData(type: .defiUpdateSBPRegistration, values: [String(investId),
+                                                                  String(operationCode),
+                                                                  sbpName,
+                                                                  blockProducingAddress,
+                                                                  rewardWithdrawAddress])
+    }
+
+    public static func getDeFiInvestData(loanId: UInt64,
+                                         bizType: UInt8,
+                                         amount: Amount,
+                                         beneficiaryAddress: ViteAddress) -> Data {
+        return getData(type: .defiInvest, values: [String(loanId),
+                                                   String(bizType),
+                                                   amount.description,
+                                                   beneficiaryAddress])
+    }
+
+    public static func getDeFiCancelInvestData(investId: UInt64) -> Data {
+        return getData(type: .defiCancelInvest, values: [String(investId)])
     }
 }
 
