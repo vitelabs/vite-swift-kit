@@ -232,7 +232,7 @@ extension AccountBlock {
         }
 
         // hash
-        if let data = accountBlock.data {
+        if let data = accountBlock.data, data.count > 0 {
             let hash = Blake2b.hash(outLength: 32, in: Bytes(data)) ?? Bytes()
             source.append(contentsOf: hash)
         }
