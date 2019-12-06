@@ -23,6 +23,7 @@ public struct ViteNode {
     public struct transaction {}
     public struct utils {}
     public struct dex {}
+    public struct defi{}
 }
 
 public struct SendBlockContext {
