@@ -9,35 +9,45 @@ import Foundation
 import JSONRPCKit
 
 public struct DefiAccountInfoRequest: JSONRPCKit.Request {
-    public typealias Response = DefiAccountInfo?
+    public typealias Response = [DefiBalanceInfo]
 
     let address: String
-    let tokenId: String
+    let tokenId: String?
 
     public var method: String {
         return "defi_getAccountInfo"
     }
 
     public var parameters: Any? {
-        return [address, tokenId]
+        if let tokenId = tokenId {
+            return [address, tokenId]
+        } else {
+            return [address, nil]
+        }
     }
 
-    public init(address: String,tokenId:String) {
+    public init(address: String, tokenId:String?) {
         self.address = address
         self.tokenId = tokenId
     }
 
     public func response(from resultObject: Any) throws -> Response {
         if let _ = resultObject as? NSNull {
-            return nil
-        } else if let response = (resultObject as? [String: Any])?[self.tokenId] as? [String: Any]{
-            if let ret = DefiAccountInfo(JSON: response) {
-                return ret
-            } else {
-                throw ViteError.JSONTypeError
-            }
-        } else {
+            return []
+        }
+
+        guard let response = resultObject as? [String: Any] else {
             throw ViteError.JSONTypeError
         }
+
+        var balanceInfoArray = [[String: Any]]()
+        if let array = Array(response.values) as? [[String: Any]] {
+            balanceInfoArray = array
+        }
+
+        let balanceInfos = balanceInfoArray.map({ DefiBalanceInfo(JSON: $0) })
+        let ret = balanceInfos.compactMap { $0 }
+
+        return ret
     }
 }

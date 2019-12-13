@@ -11,12 +11,12 @@ import PromiseKit
 import BigInt
 
 public extension ViteNode.defi {
-    public struct info {}
-    public struct perform {}
+    struct info {}
+    struct perform {}
 }
 
 public extension ViteNode.defi.info {
-    static func getDefiAccountInfo(address: ViteAddress, tokenId: ViteTokenId) -> Promise<DefiAccountInfo?> {
+    static func getDefiAccountInfo(address: ViteAddress, tokenId: ViteTokenId?) -> Promise<[DefiBalanceInfo]> {
         return DefiAccountInfoRequest(address: address, tokenId: tokenId).defaultProviderPromise
     }
 

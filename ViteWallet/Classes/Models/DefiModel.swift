@@ -18,7 +18,7 @@ enum DeFiLoanStatus: Int {
     case failedAndRefunded = 6
 }
 
-public struct DefiAccountInfo: Mappable {
+public struct DefiBalanceInfo: Mappable {
 
     public struct BaseAccount: Mappable {
 
@@ -51,16 +51,20 @@ public struct DefiAccountInfo: Mappable {
         }
     }
 
-    public fileprivate(set) var token: String = ""
+    public fileprivate(set) var token = Token()
     public fileprivate(set) var baseAccount = BaseAccount()
     public fileprivate(set) var loanAccount = LoanAccount()
 
     public init?(map: Map) { }
 
     public mutating func mapping(map: Map) {
-        token <- map["token"]
+        token <- map["tokenInfo"]
         baseAccount <- map["baseAccount"]
         loanAccount <- map["loanAccount"]
+    }
+
+    public init(token: Token) {
+        self.token = token
     }
 }
 
