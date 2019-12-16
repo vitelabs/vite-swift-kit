@@ -25,6 +25,7 @@ public struct DefiBalanceInfo: Mappable {
         public fileprivate(set) var available = Amount()
         public fileprivate(set) var subscribed = Amount()
         public fileprivate(set) var invested = Amount()
+        public fileprivate(set) var locked = Amount()
 
         public init() {  }
 
@@ -34,6 +35,7 @@ public struct DefiBalanceInfo: Mappable {
             available <- (map["available"], JSONTransformer.bigint)
             subscribed <- (map["subscribed"], JSONTransformer.bigint)
             invested <- (map["invested"], JSONTransformer.bigint)
+            locked <- (map["locked"], JSONTransformer.bigint)
         }
     }
 
