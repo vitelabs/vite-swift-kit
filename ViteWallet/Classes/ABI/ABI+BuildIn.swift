@@ -262,7 +262,7 @@ extension ABI.BuildIn {
                                           subscribeDays: Int,
                                           expireDays: Int) -> Data {
         return getData(type: .defiNewLoan, values: [tokenId,
-                                                    String(UInt64(dayRate * 100000000)),
+                                                    String(UInt64(dayRate * 1000000)),
                                                     shareAmount.description,
                                                     String(shares),
                                                     String(subscribeDays),

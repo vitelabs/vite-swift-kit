@@ -23,6 +23,7 @@ public struct DefiBalanceInfo: Mappable {
     public struct BaseAccount: Mappable {
 
         public fileprivate(set) var available = Amount()
+        public fileprivate(set) var subscribing = Amount()
         public fileprivate(set) var subscribed = Amount()
         public fileprivate(set) var invested = Amount()
         public fileprivate(set) var locked = Amount()
@@ -33,6 +34,7 @@ public struct DefiBalanceInfo: Mappable {
 
         public mutating func mapping(map: Map) {
             available <- (map["available"], JSONTransformer.bigint)
+            subscribed <- (map["subscribing"], JSONTransformer.bigint)
             subscribed <- (map["subscribed"], JSONTransformer.bigint)
             invested <- (map["invested"], JSONTransformer.bigint)
             locked <- (map["locked"], JSONTransformer.bigint)
@@ -60,7 +62,7 @@ public struct DefiBalanceInfo: Mappable {
     public init?(map: Map) { }
 
     public mutating func mapping(map: Map) {
-        token <- map["tokenInfo"]
+        token <- map["token"]
         baseAccount <- map["baseAccount"]
         loanAccount <- map["loanAccount"]
     }
