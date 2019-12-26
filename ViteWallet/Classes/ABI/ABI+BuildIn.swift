@@ -256,13 +256,13 @@ extension ABI.BuildIn {
     }
 
     public static func getDeFiNewLoanData(tokenId: ViteTokenId,
-                                          dayRate: Double,
+                                          dayRate: Decimal,
                                           shareAmount: Amount,
-                                          shares: Int,
-                                          subscribeDays: Int,
-                                          expireDays: Int) -> Data {
+                                          shares: UInt64,
+                                          subscribeDays: UInt64,
+                                          expireDays: UInt64) -> Data {
         return getData(type: .defiNewLoan, values: [tokenId,
-                                                    String(UInt64(dayRate * 1000000)),
+                                                    (dayRate * 1000000).description,
                                                     shareAmount.description,
                                                     String(shares),
                                                     String(subscribeDays),
