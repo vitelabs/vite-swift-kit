@@ -8,14 +8,14 @@
 import Foundation
 import ObjectMapper
 
-enum DeFiLoanStatus: Int {
-    case invalid = 0
+public enum DeFiLoanStatus: Int {
+//    case invalid = 0
     case raising = 1
     case raised = 2
-    case dueAndWaitToRefund = 3
-    case dueAndrefunded = 4
+//    case dueAndWaitToRefund = 3
+//    case dueAndrefunded = 4
     case failedAndWaitToRefund = 5
-    case failedAndRefunded = 6
+//    case failedAndRefunded = 6
 }
 
 public struct DefiBalanceInfo: Mappable {
@@ -74,20 +74,21 @@ public struct DefiBalanceInfo: Mappable {
 
 public struct DeFiLoanInfo: Mappable {
 
-    fileprivate(set) var id: Int = 0
-    fileprivate(set) var address: ViteAddress = ""
-    fileprivate(set) var token: ViteAddress = ""
-    fileprivate(set) var shareAmount: Amount = Amount()
-    fileprivate(set) var shares: Int = 0
-    fileprivate(set) var dayRate: Double = 0
-    fileprivate(set) var subscribeDays: Int = 0
-    fileprivate(set) var expireDays: Int = 0
-    fileprivate(set) var expireHeight: Int = 0
-    fileprivate(set) var invested: String = ""
-    fileprivate(set) var status: DeFiLoanStatus = .invalid
-    fileprivate(set) var created: Date = Date()
-    fileprivate(set) var startTime: Date = Date()
-    fileprivate(set) var updated: Date = Date()
+    public fileprivate(set) var id: Int = 0
+    public fileprivate(set) var address: ViteAddress = ""
+    public fileprivate(set) var token: ViteAddress = ""
+    public fileprivate(set) var shareAmount: Amount = Amount()
+    public fileprivate(set) var shares: Int = 0
+    public fileprivate(set) var dayRate: Double = 0
+    public fileprivate(set) var subscribeDays: Int = 0
+    public fileprivate(set) var expireDays: Int = 0
+    public fileprivate(set) var expireHeight: Int = 0
+    public fileprivate(set) var subscribedShares: Int = 0
+    public fileprivate(set) var invested: Amount = 0
+    public fileprivate(set) var status: DeFiLoanStatus = .raising
+    public fileprivate(set) var created: Date = Date()
+    public fileprivate(set) var startTime: Date = Date()
+    public fileprivate(set) var updated: Date = Date()
 
     public init?(map: Map) { }
 
@@ -101,7 +102,8 @@ public struct DeFiLoanInfo: Mappable {
         subscribeDays <- map["subscribeDays"]
         expireDays <- map["expireDays"]
         expireHeight <- map["expireHeight"]
-        invested <- map["invested"]
+        subscribedShares <- map["subscribedShares"]
+        invested <- (map["invested"], JSONTransformer.bigint)
         status <- map["status"]
         created <- (map["created"], JSONTransformer.timestamp)
         startTime <- (map["startTime"], JSONTransformer.timestamp)
@@ -117,7 +119,7 @@ public struct DefiSubscriptionInfo: Mappable {
     fileprivate(set) var token: String = ""
     fileprivate(set) var shareAmount: Amount = Amount()
     fileprivate(set) var shares: Int = 0
-    fileprivate(set) var status: DeFiLoanStatus = .invalid
+    fileprivate(set) var status: DeFiLoanStatus = .raising
     fileprivate(set) var created: Date = Date()
     fileprivate(set) var updated: Date = Date()
 
