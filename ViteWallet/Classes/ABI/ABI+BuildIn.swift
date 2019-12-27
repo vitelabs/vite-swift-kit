@@ -54,7 +54,7 @@ public extension ABI {
         case defiCancelLoan = "{\"type\":\"function\",\"name\":\"CancelLoan\",\"inputs\":[{\"name\":\"loanId\",\"type\":\"uint64\"}]}"
         case defiSubscribe = "{\"type\":\"function\",\"name\":\"Subscribe\",\"inputs\":[{\"name\":\"loanId\",\"type\":\"uint64\"},{\"name\":\"shares\",\"type\":\"int32\"}]}"
         case defiRegisterSBP = "{\"type\":\"function\",\"name\":\"RegisterSBP\",\"inputs\":[{\"name\":\"loadId\",\"type\":\"uint64\"},{\"name\":\"amount\",\"type\":\"uint256\"},{\"name\":\"sbpName\",\"type\":\"string\"},{\"name\":\"blockProducingAddress\",\"type\":\"address\"},{\"name\":\"rewardWithdrawAddress\",\"type\":\"address\"}]}"
-        case defiUpdateSBPRegistration = "{\"type\":\"function\",\"name\":\"UpdateSBPRegistration\",\"inputs\":[{\"name\":\"investId\",\"type\":\"uint64\"},{\"name\":\"operationCode\",\"type\":\"uint8\"},{\"name\":\"sbpName\",\"type\":\"string\"},{\"name\":\"blockProducingAddress\",\"type\":\"address\"},{\"name\":\"rewardWithdrawAddress\",\"type\":\"address\"}]}"
+        case defiUpdateSBPRegistration = "{\"type\":\"function\",\"name\":\"UpdateSBPRegistration\",\"inputs\":[{\"name\":\"investId\",\"type\":\"uint64\"},{\"name\":\"operationCode\",\"type\":\"uint8\"},{\"name\":\"blockProducingAddress\",\"type\":\"address\"},{\"name\":\"rewardWithdrawAddress\",\"type\":\"address\"}]}"
         case defiInvest = "{\"type\":\"function\",\"name\":\"Invest\",\"inputs\":[{\"name\":\"loadId\",\"type\":\"uint64\"},{\"name\":\"bizType\",\"type\":\"uint8\"},{\"name\":\"amount\",\"type\":\"uint256\"},{\"name\":\"beneficiary\",\"type\":\"address\"}]}"
         case defiCancelInvest = "{\"type\":\"function\",\"name\":\"CancelInvest\",\"inputs\":[{\"name\":\"investId\",\"type\":\"uint64\"}]}"
 
@@ -296,7 +296,6 @@ extension ABI.BuildIn {
                                                         rewardWithdrawAddress: ViteAddress) -> Data {
         return getData(type: .defiUpdateSBPRegistration, values: [String(investId),
                                                                   String(operationCode),
-                                                                  sbpName,
                                                                   blockProducingAddress,
                                                                   rewardWithdrawAddress])
     }
