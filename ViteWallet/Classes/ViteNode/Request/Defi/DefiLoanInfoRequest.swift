@@ -9,7 +9,7 @@ import Foundation
 import JSONRPCKit
 
 public struct DefiLoanInfoRequest: JSONRPCKit.Request {
-    public typealias Response = DeFiLoanInfo?
+    public typealias Response = DeFiLoanInfo
 
     let id: Int
 
@@ -26,9 +26,7 @@ public struct DefiLoanInfoRequest: JSONRPCKit.Request {
     }
 
     public func response(from resultObject: Any) throws -> Response {
-        if let _ = resultObject as? NSNull {
-            return nil
-        } else if let response = resultObject as? [String: Any] {
+        if let response = resultObject as? [String: Any] {
             if let ret = DeFiLoanInfo(JSON: response) {
                 return ret
             } else {

@@ -20,11 +20,11 @@ public extension ViteNode.defi.info {
         return DefiAccountInfoRequest(address: address, tokenId: tokenId).defaultProviderPromise
     }
 
-    static func getDefiLoanInfo(id: Int) -> Promise<DeFiLoanInfo?> {
+    static func getDefiLoanInfo(id: Int) -> Promise<DeFiLoanInfo> {
         return DefiLoanInfoRequest(id: id).defaultProviderPromise
     }
 
-    static func getDefiSubscriptionInfo(id: Int) -> Promise<DefiSubscriptionInfo?> {
+    static func getDefiSubscriptionInfo(id: Int) -> Promise<DefiSubscriptionInfo> {
         return DefiSubscriptionInfoRequest(id: id).defaultProviderPromise
     }
 }

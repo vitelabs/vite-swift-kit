@@ -39,7 +39,7 @@ class DexTests: XCTestCase {
                                                  tokenId: tokenId,
                                                  amount: amount,
                                                  fee: nil,
-                                                 data: ABI.BuildIn.getDexDeposit())
+                                                 data: ABI.BuildIn.getDexDepositData())
                     .then { (_) -> Promise<AccountBlock> in
                         return Box.f.afterLatestAccountBlockConfirmed(address: address)
                 }
@@ -52,7 +52,7 @@ class DexTests: XCTestCase {
                                                  tokenId: tokenId,
                                                  amount: 0,
                                                  fee: nil,
-                                                 data: ABI.BuildIn.getDexWithdraw(tokenId: tokenId, amount: amount))
+                                                 data: ABI.BuildIn.getDexWithdrawData(tokenId: tokenId, amount: amount))
                     .then { (_) -> Promise<AccountBlock> in
                         return Box.f.afterLatestAccountBlockConfirmed(address: address)
                 }

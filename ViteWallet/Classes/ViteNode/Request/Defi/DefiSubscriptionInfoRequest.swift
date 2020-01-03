@@ -9,7 +9,7 @@ import Foundation
 import JSONRPCKit
 
 public struct DefiSubscriptionInfoRequest: JSONRPCKit.Request {
-    public typealias Response = DefiSubscriptionInfo?
+    public typealias Response = DefiSubscriptionInfo
 
     let id: Int
 
@@ -26,9 +26,7 @@ public struct DefiSubscriptionInfoRequest: JSONRPCKit.Request {
     }
 
     public func response(from resultObject: Any) throws -> Response {
-        if let _ = resultObject as? NSNull {
-            return nil
-        } else if let response = resultObject as? [String: Any] {
+        if let response = resultObject as? [String: Any] {
             if let ret = DefiSubscriptionInfo(JSON: response) {
                 return ret
             } else {
