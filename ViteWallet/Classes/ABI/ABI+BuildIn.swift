@@ -1,5 +1,5 @@
 //
-//  ABI+Extension.swift
+//  ABI+BuildIn.swift
 //  ViteWallet
 //
 //  Created by Stone on 2019/6/3.
@@ -11,43 +11,54 @@ public extension ABI {
 
     enum BuildIn: String, CaseIterable {
 
-        case register = "{\"type\":\"function\",\"name\":\"Register\", \"inputs\":[{\"name\":\"gid\",\"type\":\"gid\"},{\"name\":\"name\",\"type\":\"string\"},{\"name\":\"nodeAddr\",\"type\":\"address\"}]}"
-        case registerUpdate = "{\"type\":\"function\",\"name\":\"UpdateRegistration\",\"inputs\":[{\"name\":\"gid\",\"type\":\"gid\"},{\"Name\":\"name\",\"type\":\"string\"},{\"name\":\"nodeAddr\",\"type\":\"address\"}]}"
-        case cancelRegister = "{\"type\":\"function\",\"name\":\"CancelRegister\",\"inputs\":[{\"name\":\"gid\",\"type\":\"gid\"},{\"name\":\"name\",\"type\":\"string\"}]}"
-        case extractReward = "{\"type\":\"function\",\"name\":\"Reward\",\"inputs\":[{\"name\":\"gid\",\"type\":\"gid\"},{\"name\":\"name\",\"type\":\"string\"},{\"name\":\"beneficialAddr\",\"type\":\"address\"}]}"
-
-        case vote = "{\"type\":\"function\",\"name\":\"Vote\", \"inputs\":[{\"name\":\"gid\",\"type\":\"gid\"},{\"name\":\"nodeName\",\"type\":\"string\"}]}"
-        case cancelVote = "{\"type\":\"function\",\"name\":\"CancelVote\",\"inputs\":[{\"name\":\"gid\",\"type\":\"gid\"}]}"
-        case pledge = "{\"type\":\"function\",\"name\":\"Pledge\", \"inputs\":[{\"name\":\"beneficial\",\"type\":\"address\"}]}"
-        case cancelPledge = "{\"type\":\"function\",\"name\":\"CancelPledge\",\"inputs\":[{\"name\":\"beneficial\",\"type\":\"address\"},{\"name\":\"amount\",\"type\":\"uint256\"}]}"
-
-        case coinMint = "{\"type\":\"function\",\"name\":\"Mint\",\"inputs\":[{\"name\":\"isReIssuable\",\"type\":\"bool\"},{\"name\":\"tokenName\",\"type\":\"string\"},{\"name\":\"tokenSymbol\",\"type\":\"string\"},{\"name\":\"totalSupply\",\"type\":\"uint256\"},{\"name\":\"decimals\",\"type\":\"uint8\"},{\"name\":\"maxSupply\",\"type\":\"uint256\"},{\"name\":\"ownerBurnOnly\",\"type\":\"bool\"}]}"
-        case coinIssue = "{\"type\":\"function\",\"name\":\"Issue\",\"inputs\":[{\"name\":\"tokenId\",\"type\":\"tokenId\"},{\"name\":\"amount\",\"type\":\"uint256\"},{\"name\":\"beneficial\",\"type\":\"address\"}]}"
-        case coinBurn = "{\"type\":\"function\",\"name\":\"Burn\",\"inputs\":[]}"
-        case coinTransferOwner = "{\"type\":\"function\",\"name\":\"TransferOwner\",\"inputs\":[{\"name\":\"tokenId\",\"type\":\"tokenId\"},{\"name\":\"newOwner\",\"type\":\"address\"}]}"
-        case coinChangeTokenType = "{\"type\":\"function\",\"name\":\"ChangeTokenType\",\"inputs\":[{\"name\":\"tokenId\",\"type\":\"tokenId\"}]}"
-
-        case dexDeposit = "{\"type\":\"function\",\"name\":\"DexFundUserDeposit\",\"inputs\":[]}"
-        case dexWithdraw = "{\"type\":\"function\",\"name\":\"DexFundUserWithdraw\",\"inputs\":[{\"name\":\"token\",\"type\":\"tokenId\"},{\"name\":\"amount\",\"type\":\"uint256\"}]}"
-        case dexPost = "{\"type\":\"function\",\"name\":\"DexFundNewOrder\",\"inputs\":[{\"name\":\"tradeToken\",\"type\":\"tokenId\"},{\"name\":\"quoteToken\",\"type\":\"tokenId\"},{\"name\":\"side\",\"type\":\"bool\"},{\"name\":\"orderType\",\"type\":\"uint8\"},{\"name\":\"price\",\"type\":\"string\"},{\"name\":\"quantity\",\"type\":\"uint256\"}]}"
-        case dexCancel = "{\"type\":\"function\",\"name\":\"DexTradeCancelOrder\",\"inputs\":[{\"name\":\"orderId\",\"type\":\"bytes\"}]}"
-
-        case dexNewInviter = "{\"type\":\"function\",\"name\":\"DexFundNewInviter\",\"inputs\":[]}"
-        case dexBindInviter = "{\"type\":\"function\",\"name\":\"DexFundBindInviteCode\",\"inputs\":[{\"name\":\"code\",\"type\":\"uint32\"}]}"
-
-        case dexTransferTokenOwner = "{\"type\":\"function\",\"name\":\"DexFundTransferTokenOwner\",\"inputs\":[{\"name\":\"token\",\"type\":\"tokenId\"},{\"name\":\"owner\",\"type\":\"address\"}]}"
-        case dexNewMarket = "{\"type\":\"function\",\"name\":\"DexFundNewMarket\",\"inputs\":[{\"name\":\"tradeToken\",\"type\":\"tokenId\"},{\"name\":\"quoteToken\",\"type\":\"tokenId\"}]}"
-        case dexMarketConfig = "{\"type\":\"function\",\"name\":\"DexFundMarketOwnerConfig\",\"inputs\":[{\"name\":\"operationCode\",\"type\":\"uint8\"},{\"name\":\"tradeToken\",\"type\":\"tokenId\"},{\"name\":\"quoteToken\",\"type\":\"tokenId\"},{\"name\":\"owner\",\"type\":\"address\"},{\"name\":\"takerFeeRate\",\"type\":\"int32\"},{\"name\":\"makerFeeRate\",\"type\":\"int32\"},{\"name\":\"stopMarket\",\"type\":\"bool\"}]}"
-
-        case dexStakingAsMining = "{\"type\":\"function\",\"name\":\"DexFundPledgeForVx\",\"inputs\":[{\"name\":\"actionType\",\"type\":\"uint8\"},{\"name\":\"amount\",\"type\":\"uint256\"}]}"
-        case dexVip = "{\"type\":\"function\",\"name\":\"DexFundPledgeForVip\",\"inputs\":[{\"name\":\"actionType\",\"type\":\"uint8\"}]}"
-
+        // MARK: SBP
+        case old_register = "{\"type\":\"function\",\"name\":\"Register\", \"inputs\":[{\"name\":\"gid\",\"type\":\"gid\"},{\"name\":\"name\",\"type\":\"string\"},{\"name\":\"nodeAddr\",\"type\":\"address\"}]}"
+        case old_registerUpdate = "{\"type\":\"function\",\"name\":\"UpdateRegistration\",\"inputs\":[{\"name\":\"gid\",\"type\":\"gid\"},{\"Name\":\"name\",\"type\":\"string\"},{\"name\":\"nodeAddr\",\"type\":\"address\"}]}"
+        case old_cancelRegister = "{\"type\":\"function\",\"name\":\"CancelRegister\",\"inputs\":[{\"name\":\"gid\",\"type\":\"gid\"},{\"name\":\"name\",\"type\":\"string\"}]}"
+        case old_extractReward = "{\"type\":\"function\",\"name\":\"Reward\",\"inputs\":[{\"name\":\"gid\",\"type\":\"gid\"},{\"name\":\"name\",\"type\":\"string\"},{\"name\":\"beneficialAddr\",\"type\":\"address\"}]}"
         case registerSBP = "{\"type\":\"function\",\"name\":\"RegisterSBP\", \"inputs\":[{\"name\":\"sbpName\",\"type\":\"string\"},{\"name\":\"blockProducingAddress\",\"type\":\"address\"},{\"name\":\"rewardWithdrawAddress\",\"type\":\"address\"}]}"
-        case voteForSBP = "{\"type\":\"function\",\"name\":\"VoteForSBP\", \"inputs\":[{\"name\":\"sbpName\",\"type\":\"string\"}]}"
-        case CancelSBPVoting = " {\"type\":\"function\",\"name\":\"CancelSBPVoting\",\"inputs\":[]}"
-        case StakeForQuota = "{\"type\":\"function\",\"name\":\"StakeForQuota\", \"inputs\":[{\"name\":\"beneficiary\",\"type\":\"address\"}]}"
-        case CancelQuotaStaking = "{\"type\":\"function\",\"name\":\"CancelQuotaStaking\",\"inputs\":[{\"name\":\"id\",\"type\":\"bytes32\"}]}"
+        case updateSBPBlockProducingAddress = "{\"type\":\"function\",\"name\":\"UpdateSBPBlockProducingAddress\", \"inputs\":[{\"name\":\"sbpName\",\"type\":\"string\"},{\"name\":\"blockProducingAddress\",\"type\":\"address\"}]}"
+        case updateSBPRewardWithdrawAddress = "{\"type\":\"function\",\"name\":\"UpdateSBPRewardWithdrawAddress\", \"inputs\":[{\"name\":\"sbpName\",\"type\":\"string\"},{\"name\":\"rewardWithdrawAddress\",\"type\":\"address\"}]}"
+        case revokeSBP = "{\"type\":\"function\",\"name\":\"RevokeSBP\",\"inputs\":[{\"name\":\"sbpName\",\"type\":\"string\"}]}"
+        case withdrawSBPReward = "{\"type\":\"function\",\"name\":\"WithdrawSBPReward\",\"inputs\":[{\"name\":\"sbpName\",\"type\":\"string\"},{\"name\":\"receiveAddress\",\"type\":\"address\"}]}"
 
+        // MARK: Vote
+        case old_vote = "{\"type\":\"function\",\"name\":\"Vote\", \"inputs\":[{\"name\":\"gid\",\"type\":\"gid\"},{\"name\":\"nodeName\",\"type\":\"string\"}]}"
+        case old_cancelVote = "{\"type\":\"function\",\"name\":\"CancelVote\",\"inputs\":[{\"name\":\"gid\",\"type\":\"gid\"}]}"
+        case voteForSBP = "{\"type\":\"function\",\"name\":\"VoteForSBP\", \"inputs\":[{\"name\":\"sbpName\",\"type\":\"string\"}]}"
+        case cancelSBPVoting = " {\"type\":\"function\",\"name\":\"CancelSBPVoting\",\"inputs\":[]}"
+
+        // MARK: Stake
+        case old_pledge = "{\"type\":\"function\",\"name\":\"Pledge\", \"inputs\":[{\"name\":\"beneficial\",\"type\":\"address\"}]}"
+        case old_cancelPledge = "{\"type\":\"function\",\"name\":\"CancelPledge\",\"inputs\":[{\"name\":\"beneficial\",\"type\":\"address\"},{\"name\":\"amount\",\"type\":\"uint256\"}]}"
+        case old_cancelStake = "{\"type\":\"function\",\"name\":\"CancelStake\",\"inputs\":[{\"name\":\"beneficiary\",\"type\":\"address\"},{\"name\":\"amount\",\"type\":\"uint256\"}]}"
+        case stakeForQuota = "{\"type\":\"function\",\"name\":\"StakeForQuota\", \"inputs\":[{\"name\":\"beneficiary\",\"type\":\"address\"}]}"
+        case cancelQuotaStaking = "{\"type\":\"function\",\"name\":\"CancelQuotaStaking\",\"inputs\":[{\"name\":\"id\",\"type\":\"bytes32\"}]}"
+
+        // MARK: Coin
+        case coinIssueToken = "{\"type\":\"function\",\"name\":\"IssueToken\",\"inputs\":[{\"name\":\"isReIssuable\",\"type\":\"bool\"},{\"name\":\"tokenName\",\"type\":\"string\"},{\"name\":\"tokenSymbol\",\"type\":\"string\"},{\"name\":\"totalSupply\",\"type\":\"uint256\"},{\"name\":\"decimals\",\"type\":\"uint8\"},{\"name\":\"maxSupply\",\"type\":\"uint256\"},{\"name\":\"isOwnerBurnOnly\",\"type\":\"bool\"}]}"
+        case coinReIssue = "{\"type\":\"function\",\"name\":\"ReIssue\",\"inputs\":[{\"name\":\"tokenId\",\"type\":\"tokenId\"},{\"name\":\"amount\",\"type\":\"uint256\"},{\"name\":\"receiveAddress\",\"type\":\"address\"}]}"
+        case coinBurn = "{\"type\":\"function\",\"name\":\"Burn\",\"inputs\":[]}"
+        case coinTransferOwnership = "{\"type\":\"function\",\"name\":\"TransferOwnership\",\"inputs\":[{\"name\":\"tokenId\",\"type\":\"tokenId\"},{\"name\":\"newOwner\",\"type\":\"address\"}]}"
+        case coinChangeTokenType = "{\"type\":\"function\",\"name\":\"DisableReIssue\",\"inputs\":[{\"name\":\"tokenId\",\"type\":\"tokenId\"}]}"
+
+        // MARK: Dex
+        case dexDeposit = "{\"type\":\"function\",\"name\":\"Deposit\", \"inputs\":[]}"
+        case dexWithdraw = "{\"type\":\"function\",\"name\":\"Withdraw\", \"inputs\":[{\"name\":\"token\",\"type\":\"tokenId\"},{\"name\":\"amount\",\"type\":\"uint256\"}]}"
+        case dexPlaceOrder = "{\"type\":\"function\",\"name\":\"PlaceOrder\", \"inputs\":[{\"name\":\"tradeToken\",\"type\":\"tokenId\"}, {\"name\":\"quoteToken\",\"type\":\"tokenId\"}, {\"name\":\"side\", \"type\":\"bool\"}, {\"name\":\"orderType\", \"type\":\"uint8\"}, {\"name\":\"price\", \"type\":\"string\"}, {\"name\":\"quantity\", \"type\":\"uint256\"}]}"
+        case dexCancelOrder = "{\"type\":\"function\",\"name\":\"CancelOrder\", \"inputs\":[{\"name\":\"orderId\",\"type\":\"bytes\"}]}"
+
+        case dexCreateInviteCode = "{\"type\":\"function\",\"name\":\"CreateInviteCode\", \"inputs\":[]}"
+        case dexBindInviteCode = "{\"type\":\"function\",\"name\":\"BindInviteCode\", \"inputs\":[{\"name\":\"code\",\"type\":\"uint32\"}]}"
+
+        case dexTransferTokenOwnership = "{\"type\":\"function\",\"name\":\"TransferTokenOwnership\", \"inputs\":[{\"name\":\"token\",\"type\":\"tokenId\"}, {\"name\":\"newOwner\",\"type\":\"address\"}]}"
+        case dexOpenNewMarket = "{\"type\":\"function\",\"name\":\"OpenNewMarket\", \"inputs\":[{\"name\":\"tradeToken\",\"type\":\"tokenId\"}, {\"name\":\"quoteToken\",\"type\":\"tokenId\"}]}"
+        case dexMarketAdminConfig = "{\"type\":\"function\",\"name\":\"MarketAdminConfig\", \"inputs\":[{\"name\":\"operationCode\",\"type\":\"uint8\"},{\"name\":\"tradeToken\",\"type\":\"tokenId\"},{\"name\":\"quoteToken\",\"type\":\"tokenId\"},{\"name\":\"marketOwner\",\"type\":\"address\"},{\"name\":\"takerFeeRate\",\"type\":\"int32\"},{\"name\":\"makerFeeRate\",\"type\":\"int32\"},{\"name\":\"stopMarket\",\"type\":\"bool\"}]}"
+
+        case dexStakeForMining = "{\"type\":\"function\",\"name\":\"StakeForMining\", \"inputs\":[{\"name\":\"actionType\",\"type\":\"uint8\"}, {\"name\":\"amount\",\"type\":\"uint256\"}]}"
+        case dexStakeForVIP = "{\"type\":\"function\",\"name\":\"StakeForVIP\", \"inputs\":[{\"name\":\"actionType\",\"type\":\"uint8\"}]}"
+
+        // MARK: DeFi
         case defiDeposit = "{\"type\":\"function\",\"name\":\"Deposit\",\"inputs\":[]}"
         case defiWithdraw = "{\"type\":\"function\",\"name\":\"Withdraw\",\"inputs\":[{\"name\":\"token\",\"type\":\"tokenId\"},{\"name\":\"amount\",\"type\":\"uint256\"}]}"
         case defiNewLoan = "{\"type\":\"function\",\"name\":\"NewLoan\",\"inputs\":[{\"name\":\"token\",\"type\":\"tokenId\"},{\"name\":\"dayRate\",\"type\":\"int32\"},{\"name\":\"shareAmount\",\"type\":\"uint256\"},{\"name\":\"shares\",\"type\":\"int32\"},{\"name\":\"subscribeDays\",\"type\":\"int32\"},{\"name\":\"expireDays\",\"type\":\"int32\"}]}"
@@ -69,60 +80,88 @@ public extension ABI {
 
         public var ut: Double {
             switch self {
-            case .register:
+            case .old_register:
                  return 8
-            case .registerSBP:
+            case .old_registerUpdate:
                 return 8
-            case .registerUpdate:
-                return 8
-            case .cancelRegister:
+            case .old_cancelRegister:
                 return 6
-            case .extractReward:
+            case .old_extractReward:
                 return 7
 
-            case .vote, .voteForSBP:
+
+            case .registerSBP:
+                return 8
+            case .updateSBPBlockProducingAddress:
+                return 8
+            case .updateSBPRewardWithdrawAddress:
+                return 8
+            case .revokeSBP:
+                return 6
+            case .withdrawSBPReward:
+                return 7
+
+
+            case .old_vote:
                 return 4
-            case .cancelVote, .CancelSBPVoting:
+            case .old_cancelVote:
                 return 2.5
-            case .pledge, .StakeForQuota:
+            case .voteForSBP:
+                return 4
+            case .cancelSBPVoting:
+                return 2.5
+
+
+            case .old_pledge:
                 return 5
-            case .cancelPledge, .CancelQuotaStaking:
+            case .old_cancelPledge:
+                return 5
+            case .old_cancelStake:
+                return 5
+            case .stakeForQuota:
+                return 5
+            case .cancelQuotaStaking:
                 return 5
 
-            case .coinMint:
+
+            case .coinIssueToken:
                 return 9
-            case .coinIssue:
+            case .coinReIssue:
                 return 6
             case .coinBurn:
                 return 5.5
-            case .coinTransferOwner:
+            case .coinTransferOwnership:
                 return 6.5
             case .coinChangeTokenType:
                 return 5.5
+
+
             case .dexDeposit:
                 return 1.0130
             case .dexWithdraw:
                 return 1.2202
-            case .dexPost:
+            case .dexPlaceOrder:
                 return 1.8419
-            case .dexCancel:
+            case .dexCancelOrder:
                 return 1.3238
 
-            case .dexNewInviter:
+            case .dexCreateInviteCode:
                 return 1.0130
-            case .dexBindInviter:
+            case .dexBindInviteCode:
                 return 1.1166
 
-            case .dexTransferTokenOwner:
+            case .dexTransferTokenOwnership:
                 return 1.2202
-            case .dexNewMarket:
+            case .dexOpenNewMarket:
                 return 1.2202
-            case .dexMarketConfig:
+            case .dexMarketAdminConfig:
                 return 1.7383
-            case .dexStakingAsMining:
+            case .dexStakeForMining:
                 return 1.2202
-            case .dexVip:
+            case .dexStakeForVIP:
                 return 1.1166
+
+
             case .defiDeposit:
                 return 1.111111111111111
             case .defiWithdraw:
@@ -146,18 +185,22 @@ public extension ABI {
 
         public var toAddress: ViteAddress {
             switch self {
-            case .register,.registerSBP, .registerUpdate, .cancelRegister, .extractReward, .vote, .cancelVote, .voteForSBP, .CancelSBPVoting:
+            case .old_register, .old_registerUpdate, .old_cancelRegister, .old_extractReward,
+                 .registerSBP, .updateSBPBlockProducingAddress, .updateSBPRewardWithdrawAddress, .revokeSBP, .withdrawSBPReward,
+                 .old_vote, .old_cancelVote,
+                 .voteForSBP, .cancelSBPVoting:
                 return ViteWalletConst.ContractAddress.consensus.address
-            case .pledge, .cancelPledge, .StakeForQuota, .CancelQuotaStaking:
+            case .old_pledge, .old_cancelPledge,
+                 .old_cancelStake, .stakeForQuota, .cancelQuotaStaking:
                 return ViteWalletConst.ContractAddress.pledge.address
-            case .coinMint, .coinIssue, .coinBurn, .coinTransferOwner, .coinChangeTokenType:
+            case .coinIssueToken, .coinReIssue, .coinBurn, .coinTransferOwnership, .coinChangeTokenType:
                 return ViteWalletConst.ContractAddress.coin.address
-                case .dexDeposit, .dexWithdraw, .dexPost,
-                     .dexNewInviter, .dexBindInviter,
-                     .dexTransferTokenOwner, .dexNewMarket, .dexMarketConfig,
-                     .dexStakingAsMining, .dexVip:
+            case .dexDeposit, .dexWithdraw, .dexPlaceOrder,
+                     .dexCreateInviteCode, .dexBindInviteCode,
+                     .dexTransferTokenOwnership, .dexOpenNewMarket, .dexMarketAdminConfig,
+                     .dexStakeForMining, .dexStakeForVIP:
                 return ViteWalletConst.ContractAddress.dexFund.address
-            case .dexCancel:
+            case .dexCancelOrder:
                 return ViteWalletConst.ContractAddress.dexTrade.address
             case .defiDeposit, .defiWithdraw, .defiNewLoan, .defiCancelLoan, .defiSubscribe,
                  .defiRegisterSBP, .defiUpdateSBPRegistration, .defiInvest, .defiCancelInvest:
@@ -168,14 +211,14 @@ public extension ABI {
         fileprivate static let toAddressAndDataPrefixMap: [String: BuildIn] =
             BuildIn.allCases.reduce([String: BuildIn]()) { (r, t) -> [String: BuildIn] in
                 var ret = r
-                let key = "\(t.toAddress)_\(t.encodedFunctionSignature.toHexString())"
+                let key = "\(t.toAddress).\(t.encodedFunctionSignature.toHexString())"
                 ret[key] = t
                 return ret
         }
 
         public static func type(data: Data?, toAddress: ViteAddress) -> (BuildIn, [ABIParameterValue])? {
             if let data = data, data.count >= 4,
-                let type = toAddressAndDataPrefixMap["\(toAddress)_\(data[0..<4].toHexString())"] {
+                let type = toAddressAndDataPrefixMap["\(toAddress).\(data[0..<4].toHexString())"] {
                 do {
                     let values = try ABI.Decoding.decodeParameters(data, abiString: type.rawValue)
                     return (type, values)
@@ -187,52 +230,7 @@ public extension ABI {
             }
         }
 
-//        public static func getVoteData(gid: ViteGId, name: String) -> Data {
-//            return getData(type: .vote, values: [gid, name])
-//        }
-
-        public static func getVoteForSBPData(name: String) -> Data {
-            return getData(type: .voteForSBP, values: [name])
-        }
-
-//        public static func getCancelVoteData(gid: ViteGId) -> Data {
-//            return getData(type: .cancelVote, values: [gid])
-//        }
-
-        public static func getCancelSBPVotingData() -> Data {
-            return getData(type: .CancelSBPVoting, values: [])
-        }
-
-//        public static func getPledgeData(beneficialAddress: ViteAddress) -> Data {
-//            return getData(type: .pledge, values: [beneficialAddress])
-//        }
-
-        public static func getStakeForQuota(beneficialAddress: ViteAddress) -> Data {
-            return getData(type: .StakeForQuota, values: [beneficialAddress])
-        }
-
-        public static func getCancelPledgeData(beneficialAddress: ViteAddress, amount: Amount) -> Data {
-            return getData(type: .cancelPledge, values: [beneficialAddress, amount.description])
-        }
-
-        public static func getCancelQuotaStakingData(id: String) -> Data {
-            return getData(type: .CancelQuotaStaking, values: [id])
-        }
-
-        public static func getDexDepositData() -> Data {
-            return getData(type: .dexDeposit, values: [])
-        }
-
-        public static func getDexWithdrawData(tokenId: ViteTokenId, amount: Amount) -> Data {
-            return getData(type: .dexWithdraw, values: [tokenId, amount.description])
-        }
-
-        public static func getDexBindInviterData(code: String) -> Data {
-            return getData(type: .dexBindInviter, values: [code])
-        }
-
-
-        private static func getData(type: BuildIn, values: [String]) -> Data {
+        public static func getData(type: BuildIn, values: [String]) -> Data {
             do {
                 let json = try JSONEncoder().encode(values)
                 let valuesString = String(bytes: json, encoding: .utf8) ?? ""
@@ -243,77 +241,5 @@ public extension ABI {
         }
     }
 }
-
-extension ABI.BuildIn {
-    //MARK: DeFi
-
-    public static func getDeFiDepositData() -> Data {
-        return getData(type: .defiDeposit, values: [])
-    }
-
-    public static func getDeFiWithdrawData(tokenId: ViteTokenId, amount: Amount) -> Data {
-        return getData(type: .defiWithdraw, values: [tokenId, amount.description])
-    }
-
-    public static func getDeFiNewLoanData(tokenId: ViteTokenId,
-                                          dayRate: Decimal,
-                                          shareAmount: Amount,
-                                          shares: UInt64,
-                                          subscribeDays: UInt64,
-                                          expireDays: UInt64) -> Data {
-        return getData(type: .defiNewLoan, values: [tokenId,
-                                                    (dayRate * 1000000).description,
-                                                    shareAmount.description,
-                                                    String(shares),
-                                                    String(subscribeDays),
-                                                    String(expireDays)])
-    }
-
-    public static func getDeFiCancelLoanData(loanId: UInt64) -> Data {
-        return getData(type: .defiCancelLoan, values: [String(loanId)])
-    }
-
-    public static func getDeFiSubscribeData(loanId: UInt64, shares: UInt64) -> Data {
-        return getData(type: .defiSubscribe, values: [String(loanId), String(shares)])
-    }
-
-    public static func getDeFiRegisterSBPData(loanId: UInt64,
-                                              amount: Amount,
-                                              sbpName: String,
-                                              blockProducingAddress: ViteAddress,
-                                              rewardWithdrawAddress: ViteAddress) -> Data {
-        return getData(type: .defiRegisterSBP, values: [String(loanId),
-                                                        amount.description,
-                                                        sbpName,
-                                                        blockProducingAddress,
-                                                        rewardWithdrawAddress])
-    }
-
-    public static func getDeFiUpdateSBPRegistrationData(investId: UInt64,
-                                                        operationCode: UInt8,
-                                                        sbpName: String,
-                                                        blockProducingAddress: ViteAddress,
-                                                        rewardWithdrawAddress: ViteAddress) -> Data {
-        return getData(type: .defiUpdateSBPRegistration, values: [String(investId),
-                                                                  String(operationCode),
-                                                                  blockProducingAddress,
-                                                                  rewardWithdrawAddress])
-    }
-
-    public static func getDeFiInvestData(loanId: UInt64,
-                                         bizType: UInt8,
-                                         amount: Amount,
-                                         beneficiaryAddress: ViteAddress) -> Data {
-        return getData(type: .defiInvest, values: [String(loanId),
-                                                   String(bizType),
-                                                   amount.description,
-                                                   beneficiaryAddress])
-    }
-
-    public static func getDeFiCancelInvestData(investId: UInt64) -> Data {
-        return getData(type: .defiCancelInvest, values: [String(investId)])
-    }
-}
-
 
 

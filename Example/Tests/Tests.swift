@@ -64,4 +64,11 @@ class Tests: XCTestCase {
         print(h)
         print(s)
     }
+
+    func testPrintAllBuildIn() {
+        for abi in ABI.BuildIn.allCases {
+            printLog("\(abi.toAddress).\(abi.encodedFunctionSignature.toHexString())  \(abi)")
+        }
+        print("")
+    }
 }
