@@ -30,7 +30,7 @@ public struct Pledge: Mappable {
         amount <- (map["stakeAmount"], JSONTransformer.balance)
         withdrawHeight <- (map["expirationHeight"], JSONTransformer.uint64)
         beneficialAddress <- map["beneficiary"]
-        timestamp <- (map["withdrawTime"], JSONTransformer.timestamp)
+        timestamp <- (map["expirationTime"], JSONTransformer.timestamp)
         agent <- map["isDelegated"]
         agentAddress <- map["delegateAddress"]
         bid <- map["bid"]
