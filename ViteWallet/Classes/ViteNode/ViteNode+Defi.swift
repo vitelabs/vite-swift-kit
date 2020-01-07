@@ -17,7 +17,8 @@ public extension ViteNode.defi {
 
 public extension ViteNode.defi.info {
     static func getDefiAccountInfo(address: ViteAddress, tokenId: ViteTokenId?) -> Promise<[DefiBalanceInfo]> {
-        return DefiAccountInfoRequest(address: address, tokenId: tokenId).defaultProviderPromise
+        return Promise.value([])
+//        return DefiAccountInfoRequest(address: address, tokenId: tokenId).defaultProviderPromise
     }
 
     static func getDefiLoanInfo(id: Int) -> Promise<DeFiLoanInfo> {
