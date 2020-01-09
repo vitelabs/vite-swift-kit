@@ -57,6 +57,7 @@ public extension ABI {
 
         case dexStakeForMining = "{\"type\":\"function\",\"name\":\"StakeForMining\", \"inputs\":[{\"name\":\"actionType\",\"type\":\"uint8\"}, {\"name\":\"amount\",\"type\":\"uint256\"}]}"
         case dexStakeForVIP = "{\"type\":\"function\",\"name\":\"StakeForVIP\", \"inputs\":[{\"name\":\"actionType\",\"type\":\"uint8\"}]}"
+        case dexLockVxForDividend = "{\"type\":\"function\",\"name\":\"LockVxForDividend\", \"inputs\":[{\"name\":\"actionType\",\"type\":\"uint8\"},{\"name\":\"amount\",\"type\":\"uint256\"}]}"
 
         // MARK: DeFi
         case defiDeposit = "{\"type\":\"function\",\"name\":\"Deposit\",\"inputs\":[]}"
@@ -160,7 +161,8 @@ public extension ABI {
                 return 1.2202
             case .dexStakeForVIP:
                 return 1.1166
-
+            case .dexLockVxForDividend:
+                return 1.2202
 
             case .defiDeposit:
                 return 1.111111111111111
@@ -198,7 +200,7 @@ public extension ABI {
             case .dexDeposit, .dexWithdraw, .dexPlaceOrder,
                      .dexCreateInviteCode, .dexBindInviteCode,
                      .dexTransferTokenOwnership, .dexOpenNewMarket, .dexMarketAdminConfig,
-                     .dexStakeForMining, .dexStakeForVIP:
+                     .dexStakeForMining, .dexStakeForVIP, .dexLockVxForDividend:
                 return ViteWalletConst.ContractAddress.dexFund.address
             case .dexCancelOrder:
                 return ViteWalletConst.ContractAddress.dexTrade.address
