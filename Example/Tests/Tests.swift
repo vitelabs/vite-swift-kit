@@ -71,4 +71,11 @@ class Tests: XCTestCase {
         }
         print("")
     }
+
+    func testABI() {
+        let abi = "{\"type\":\"function\",\"name\":\"CreateNewInviter\",\"inputs\":[]}"
+        let functionSignature = try! ABI.Encoding.encodeFunctionSignature(abiString: abi).toHexString()
+        print(functionSignature)
+        print("")
+    }
 }

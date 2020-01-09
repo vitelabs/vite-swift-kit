@@ -48,7 +48,7 @@ public extension ABI {
         case dexPlaceOrder = "{\"type\":\"function\",\"name\":\"PlaceOrder\", \"inputs\":[{\"name\":\"tradeToken\",\"type\":\"tokenId\"}, {\"name\":\"quoteToken\",\"type\":\"tokenId\"}, {\"name\":\"side\", \"type\":\"bool\"}, {\"name\":\"orderType\", \"type\":\"uint8\"}, {\"name\":\"price\", \"type\":\"string\"}, {\"name\":\"quantity\", \"type\":\"uint256\"}]}"
         case dexCancelOrder = "{\"type\":\"function\",\"name\":\"CancelOrder\", \"inputs\":[{\"name\":\"orderId\",\"type\":\"bytes\"}]}"
 
-        case dexCreateInviteCode = "{\"type\":\"function\",\"name\":\"CreateInviteCode\", \"inputs\":[]}"
+        case dexCreateInviteCode = "{\"type\":\"function\",\"name\":\"CreateNewInviter\", \"inputs\":[]}"
         case dexBindInviteCode = "{\"type\":\"function\",\"name\":\"BindInviteCode\", \"inputs\":[{\"name\":\"code\",\"type\":\"uint32\"}]}"
 
         case dexTransferTokenOwnership = "{\"type\":\"function\",\"name\":\"TransferTokenOwnership\", \"inputs\":[{\"name\":\"token\",\"type\":\"tokenId\"}, {\"name\":\"newOwner\",\"type\":\"address\"}]}"
