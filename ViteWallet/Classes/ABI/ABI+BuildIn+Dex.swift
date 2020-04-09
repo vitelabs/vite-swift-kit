@@ -20,4 +20,8 @@ extension ABI.BuildIn {
     public static func getDexBindInviterData(code: String) -> Data {
         return getData(type: .dexBindInviteCode, values: [code])
     }
+
+    public static func getDexPlaceOrderData(tradeToken: ViteTokenId, quoteToken: ViteTokenId, isBuy: Bool, price: String, quantity: Amount) -> Data {
+        return getData(type: .dexPlaceOrder, values: [tradeToken, quoteToken, isBuy ? "false" : "true", "0", price, quantity.description])
+    }
 }
