@@ -24,4 +24,12 @@ extension ABI.BuildIn {
     public static func getDexPlaceOrderData(tradeToken: ViteTokenId, quoteToken: ViteTokenId, isBuy: Bool, price: String, quantity: Amount) -> Data {
         return getData(type: .dexPlaceOrder, values: [tradeToken, quoteToken, isBuy ? "false" : "true", "0", price, quantity.description])
     }
+
+    public static func getDexCancelOrderData(orderId: String) -> Data {
+        return getData(type: .dexCancelOrder, values: [orderId])
+    }
+
+    public static func getDexStakeForVIP(isPledge: Bool) -> Data {
+        return getData(type: .dexStakeForVIP, values: [isPledge ? "1": "2"])
+    }
 }

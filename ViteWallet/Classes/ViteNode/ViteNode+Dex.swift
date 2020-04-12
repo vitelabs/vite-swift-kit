@@ -27,4 +27,8 @@ public extension ViteNode.dex.info {
     static func checkDexInviteCode(inviteCode: Int64) -> Promise<Bool> {
         return CheckDexInviteCodeRequest(inviteCode: inviteCode).defaultProviderPromise
     }
+
+    static func getDexVIPState(address: ViteAddress) -> Promise<Bool> {
+        return GetDexVIPStateRequest(address: address).defaultProviderPromise
+    }
 }
