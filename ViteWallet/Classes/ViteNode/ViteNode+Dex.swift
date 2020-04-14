@@ -31,4 +31,8 @@ public extension ViteNode.dex.info {
     static func getDexVIPState(address: ViteAddress) -> Promise<Bool> {
         return GetDexVIPStateRequest(address: address).defaultProviderPromise
     }
+
+    static func getDexVIPStakeInfoListRequest(address: ViteAddress, index: Int, count: Int) -> Promise<PledgeDetail> {
+        return GetDexVIPStakeInfoListRequest(address: address, index: index, count: count).defaultProviderPromise
+    }
 }

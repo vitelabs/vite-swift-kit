@@ -32,4 +32,9 @@ extension ABI.BuildIn {
     public static func getDexStakeForVIP(isPledge: Bool) -> Data {
         return getData(type: .dexStakeForVIP, values: [isPledge ? "1": "2"])
     }
+
+    public static func getDexCancelStakeById(id: String) -> Data {
+        return getData(type: .dexCancelStakeById, values: [id])
+    }
+
 }
