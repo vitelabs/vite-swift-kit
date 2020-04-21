@@ -78,4 +78,19 @@ class Tests: XCTestCase {
         print(functionSignature)
         print("")
     }
+
+    func testABIValue() {
+        let abi = ABI.BuildIn.dexPlaceOrder.rawValue
+        let data = Data(base64Encoded: "BFT17wAAAAAAAAAAAAAAAAAAAAAAAAAAAABWSVRFWCBDT0lOAAAAAAAAAAAAAAAAAAAAAAAAAAAAADIoYrP47a47ArEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAMAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABfXhAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAADMS4yAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=")!
+        do {
+            let values = try ABI.Decoding.decodeParameters(data, abiString: abi)
+            for value in values {
+                print(value.toString())
+            }
+            print("")
+        } catch {
+            print(error)
+            XCTAssert(false, error.localizedDescription)
+        }
+    }
 }
