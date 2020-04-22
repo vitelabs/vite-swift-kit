@@ -1,5 +1,5 @@
 //
-//  GetDexVIPStateRequest.swift
+//  GetDexSuperVIPStateRequest.swift
 //  Vite
 //
 //  Created by Stone on 2018/9/9.
@@ -9,13 +9,13 @@
 import Foundation
 import JSONRPCKit
 
-public struct GetDexVIPStateRequest: JSONRPCKit.Request {
+public struct GetDexSuperVIPStateRequest: JSONRPCKit.Request {
     public typealias Response = Bool
 
     let address: ViteAddress
 
     public var method: String {
-        return "dex_hasStakedForVIP"
+        return "dex_hasStakedForSVIP"
     }
 
     public var parameters: Any? {

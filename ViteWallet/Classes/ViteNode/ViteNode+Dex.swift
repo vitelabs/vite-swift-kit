@@ -11,8 +11,8 @@ import PromiseKit
 import BigInt
 
 public extension ViteNode.dex {
-    public struct info {}
-    public struct perform {}
+    struct info {}
+    struct perform {}
 }
 
 public extension ViteNode.dex.info {
@@ -31,6 +31,15 @@ public extension ViteNode.dex.info {
     static func getDexVIPState(address: ViteAddress) -> Promise<Bool> {
         return GetDexVIPStateRequest(address: address).defaultProviderPromise
     }
+
+    static func getDexSuperVIPState(address: ViteAddress) -> Promise<Bool> {
+        return GetDexSuperVIPStateRequest(address: address).defaultProviderPromise
+    }
+
+    static func getDexMarketInfoRequest(tradeTokenId: ViteTokenId, quoteTokenId: ViteTokenId) ->Promise<DexMarketInfo> {
+        return GetDexMarketInfoRequest(tradeTokenId: tradeTokenId, quoteTokenId: quoteTokenId).defaultProviderPromise
+    }
+
 
     static func getDexVIPStakeInfoListRequest(address: ViteAddress, index: Int, count: Int) -> Promise<PledgeDetail> {
         return GetDexVIPStakeInfoListRequest(address: address, index: index, count: count).defaultProviderPromise
