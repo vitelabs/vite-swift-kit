@@ -20,7 +20,7 @@ public struct DexMarketInfo: Mappable {
 
     public mutating func mapping(map: Map) {
         marketSymbol <- map["marketSymbol"]
-        takerBrokerFeeRate <- map["takerBrokerFeeRate"]
-        makerBrokerFeeRate <- map["makerBrokerFeeRate"]
+        takerBrokerFeeRate <- map["takerOperatorFeeRate"]
+        makerBrokerFeeRate <- map["makerOperatorFeeRate"]
     }
 }
