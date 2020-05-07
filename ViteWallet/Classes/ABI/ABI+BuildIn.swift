@@ -60,18 +60,6 @@ public extension ABI {
         case dexLockVxForDividend = "{\"type\":\"function\",\"name\":\"LockVxForDividend\", \"inputs\":[{\"name\":\"actionType\",\"type\":\"uint8\"},{\"name\":\"amount\",\"type\":\"uint256\"}]}"
         case dexCancelStakeById = "{\"type\":\"function\",\"name\":\"CancelStakeById\", \"inputs\":[{\"name\":\"id\",\"type\":\"bytes32\"}]}"
 
-        // MARK: DeFi
-        case defiDeposit = "{\"type\":\"function\",\"name\":\"Deposit\",\"inputs\":[]}"
-        case defiWithdraw = "{\"type\":\"function\",\"name\":\"Withdraw\",\"inputs\":[{\"name\":\"token\",\"type\":\"tokenId\"},{\"name\":\"amount\",\"type\":\"uint256\"}]}"
-        case defiNewLoan = "{\"type\":\"function\",\"name\":\"NewLoan\",\"inputs\":[{\"name\":\"token\",\"type\":\"tokenId\"},{\"name\":\"dayRate\",\"type\":\"int32\"},{\"name\":\"shareAmount\",\"type\":\"uint256\"},{\"name\":\"shares\",\"type\":\"int32\"},{\"name\":\"subscribeDays\",\"type\":\"int32\"},{\"name\":\"expireDays\",\"type\":\"int32\"}]}"
-        case defiCancelLoan = "{\"type\":\"function\",\"name\":\"CancelLoan\",\"inputs\":[{\"name\":\"loanId\",\"type\":\"uint64\"}]}"
-        case defiSubscribe = "{\"type\":\"function\",\"name\":\"Subscribe\",\"inputs\":[{\"name\":\"loanId\",\"type\":\"uint64\"},{\"name\":\"shares\",\"type\":\"int32\"}]}"
-        case defiRegisterSBP = "{\"type\":\"function\",\"name\":\"RegisterSBP\",\"inputs\":[{\"name\":\"loadId\",\"type\":\"uint64\"},{\"name\":\"amount\",\"type\":\"uint256\"},{\"name\":\"sbpName\",\"type\":\"string\"},{\"name\":\"blockProducingAddress\",\"type\":\"address\"},{\"name\":\"rewardWithdrawAddress\",\"type\":\"address\"}]}"
-        case defiUpdateSBPRegistration = "{\"type\":\"function\",\"name\":\"UpdateSBPRegistration\",\"inputs\":[{\"name\":\"investId\",\"type\":\"uint64\"},{\"name\":\"operationCode\",\"type\":\"uint8\"},{\"name\":\"blockProducingAddress\",\"type\":\"address\"},{\"name\":\"rewardWithdrawAddress\",\"type\":\"address\"}]}"
-        case defiInvest = "{\"type\":\"function\",\"name\":\"Invest\",\"inputs\":[{\"name\":\"loadId\",\"type\":\"uint64\"},{\"name\":\"bizType\",\"type\":\"uint8\"},{\"name\":\"amount\",\"type\":\"uint256\"},{\"name\":\"beneficiary\",\"type\":\"address\"}]}"
-        case defiCancelInvest = "{\"type\":\"function\",\"name\":\"CancelInvest\",\"inputs\":[{\"name\":\"investId\",\"type\":\"uint64\"}]}"
-
-
         public var encodedFunctionSignature: Data {
             return try! ABI.Encoding.encodeFunctionSignature(abiString: self.rawValue)
         }
@@ -166,25 +154,6 @@ public extension ABI {
                 return 1.2202
             case .dexCancelStakeById:
                 return 1.117
-
-            case .defiDeposit:
-                return 1.111111111111111
-            case .defiWithdraw:
-                return 1.111111111111111
-            case .defiNewLoan:
-                return 1.111111111111111
-            case .defiCancelLoan:
-                return 1.111111111111111
-            case .defiSubscribe:
-                return 1.111111111111111
-            case .defiRegisterSBP:
-                return 1.111111111111111
-            case .defiUpdateSBPRegistration:
-                return 1.111111111111111
-            case .defiInvest:
-                return 1.111111111111111
-            case .defiCancelInvest:
-                return 1.111111111111111
             }
         }
 
@@ -207,9 +176,6 @@ public extension ABI {
                 return ViteWalletConst.ContractAddress.dexFund.address
             case .dexCancelOrder:
                 return ViteWalletConst.ContractAddress.dexTrade.address
-            case .defiDeposit, .defiWithdraw, .defiNewLoan, .defiCancelLoan, .defiSubscribe,
-                 .defiRegisterSBP, .defiUpdateSBPRegistration, .defiInvest, .defiCancelInvest:
-                return ViteWalletConst.ContractAddress.defi.address
             }
         }
 

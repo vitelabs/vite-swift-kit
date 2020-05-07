@@ -17,7 +17,6 @@ public struct ViteWalletConst {
         case coin = "vite_000000000000000000000000000000000000000595292d996d"
         case dexFund = "vite_0000000000000000000000000000000000000006e82b8ba657"
         case dexTrade = "vite_00000000000000000000000000000000000000079710f19dc7"
-        case defi = "vite_0000000000000000000000000000000000000008e745d12403"
 
         public var address: ViteAddress {
             return self.rawValue
