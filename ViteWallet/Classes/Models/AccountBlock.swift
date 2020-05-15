@@ -49,6 +49,7 @@ public struct AccountBlock: Mappable {
     public fileprivate(set) var fee: Amount?
     public fileprivate(set) var confirmedTimes: UInt64?
     public fileprivate(set) var token: Token?
+    public fileprivate(set) var receiveBlockHash: String?
 
     public init() {
 
@@ -82,6 +83,7 @@ public struct AccountBlock: Mappable {
         fee <- (map["fee"], JSONTransformer.balance)
         confirmedTimes <- (map["confirmedTimes"], JSONTransformer.uint64)
         token <- map["tokenInfo"]
+        receiveBlockHash <- map["receiveBlockHash"]
     }
 }
 
