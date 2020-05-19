@@ -46,7 +46,7 @@ public extension ABI {
         case dexDeposit = "{\"type\":\"function\",\"name\":\"Deposit\", \"inputs\":[]}"
         case dexWithdraw = "{\"type\":\"function\",\"name\":\"Withdraw\", \"inputs\":[{\"name\":\"token\",\"type\":\"tokenId\"},{\"name\":\"amount\",\"type\":\"uint256\"}]}"
         case dexPlaceOrder = "{\"type\":\"function\",\"name\":\"PlaceOrder\", \"inputs\":[{\"name\":\"tradeToken\",\"type\":\"tokenId\"}, {\"name\":\"quoteToken\",\"type\":\"tokenId\"}, {\"name\":\"side\", \"type\":\"bool\"}, {\"name\":\"orderType\", \"type\":\"uint8\"}, {\"name\":\"price\", \"type\":\"string\"}, {\"name\":\"quantity\", \"type\":\"uint256\"}]}"
-        case dexCancelOrder = "{\"type\":\"function\",\"name\":\"CancelOrder\", \"inputs\":[{\"name\":\"orderId\",\"type\":\"bytes\"}]}"
+        case dexCancelOrder = "{\"type\":\"function\",\"name\":\"CancelOrderByTransactionHash\", \"inputs\":[{\"name\":\"sendHash\",\"type\":\"bytes32\"}]}"
 
         case dexCreateInviteCode = "{\"type\":\"function\",\"name\":\"CreateNewInviter\", \"inputs\":[]}"
         case dexBindInviteCode = "{\"type\":\"function\",\"name\":\"BindInviteCode\", \"inputs\":[{\"name\":\"code\",\"type\":\"uint32\"}]}"

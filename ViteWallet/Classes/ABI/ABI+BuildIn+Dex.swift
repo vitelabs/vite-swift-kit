@@ -25,8 +25,8 @@ extension ABI.BuildIn {
         return getData(type: .dexPlaceOrder, values: [tradeToken, quoteToken, isBuy ? "false" : "true", "0", price, quantity.description])
     }
 
-    public static func getDexCancelOrderData(orderId: String) -> Data {
-        return getData(type: .dexCancelOrder, values: [orderId])
+    public static func getDexCancelOrderData(sendBlockHash: String) -> Data {
+        return getData(type: .dexCancelOrder, values: [sendBlockHash])
     }
 
     public static func getDexStakeForVIP(isPledge: Bool) -> Data {
