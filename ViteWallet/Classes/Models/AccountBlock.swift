@@ -288,6 +288,7 @@ extension Array where Element == UInt8 {
 
 extension AccountBlock {
     public enum TransactionType: Int {
+        case contract
         case register
         case registerUpdate
         case cancelRegister
@@ -302,7 +303,7 @@ extension AccountBlock {
     }
 
     public var transactionType: TransactionType {
-        guard let type = type else {
+        guard let type = type, let toAddressType = toAddress?.viteAddressType else {
             return .receive
         }
 
@@ -312,17 +313,19 @@ extension AccountBlock {
         case .receiveError, .genesisReceive:
             return .receive
         case .send:
-            guard let hexString = data?.toHexString() else { return .send }
-            guard hexString.count >= 8 else { return .send }
-            let prefix = (hexString as NSString).substring(to: 8) as String
-            if let type = AccountBlock.transactionTypeDataPrefixMap[prefix] {
-                if AccountBlock.transactionTypeToAddressMap[type] == toAddress {
+            switch toAddressType {
+            case .user:
+                return .send
+            case .contract:
+                guard let hexString = data?.toHexString(), hexString.count >= 8 else {
+                    return .contract
+                }
+                let prefix = (hexString as NSString).substring(to: 8) as String
+                if let type = AccountBlock.transactionTypeDataPrefixMap[prefix], AccountBlock.transactionTypeToAddressMap[type] == toAddress {
                     return type
                 } else {
-                    return .send
+                    return .contract
                 }
-            } else {
-                return .send
             }
         case .receive:
             return .receive
