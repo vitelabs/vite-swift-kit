@@ -36,12 +36,19 @@ public extension ViteNode.dex.info {
         return GetDexSuperVIPStateRequest(address: address).defaultProviderPromise
     }
 
-    static func getDexMarketInfoRequest(tradeTokenId: ViteTokenId, quoteTokenId: ViteTokenId) ->Promise<DexMarketInfo> {
+    static func getDexMarketInfo(tradeTokenId: ViteTokenId, quoteTokenId: ViteTokenId) ->Promise<DexMarketInfo> {
         return GetDexMarketInfoRequest(tradeTokenId: tradeTokenId, quoteTokenId: quoteTokenId).defaultProviderPromise
     }
 
 
-    static func getDexVIPStakeInfoListRequest(address: ViteAddress, index: Int, count: Int) -> Promise<PledgeDetail> {
+    static func getDexVIPStakeInfoList(address: ViteAddress, index: Int, count: Int) -> Promise<PledgeDetail> {
         return GetDexVIPStakeInfoListRequest(address: address, index: index, count: count).defaultProviderPromise
+    }
+
+    static func getDexTradingMiningInfo(address: ViteAddress) -> Promise<(DexMiningInfo, DexTradingMiningFeeInfo, DexAddressFeeInfo)> {
+        let batch = BatchFactory().create(GetDexCurrentMiningInfoRequest(),
+                                          GetDexTradingMiningFeeInfoRequest(),
+                                          GetDexFeesByAddressRequest(address: address))
+        return RPCRequest(for: Provider.default.server, batch: batch).promise
     }
 }
