@@ -1,5 +1,5 @@
 //
-//  GetDexTradingMiningFeeInfoRequest.swift
+//  GetDexMiningTradingFeeInfoRequest.swift
 //  ViteWallet
 //
 //  Created by Stone on 2020/6/2.
@@ -8,7 +8,7 @@
 import Foundation
 import JSONRPCKit
 
-public struct GetDexTradingMiningFeeInfoRequest: JSONRPCKit.Request {
+public struct GetDexMiningTradingFeeInfoRequest: JSONRPCKit.Request {
     public typealias Response = DexTradingMiningFeeInfo
 
     public var method: String {
