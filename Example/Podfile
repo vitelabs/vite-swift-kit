@@ -8,8 +8,8 @@ target 'ViteWallet_Example' do
   pod 'BigInt', '3.1.0'
   pod 'ObjectMapper', '3.3.0'
   pod 'CryptoSwift', '1.0.0'
-#  pod 'Vite_HDWalletKit', :git => 'https://github.com/vitelabs/vite-keystore-ios.git', :tag => '1.2.1'
-  pod 'Vite_HDWalletKit', :path => '../../vite-hd-ios/'
+#  pod 'Vite_HDWalletKit', :git => 'https://github.com/vitelabs/vite-hd-wallet-kit-ios.git', :commit => 'afffc6fb34690e49ae94f2fd796032e08f487c53'
+  pod 'Vite_HDWalletKit', :path => '../../vite-hd-wallet-kit-ios/'
 
   pod 'APIKit', '3.2.1'
   pod 'JSONRPCKit', '3.0.0'
