@@ -57,4 +57,8 @@ public extension ViteNode.dex.info {
                                           GetDexMiningCancelStakeInfoRequest(address: address, index: 0, count: 50))
         return RPCRequest(for: Provider.default.server, batch: batch).promise.map { $0.0 }
     }
+
+    static func getDexPlaceOrderInfo(address: ViteAddress, tradeTokenId: ViteTokenId, quoteTokenId: ViteTokenId, side: Bool) -> Promise<PlaceOrderInfo> {
+        return GetDexPlaceOrderInfoRequest(address: address, tradeTokenId: tradeTokenId, quoteTokenId: quoteTokenId, side: side).defaultProviderPromise
+    }
 }
