@@ -47,7 +47,7 @@ public struct AccountBlock: Mappable {
     public fileprivate(set) var quota: UInt64?
     public fileprivate(set) var amount: Amount?
     public fileprivate(set) var fee: Amount?
-    public fileprivate(set) var confirmedTimes: UInt64?
+    public fileprivate(set) var confirmations: UInt64?
     public fileprivate(set) var token: Token?
     public fileprivate(set) var receiveBlockHash: String?
     public fileprivate(set) var firstSnapshotHeight: UInt64?
@@ -82,10 +82,14 @@ public struct AccountBlock: Mappable {
         quota <- (map["quota"], JSONTransformer.uint64)
         amount <- (map["amount"], JSONTransformer.balance)
         fee <- (map["fee"], JSONTransformer.balance)
-        confirmedTimes <- (map["confirmedTimes"], JSONTransformer.uint64)
+        confirmations <- (map["confirmations"], JSONTransformer.uint64)
         token <- map["tokenInfo"]
         receiveBlockHash <- map["receiveBlockHash"]
         firstSnapshotHeight <- (map["firstSnapshotHeight"], JSONTransformer.uint64)
+    }
+
+    public mutating func update(confirmations: UInt64) {
+        self.confirmations = confirmations
     }
 }
 
