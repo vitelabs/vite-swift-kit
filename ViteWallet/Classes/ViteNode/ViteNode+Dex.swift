@@ -61,4 +61,12 @@ public extension ViteNode.dex.info {
     static func getDexPlaceOrderInfo(address: ViteAddress, tradeTokenId: ViteTokenId, quoteTokenId: ViteTokenId, side: Bool) -> Promise<PlaceOrderInfo> {
         return GetDexPlaceOrderInfoRequest(address: address, tradeTokenId: tradeTokenId, quoteTokenId: quoteTokenId, side: side).defaultProviderPromise
     }
+
+    static func getDexAccountFundInfo(address: ViteAddress, tokenId: ViteTokenId?) -> Promise<[ViteTokenId: DexAccountFundInfo]> {
+        return GetDexAccountFundInfoRequest(address: address, tokenId: tokenId).defaultProviderPromise
+    }
+
+    static func getDexCurrentMiningStakingAmountByAddress(address: ViteAddress) -> Promise<Amount> {
+        return GetDexCurrentMiningStakingAmountByAddressRequest(address: address).defaultProviderPromise
+    }
 }
