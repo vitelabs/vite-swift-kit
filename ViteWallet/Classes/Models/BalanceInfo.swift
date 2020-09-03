@@ -17,6 +17,10 @@ public struct BalanceInfo: Mappable {
     public fileprivate(set) var unconfirmedBalance = Amount()
     public fileprivate(set) var unconfirmedCount: UInt64 = 0
 
+    public fileprivate(set) var viteStakeForPledge = Amount()       // Only valid for VITE
+    public fileprivate(set) var viteStakeForSBP = Amount()          // Only valid for VITE
+    public fileprivate(set) var viteStakeForFullNode = Amount()     // Only valid for VITE
+
     public init?(map: Map) {
 
     }
@@ -31,11 +35,39 @@ public struct BalanceInfo: Mappable {
     public mutating func mapping(map: Map) {
         token <- map["tokenInfo"]
         balance <- (map["totalAmount"], JSONTransformer.balance)
+
+        viteStakeForPledge <- (map["viteStakeForPledge"], JSONTransformer.balance)
+        viteStakeForSBP <- (map["viteStakeForSBP"], JSONTransformer.balance)
+        viteStakeForFullNode <- (map["viteStakeForFullNode"], JSONTransformer.balance)
     }
 
     mutating func fill(unconfirmedBalance: Amount, unconfirmedCount: UInt64) {
         self.unconfirmedBalance = unconfirmedBalance
         self.unconfirmedCount = unconfirmedCount
+    }
+
+    public var total: Amount {
+        if token.id == ViteWalletConst.viteToken.id {
+            return balance + viteStake
+        } else {
+            return balance
+        }
+    }
+
+    public var viteStake: Amount {
+        if token.id == ViteWalletConst.viteToken.id {
+            return viteStakeForPledge + viteStakeForSBP + viteStakeForFullNode
+        } else {
+            return Amount(0)
+        }
+    }
+
+    public mutating func mergeLockedInfoIfNeeded(info: WalletBalanceLocked) {
+        if token.id == ViteWalletConst.viteToken.id {
+            viteStakeForPledge = info.viteStakeForPledge
+            viteStakeForSBP = info.viteStakeForSBP
+            viteStakeForFullNode = info.viteStakeForFullNode
+        }
     }
 }
 

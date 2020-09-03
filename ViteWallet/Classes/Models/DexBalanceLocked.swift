@@ -8,6 +8,7 @@
 import Foundation
 import ObjectMapper
 import BigInt
+import ViteWallet
 
 public struct DexBalanceLocked: Mappable {
 
