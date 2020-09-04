@@ -32,7 +32,7 @@ public struct GetDexCurrentMiningStakingAmountByAddressRequest: JSONRPCKit.Reque
                 guard let amount = Amount(string) else {
                     throw ViteError.JSONTypeError
                 }
-                return sum
+                return sum + amount
             } {
             return ret
         } else {
