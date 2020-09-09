@@ -40,7 +40,7 @@ public struct DexBalanceInfo: Mappable {
 
     public var total: Amount {
         if token.id == ViteWalletConst.viteToken.id {
-            return available + locked + viteStakeForVip + viteCancellingStakeForMining + viteCancellingStakeForMining
+            return available + locked + viteStakeForVip + viteStakeForMining + viteCancellingStakeForMining
         } else if token.id == "tti_564954455820434f494e69b5" {
             return available + locked + vxLocked + vxUnlocking
         } else {
