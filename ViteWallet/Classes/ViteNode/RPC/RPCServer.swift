@@ -9,7 +9,7 @@
 import Foundation
 
 public final class RPCServer {
-    public static let shared = RPCServer(url: URL(string: "https://api.vitewallet.com/ios")!)
+    public static let shared = RPCServer(url: URL(string: "https://node.vite.net/gvite")!)
 
     public let rpcURL: URL
 
