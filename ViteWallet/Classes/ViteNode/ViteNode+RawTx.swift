@@ -18,6 +18,7 @@ public extension ViteNode.rawTx {
 public extension ViteNode.rawTx.send {
 
     static func prepare(account: Wallet.Account,
+                        blockType: AccountBlock.BlockType = .send,
                         toAddress: ViteAddress,
                         tokenId: ViteTokenId,
                         amount: Amount,
@@ -27,7 +28,7 @@ public extension ViteNode.rawTx.send {
             .then { latestAccountBlock -> Promise<(latestAccountBlock: AccountBlock?, quota: AccountBlockQuota)> in
                 ViteNode.tx.getPowDifficulty(accountAddress: account.address,
                                              prevHash: latestAccountBlock?.hash ?? AccountBlock.Const.defaultHash,
-                                             type: .send,
+                                             type: blockType,
                                              toAddress: toAddress,
                                              data: data,
                                              usePledgeQuota: true).map { (latestAccountBlock, $0) }
@@ -40,6 +41,7 @@ public extension ViteNode.rawTx.send {
                                  amount: amount,
                                  fee: fee,
                                  data: data,
+                                 blockType: blockType,
                                  quota: quota,
                                  nonce: nil)
         }
@@ -81,6 +83,7 @@ public extension ViteNode.rawTx.send {
                                  amount: context.amount,
                                  fee: context.fee,
                                  data: context.data,
+                                 blockType: context.blockType,
                                  quota: context.quota,
                                  nonce: nonce)
         }
@@ -138,6 +141,7 @@ public extension ViteNode.rawTx.send {
                                  amount: amount,
                                  fee: fee,
                                  data: data,
+                                 blockType: .send,
                                  quota: quota,
                                  nonce: nonce)
         }

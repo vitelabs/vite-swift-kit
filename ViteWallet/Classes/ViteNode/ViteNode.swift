@@ -33,6 +33,7 @@ public struct SendBlockContext {
     let amount: Amount
     let fee: Amount?
     let data: Data?
+    let blockType: AccountBlock.BlockType
 
     public let quota: AccountBlockQuota
 
@@ -53,7 +54,8 @@ public struct SendBlockContext {
                                                  fee: fee,
                                                  data: data,
                                                  nonce: nonce,
-                                                 difficulty: quota.difficulty)
+                                                 difficulty: quota.difficulty,
+                                                 blockType: blockType)
     }
 }
 

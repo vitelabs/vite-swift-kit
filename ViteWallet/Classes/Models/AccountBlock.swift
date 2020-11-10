@@ -105,7 +105,8 @@ extension AccountBlock {
                                             fee: Amount?,
                                             data: Data?,
                                             nonce: String?,
-                                            difficulty: BigInt?) -> AccountBlock {
+                                            difficulty: BigInt?,
+                                            blockType: AccountBlock.BlockType = .send) -> AccountBlock {
 
         var block = makeBaseAccountBlock(secretKey: secretKey,
                                          publicKey: publicKey,
@@ -114,7 +115,7 @@ extension AccountBlock {
                                          nonce: nonce,
                                          difficulty: difficulty)
 
-        block.type = .send
+        block.type = blockType
         block.toAddress = toAddress
         block.amount = amount
         block.tokenId = tokenId
@@ -217,7 +218,7 @@ extension AccountBlock {
 
         if let type = accountBlock.type {
             switch type {
-            case .send:
+            case .send, .createSend:
                 if let raw = accountBlock.toAddress?.rawViteAddress {
                     source.append(contentsOf: raw)
                 }
