@@ -13,6 +13,6 @@ import BigInt
 public extension ViteNode.pow {
 
     static func getNonce(address: ViteAddress, preHash: String?, difficulty: BigInt) -> Promise<String> {
-        return GetPowNonceRequest(address: address, preHash: preHash, difficulty: difficulty).defaultProviderPromise
+        return GetPowNonceRequest(address: address, preHash: preHash, difficulty: difficulty).powProviderPromise
     }
 }

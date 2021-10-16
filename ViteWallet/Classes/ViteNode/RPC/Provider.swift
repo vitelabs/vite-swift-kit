@@ -13,6 +13,7 @@ import BigInt
 
 public final class Provider {
     public static let `default` = Provider(server: RPCServer.shared)
+    public static let pow = Provider(server: RPCServer.shared)
 
     public fileprivate(set) var server: RPCServer
     public init(server: RPCServer) {
@@ -27,6 +28,10 @@ public final class Provider {
 extension JSONRPCKit.Request {
     public var defaultProviderPromise: Promise<Response> {
         return RPCRequest(for: Provider.default.server, batch: BatchFactory().create(self)).promise
+    }
+    
+    public var powProviderPromise: Promise<Response> {
+        return RPCRequest(for: Provider.pow.server, batch: BatchFactory().create(self)).promise
     }
 }
 
