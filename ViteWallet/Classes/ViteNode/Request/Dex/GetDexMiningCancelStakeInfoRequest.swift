@@ -9,7 +9,7 @@ import Foundation
 import JSONRPCKit
 
 public struct GetDexMiningCancelStakeInfoRequest: JSONRPCKit.Request {
-    public typealias Response = DexMiningStakeInfo
+    public typealias Response = DexCancelStakeInfo
 
     let address: ViteAddress
     let index: Int
@@ -31,9 +31,9 @@ public struct GetDexMiningCancelStakeInfoRequest: JSONRPCKit.Request {
 
     public func response(from resultObject: Any) throws -> Response {
         if let _ = resultObject as? NSNull {
-            return DexMiningStakeInfo()
+            return DexCancelStakeInfo()
         } else if let response = resultObject as? [String: Any] {
-            if let ret = DexMiningStakeInfo(JSON: response) {
+            if let ret = DexCancelStakeInfo(JSON: response) {
                 return ret
             } else {
                 throw ViteError.JSONTypeError

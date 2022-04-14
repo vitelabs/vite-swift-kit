@@ -52,10 +52,10 @@ public extension ViteNode.dex.info {
         return RPCRequest(for: Provider.default.server, batch: batch).promise
     }
 
-    static func getDexMiningStakeInfo(address: ViteAddress) -> Promise<DexMiningStakeInfo> {
-        let batch = BatchFactory().create(GetDexMiningStakeInfoRequest(address: address, index: 0, count: 50),
-                                          GetDexMiningCancelStakeInfoRequest(address: address, index: 0, count: 50))
-        return RPCRequest(for: Provider.default.server, batch: batch).promise.map { $0.0 }
+    static func getDexMiningStakeInfo(address: ViteAddress, index: Int, count: Int) -> Promise<(DexMiningStakeInfo, DexCancelStakeInfo)> {
+        let batch = BatchFactory().create(GetDexMiningStakeInfoRequest(address: address, index: index, count: count),
+                                          GetDexMiningCancelStakeInfoRequest(address: address, index: index, count: count))
+        return RPCRequest(for: Provider.default.server, batch: batch).promise
     }
 
     static func getDexPlaceOrderInfo(address: ViteAddress, tradeTokenId: ViteTokenId, quoteTokenId: ViteTokenId, side: Bool) -> Promise<PlaceOrderInfo> {
