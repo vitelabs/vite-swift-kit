@@ -40,5 +40,13 @@ extension ABI.BuildIn {
     public static func getDexCancelStakeById(id: String) -> Data {
         return getData(type: .dexCancelStakeById, values: [id])
     }
+    
+    public static func getDexSwitchConfig(isAuto: Bool) -> Data {
+        return getData(type: .dexSwitchConfig, values: ["1", isAuto ? "1": "0"])
+    }
 
+    public static func getDexLockVxForDividend(isLock: Bool, amount: Amount) -> Data {
+        return getData(type: .dexLockVxForDividend, values: [isLock ? "1": "2", amount.description])
+    }
+    
 }

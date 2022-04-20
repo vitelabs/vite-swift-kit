@@ -59,6 +59,8 @@ public extension ABI {
         case dexStakeForVIP = "{\"type\":\"function\",\"name\":\"StakeForVIP\", \"inputs\":[{\"name\":\"actionType\",\"type\":\"uint8\"}]}"
         case dexLockVxForDividend = "{\"type\":\"function\",\"name\":\"LockVxForDividend\", \"inputs\":[{\"name\":\"actionType\",\"type\":\"uint8\"},{\"name\":\"amount\",\"type\":\"uint256\"}]}"
         case dexCancelStakeById = "{\"type\":\"function\",\"name\":\"CancelStakeById\", \"inputs\":[{\"name\":\"id\",\"type\":\"bytes32\"}]}"
+        case dexSwitchConfig = "{\"type\":\"function\",\"name\":\"SwitchConfig\",\"inputs\":[{\"name\":\"switchType\",\"type\":\"uint8\"},{\"name\":\"enable\",\"type\":\"bool\"}]}"
+        
 
         public var encodedFunctionSignature: Data {
             return try! ABI.Encoding.encodeFunctionSignature(abiString: self.rawValue)
@@ -154,6 +156,8 @@ public extension ABI {
                 return 1.2202
             case .dexCancelStakeById:
                 return 1.117
+            case .dexSwitchConfig:
+                return 1.091
             }
         }
 
@@ -172,7 +176,7 @@ public extension ABI {
             case .dexDeposit, .dexWithdraw, .dexPlaceOrder,
                      .dexCreateInviteCode, .dexBindInviteCode,
                      .dexTransferTokenOwnership, .dexOpenNewMarket, .dexMarketAdminConfig,
-                     .dexStakeForMining, .dexStakeForVIP, .dexLockVxForDividend, .dexCancelStakeById:
+                     .dexStakeForMining, .dexStakeForVIP, .dexLockVxForDividend, .dexCancelStakeById, .dexSwitchConfig:
                 return ViteWalletConst.ContractAddress.dexFund.address
             case .dexCancelOrder:
                 return ViteWalletConst.ContractAddress.dexTrade.address

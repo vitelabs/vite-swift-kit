@@ -69,4 +69,17 @@ public extension ViteNode.dex.info {
     static func getDexCurrentMiningStakingAmountByAddress(address: ViteAddress) -> Promise<Amount> {
         return GetDexCurrentMiningStakingAmountByAddressRequest(address: address).defaultProviderPromise
     }
+    
+    static func getDexDividendPoolsInfoRequest() -> Promise<DexDividendInfo> {
+        return GetDexDividendPoolsInfoRequest().defaultProviderPromise
+    }
+    
+    static func getDexIsAutoLockMinedVx(address: ViteAddress) -> Promise<Bool> {
+        return GetDexIsAutoLockMinedVx(address: address).defaultProviderPromise
+    }
+    
+    static func getDexVxUnlockList(address: ViteAddress, index: Int, count: Int) -> Promise<DexVxUnlockInfo> {
+        return GetDexVxUnlockList(address: address, index: index, count: count).defaultProviderPromise
+    }
+    
 }
