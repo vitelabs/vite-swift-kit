@@ -18,7 +18,7 @@ public struct DexAddressFeeInfo: Mappable {
     init() {}
 
     public mutating func mapping(map: Map) {
-        array <- map["fees.userFees"]
+        array <- map["fees.0.userFees"]
     }
 
     public var vite: Fee? {
